@@ -1,0 +1,249 @@
+{
+  "_doc": "Model registry for harness/run_bench.py. agent=claude → Claude Code CLI with ANTHROPIC_BASE_URL/ANTHROPIC_MODEL; agent=codex → Codex CLI with a custom model_provider (Responses API). key_env names the variable read from configs/keys.env (never a literal key). price = USD per 1M tokens (input, output, cache_read, cache_write); used by `run_bench.py status` and scoring/aggregate.py to recompute cost from usage. concurrency = default per-model parallelism. effort → `claude --effort` / codex model_reasoning_effort.",
+  "models": {
+    "cc_deepseek_v4_flash": {
+      "agent": "claude",
+      "display": "DeepSeek-V4-Flash-0731",
+      "group": "国产",
+      "base_url": "https://api.deepseek.com/anthropic",
+      "model": "deepseek-v4-flash",
+      "key_env": "DEEPSEEK_API_KEY",
+      "concurrency": 4,
+      "note": "价格=DeepSeek 官方峰时价 ¥3/¥9/缓存¥0.1 按 7.15 折算（谷时减半）",
+      "price": {
+        "input": 0.4196,
+        "output": 1.2587,
+        "cache_read": 0.014,
+        "cache_write": 0.0
+      }
+    },
+    "cc_glm_5_2": {
+      "agent": "claude",
+      "display": "GLM-5.2",
+      "group": "国产",
+      "base_url": "https://open.bigmodel.cn/api/anthropic",
+      "model": "glm-5.2",
+      "key_env": "ZHIPU_API_KEY",
+      "concurrency": 5,
+      "price": null,
+      "note": "Anthropic 兼容端点已用真 key 验证；官方单价待用户提供"
+    },
+    "cc_glm_5_3": {
+      "agent": "claude",
+      "display": "GLM-5.3",
+      "group": "国产",
+      "base_url": "https://open.bigmodel.cn/api/anthropic",
+      "model": "glm-5.3",
+      "key_env": "ZHIPU_API_KEY",
+      "concurrency": 5,
+      "price": null,
+      "note": "Anthropic 兼容端点已用真 key 验证（带 thinking 块）；官方单价待用户提供"
+    },
+    "cc_qwen3_8_max": {
+      "agent": "claude",
+      "display": "Qwen3.8-Max",
+      "group": "国产",
+      "base_url": "https://dashscope.aliyuncs.com/api/v2/apps/claude-code-proxy",
+      "model": "qwen3.8-max",
+      "key_env": "DASHSCOPE_API_KEY",
+      "concurrency": 4,
+      "note": "model id 待确认"
+    },
+    "cc_seed_2_1": {
+      "agent": "claude",
+      "display": "Seed 2.1",
+      "group": "国产",
+      "base_url": "https://ark.cn-beijing.volces.com/api/coding",
+      "model": "doubao-seed-2-1-pro-260628",
+      "key_env": "ARK_API_KEY",
+      "concurrency": 4
+    },
+    "cc_seed_evolving": {
+      "agent": "claude",
+      "display": "Seed evolving",
+      "group": "国产",
+      "base_url": "http://127.0.0.1:4000",
+      "model": "doubao-seed-evolving",
+      "key_env": "ARK_API_KEY",
+      "concurrency": 5,
+      "price": {
+        "input": 0.839,
+        "output": 4.196,
+        "cache_read": 0.0,
+        "cache_write": 0.0
+      },
+      "note": "Ark 普通 key 没有 Anthropic 兼容端点（/api/coding 需 coding-plan key），经本机 LiteLLM 代理把 Claude Code 的 /v1/messages 转成 Ark OpenAI 兼容接口；上游 model=doubao-seed-evolving-latest-version；价格 ¥6/¥30 按 7.15 折算"
+    },
+    "cc_opus_5": {
+      "agent": "claude",
+      "display": "Opus 5 xhigh",
+      "group": "海外",
+      "base_url": "https://api.anthropic.com",
+      "model": "claude-opus-5",
+      "key_env": "ANTHROPIC_API_KEY",
+      "effort": "xhigh",
+      "concurrency": 5,
+      "price": {
+        "input": 5.0,
+        "output": 25.0,
+        "cache_read": 0.5,
+        "cache_write": 6.25
+      }
+    },
+    "cc_fable_5": {
+      "agent": "claude",
+      "display": "Fable 5 xhigh",
+      "group": "海外",
+      "base_url": "https://api.anthropic.com",
+      "model": "claude-fable-5",
+      "key_env": "ANTHROPIC_API_KEY",
+      "effort": "xhigh",
+      "concurrency": 5,
+      "price": {
+        "input": 10.0,
+        "output": 50.0,
+        "cache_read": 1.0,
+        "cache_write": 12.5
+      }
+    },
+    "codex_deepseek_v4_pro": {
+      "agent": "codex",
+      "display": "DeepSeek-V4-Pro",
+      "group": "国产",
+      "base_url": "https://api.deepseek.com/v1",
+      "model": "deepseek-v4-pro",
+      "key_env": "DEEPSEEK_API_KEY",
+      "wire_api": "responses",
+      "effort": "high",
+      "concurrency": 4,
+      "note": "价格=DeepSeek 官方峰时价 ¥9/¥27/缓存¥0.3 按 7.15 折算（谷时减半）",
+      "price": {
+        "input": 1.2587,
+        "output": 3.7762,
+        "cache_read": 0.042,
+        "cache_write": 0.0
+      }
+    },
+    "codex_gpt_5_6_sol": {
+      "agent": "codex",
+      "display": "GPT-5.6-sol high",
+      "group": "海外",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-5.6-sol",
+      "key_env": "OPENAI_API_KEY",
+      "wire_api": "responses",
+      "effort": "high",
+      "concurrency": 5,
+      "note": "/v1/models 已确认 id；价格=用户提供的 OpenAI 官方定价 2026-09-08（USD/MTok），无缓存写入费",
+      "price": {
+        "input": 4.0,
+        "output": 20.0,
+        "cache_read": 0.4,
+        "cache_write": 0.0
+      }
+    },
+    "codex_gpt_5_5": {
+      "agent": "codex",
+      "display": "GPT-5.5 high",
+      "group": "海外",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-5.5",
+      "key_env": "OPENAI_API_KEY",
+      "wire_api": "responses",
+      "effort": "high",
+      "concurrency": 5,
+      "price": {
+        "input": 5.0,
+        "output": 30.0,
+        "cache_read": 0.5,
+        "cache_write": 0.0
+      },
+      "note": "/v1/models 已确认 id；价格=用户提供的 OpenAI 官方定价 2026-09-08（USD/MTok），无缓存写入费"
+    },
+    "cc_fable_5_1": {
+      "agent": "claude",
+      "display": "Fable 5.1 xhigh",
+      "group": "海外",
+      "base_url": "https://api.anthropic.com",
+      "model": "claude-fable-5-1",
+      "key_env": "ANTHROPIC_API_KEY",
+      "effort": "xhigh",
+      "concurrency": 5,
+      "price": {
+        "input": 10.0,
+        "output": 50.0,
+        "cache_read": 1.0,
+        "cache_write": 12.5
+      },
+      "note": "价格按 Fable 5 同价假设，待核"
+    },
+    "codex_gpt_6_astra": {
+      "agent": "codex",
+      "display": "GPT-6 astra high",
+      "group": "海外",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-6-astra",
+      "key_env": "OPENAI_API_KEY",
+      "wire_api": "responses",
+      "effort": "high",
+      "concurrency": 5,
+      "price": {
+        "input": 10.0,
+        "output": 50.0,
+        "cache_read": 1.0,
+        "cache_write": 0.0
+      },
+      "note": "/v1/models 已确认 id；价格=用户提供的 OpenAI 官方定价 2026-09-08（USD/MTok），无缓存写入费"
+    },
+    "cc_kimi_k3": {
+      "agent": "claude",
+      "display": "Kimi-K3",
+      "group": "国产",
+      "base_url": "https://api.moonshot.cn/anthropic",
+      "model": "kimi-k3",
+      "key_env": "KIMI_API_KEY",
+      "concurrency": 4,
+      "price": {
+        "input": 2.797,
+        "output": 13.986,
+        "cache_read": 0.28,
+        "cache_write": 0.0
+      },
+      "note": "api-key.txt 里的 kimi key 在 moonshot.cn/.ai 与 kimi.com/coding 三处均 Invalid Authentication，待用户确认；价格=中国站 ¥20/¥100/缓存¥2 按 7.15 折算"
+    },
+    "codex_seed_evolving": {
+      "agent": "codex",
+      "display": "Seed evolving (Codex, 备用)",
+      "group": "国产",
+      "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+      "model": "doubao-seed-evolving-latest-version",
+      "key_env": "ARK_API_KEY",
+      "wire_api": "responses",
+      "effort": "high",
+      "concurrency": 5,
+      "price": {
+        "input": 0.839,
+        "output": 4.196,
+        "cache_read": 0.0,
+        "cache_write": 0.0
+      },
+      "note": "Ark /api/v3/responses 已验证可用；仅作 Claude Code 路径失败时的备用"
+    },
+    "cc_deepseek_flash_41": {
+      "agent": "claude",
+      "display": "DeepSeek-V4.1-Flash (API id deepseek-flash)",
+      "group": "国产",
+      "base_url": "https://api.deepseek.com/anthropic",
+      "model": "deepseek-flash",
+      "key_env": "DEEPSEEK_API_KEY",
+      "concurrency": 10,
+      "price": {
+        "input": 0.4196,
+        "output": 1.2587,
+        "cache_read": 0.014,
+        "cache_write": 0.0
+      },
+      "note": "2026-09-11 DeepSeek 端点模型列表只剩 deepseek-flash 与 deepseek-v4-pro（v4-flash 已下线）；按用户所说 4.1 flash 对应 deepseek-flash；价格暂按 V4-Flash"
+    }
+  }
+}

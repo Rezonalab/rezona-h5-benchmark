@@ -1,0 +1,3711 @@
+[
+ {
+  "task_id": "repro_868back_2d_017",
+  "repro_game": "868-BACK | Michael Brough / Finji | Steam app 3304110 | 2026-05-28",
+  "src_video": "https://www.bilibili.com/video/BV1h5T56yEr4/",
+  "category": "Adventure & Puzzle",
+  "platform": "web",
+  "desc": "868-BACK：吸取是不可再生资源 —— 6×6 的极简网格上，按空格吸取相邻的程序既是收集手段也是唯一货币，而敌人与你同时移动；能拿到什么，取决于你站在哪一格。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C9"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L5",
+  "label": [
+   "genre:adventure_puzzle",
+   "subtype:puzzle",
+   "render:2d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9"
+  ],
+  "prompt": "【游戏】极简网格黑客 Roguelike：6×6 的方格上，你是一只有眼罩的笑脸。整个游戏的动作只有移动与吸取两件事，而吸取次数有限——它既是收集程序的手段，也是唯一能拿到货币的手段。\n【核心机制】①网格与移动：角色在 6×6 方格内逐格移动，敌我双方同时移动而非轮流，因此一次移动会同时改变所有人的站位；碰撞与占位有明确定义。②吸取作为稀缺资源：按吸取键可对相邻格生效，既取得该格的程序，也取得该格代表的货币；吸取是有次数限制的资源本身，用在哪里决定了你能带走什么，也决定了你还能不能继续取。③程序即技能：程序分多种，各有作用与代价，其中强力程序附带惩罚（例如使用会提升警戒等级，或在被吸取时立即在该层召唤多个敌对单位）；程序之间可组合，理解组合方式对通关有决定性作用。④风险报酬与深度：每台服务器可继续深入以获取更多收益，也可在系统强制断连前提前撤出；被断连过多会使任务从头重来。⑤结构与胜负：一局跨多台服务器与多个游戏日推进，服务器按程序生成、带分支路径与不同结局；单台服务器内需存活若干扇区，角色被击败即结束。⑥装置：部分扇区提供装置，为该扇区范围内提供一次性强势效果。\n【必须实现】1. 6×6 网格内逐格移动，敌我同时移动且占用与碰撞有定义；2. 吸取仅对相邻格生效，消耗吸取次数，同时取得程序与货币；3. ≥6 种程序各有作用与代价，包含带惩罚的强力程序与可组合的交互；4. 服务器按程序生成、含分支路径，深层收益高于浅层；5. 撤出与断连判定、跨服务器与跨日的进程推进；6. 被击败、断连超限与成功撤离的完整胜负结算；7. 同种子服务器布局一致。\n【自由发挥】程序种类与数量、装置效果、视觉风格、服务器与扇区数量、结局分支、每日结构不作限制，鼓励自行设计。",
+  "checklist": [
+   "角色在网格内按方向逐格移动，越界移动被拒绝；两单位占据同格时碰撞结果有定义（状态一致性）",
+   "吸取仅对相邻格生效，对非相邻格按吸取键无效果；每次成功吸取使吸取次数减少 1，次数耗尽后吸取不再生效（状态一致性）",
+   "吸取后同时获得该格的程序与货币，二者数值同步变化；吸取空格时只获得货币不获得程序（状态一致性 + 对照）",
+   "吸取带惩罚的强力程序时，惩罚立即生效（警戒等级上升或当场生成多个敌对单位）；不吸取时同一时刻不出现这些效果（状态一致性 + 对照）",
+   "敌我在同一时刻移动：玩家移动一步后敌方位置同步改变，且其移动遵循各自规则；与静止不动的对照组相比，玩家可安全停留的格子数显著不同（同时行动×站位耦合核心断言）",
+   "深入更深层获得的收益高于浅层；被击败或断连超限结束本局、成功撤离完成结算（胜负结算）"
+  ],
+  "hidden_checklist": [
+   "当某单位的预定移动目标格被另一单位同时占据时，冲突有确定解（阻挡或让位）而非双方重叠（同时移动的二阶冲突，spec 未明说）",
+   "同层单位数量接近占满全部 36 格、叠加吸取与装置效果时结算保持稳定，不出现死锁或无限等待（规模与稳健）",
+   "角色被完全包围或吸取次数耗尽且无相邻可吸取格时，仍有定义行为（可移动或可判定停滞），不出现无操作可做的死锁（退化局面）",
+   "暂停时敌方移动与吸取结算冻结；同种子服务器布局一致；重开新局后旧局程序与货币不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（同时行动×站位耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 胜负"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "网格占用表：每格上的单位、程序、货币值、装置标识",
+   "玩家状态：位置、吸取剩余次数、生命/警戒等级",
+   "已持有程序列表与其代价、以及本层已触发的装置效果",
+   "进度状态：当前服务器、当前扇区、已过天数、分支路径选择记录",
+   "种子注入通道、玩家输入注入通道（移动/吸取/用程序/撤离）"
+  ],
+  "evidence": [
+   {
+    "claim": "6×6 方格，方向键移动，目标为到达出口且不被击败",
+    "source": "heise 评测明确写出 6×6 boards",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "空格键吸取相邻程序或点数；有限的吸取动作既是获取货币的手段，也是获取程序本身的手段",
+    "source": "heise 评测：limited siphon actions are the key resource... also collect the programs themselves",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "共 36 种程序，理解、组合与部署是胜负关键；强力程序伴随后果",
+    "source": "heise 评测：36 of them；举例 Quit 警戒 7、吸取它会当场召唤 7 个 attacking tasks",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "敌人（tasks）各有自己的移动规则，且多数 Brough 作品中敌人与玩家同时行动，单回合内可能发生很多事",
+    "source": "heise 评测",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "每台服务器 6×6 推进、含 8 个扇区，可继续深入或提前撤出；被断连过多任务从头重来",
+    "source": "评测与商店描述",
+    "grade": "STORE+REVIEW"
+   },
+   {
+    "claim": "一局跨 8 台服务器、19 个游戏日（三个游戏周），分支路径通向不同结局",
+    "source": "评测与商店描述",
+    "grade": "STORE+REVIEW"
+   },
+   {
+    "claim": "服务器为程序生成；部分扇区装置提供一次性强势效果",
+    "source": "评测",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "带有惩罚的强力程序的具体惩罚清单",
+    "source": "评测仅举 Quit 一例（警戒 7、召唤 7 个 tasks），其余惩罚未列全",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "吸取空格只获得货币不获得程序",
+    "source": "未见来源明确区分，为出题人推断",
+    "grade": "INFER",
+    "verify_priority": "medium"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=网格占位 × 吸取稀缺资源 × 程序组合与代价 × 同时行动敌人 (4) | coupled_assertion=同时行动×站位 | tier_rationale=系统数量足但单层复杂度可控（6×6 小棋盘），暂判 mid，其深度来自组合而非规模 | 注意=原 case 17 的「紫色威胁怪物/倒计时」表述在原作中未见对应机制，本版已改写为吸取与程序系统 | 刻意留白=程序数量与具体效果、吸取次数的具体值、扇区数、装置效果",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_v1.json",
+  "source_meta": {
+   "name": "repro-cases-v1",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "provenance": "检索稿。机制信息来自 Steam 官方商店页文案、官方 wiki、社区攻略与评测转述；未逐帧观看实况视频，无人实际游玩。每条 case 的 evidence 用 [STORE] [WIKI] [GUIDE] [REVIEW] [DEV] [INFER] 标注来源等级，[INFER] 为出题人推断、无出处，是真人核验时优先检查项。",
+   "baseline_schema": "基线字段沿用 cases_150_platform.json 信封，新增 difficulty_tier / minimal_state_surface / evidence / checklist_detail / repro_game / src_video。",
+   "tier_policy": "本批 difficulty_tier 按原作实际机制强度重判（不复用 cases/ 原版的 18/18 mid）。口径：floor=2 个硬系统咬合；mid=3 个；ceiling=4 个或含高不确定性核心（连续物理模拟、确定性全量回放、无上界组合爆炸）。重判结果须经 pilot 实测校准。"
+  }
+ },
+ {
+  "task_id": "repro_dieinthedungeon_2d_006",
+  "repro_game": "Die in the Dungeon | ATICO / HypeTrain Digital | Steam app 2026820 | EA 2025-02-21 / 1.0 2026-05",
+  "src_video": "https://www.bilibili.com/video/BV1KCPTeaEjt/",
+  "category": "Adventure & Puzzle",
+  "platform": "web",
+  "desc": "骰子地牢：用骰子代替卡牌的回合制 Roguelike —— 骰子按位置互相影响，增益骰会把点数加给范围内其他骰子，镜像骰复制邻近骰的能力，而结算从左到右推进，所以「放在哪」和「放多左」是两件不同的事。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C7",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L5",
+  "label": [
+   "genre:adventure_puzzle",
+   "subtype:puzzle",
+   "render:2d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】回合制骰子构筑 Roguelike：你用的不是卡牌而是骰子。每回合把掷出的骰子摆进骰盘，骰子的效果取决于它挨着谁、以及结算时它排在第几位——摆位本身就是这套系统的核心决策。\n【核心机制】①骰盘与摆位：骰子不放牌库也不出手牌，而是摆进有限的盘面格子里，回合结束时统一结算，结算后进入弃牌堆、牌库耗尽时重新洗回。相邻按上下左右判定；部分格子因被敌人占据而不可用，盘面可用空间随战斗变化。②骰子类型与相互影响：攻击骰造成伤害；格挡骰提供抵挡；治疗骰回血；**增益骰把自身点数加给它范围内（范围大小等于该骰子的点数）的其他骰子，且增益骰本身不受其他增益骰影响**；**镜像骰复制一定距离内的另一枚骰子的类型与点数**；地形骰为所在格提供逐回合衰减的加成，且**地形骰会被增益骰加强，而增益骰不受地形加成影响**。③结算顺序：效果按从左到右的顺序依次触发，因此把增益骰摆在被加成的骰子左侧与右侧会产生不同结果。④骰子属性：骰子可带属性，如使用后留在盘上并逐回合衰减、整场战斗保留、用一次即从本场牌库移除、无费用、每次使用永久成长等；部分属性需消耗特定资源购入。⑤能量与费用：每回合有能量额度，摆放骰子需支付与其对应的费用，费用不足的骰子不可摆放；每回合另有若干次重掷机会可用于改写点数。⑥胜负与循环：以分支地图逐层推进，敌方在回合开始时预告其行动、回合结束时执行（敌人不摆放骰子，仅少数例外）；战斗失败结束本局。地图行进同样由骰子决定——玩家掷骰选择分支路径。\n【必须实现】1. 有限的骰盘格与按上下左右判定的相邻关系，被占据的格不可用；2. ≥4 种骰子类型（攻击/格挡/治疗/增益/镜像/地形），并实现「增益骰加给范围内其他骰、但不被其他增益骰影响」与「地形骰被增益加强、增益不受地形加成」这两条不对称规则；3. 效果按从左到右顺序结算，摆位顺序改变结果；4. ≥5 种骰子属性，含留场衰减、整场保留、一次性移除、无费用、成长等；5. 每回合能量额度与重掷次数，费用不足拒摆；6. 敌人预告行动后于回合末执行；7. 同种子骰子点数序列与地图分支一致。\n【自由发挥】骰子与遗物种类、青蛙英雄与起始骰、骰面改造路径、地图主题与敌人种类、局外进程、盘面规模（形状、格子数量与扩展方式）不作限制，鼓励自行设计。",
+  "checklist": [
+   "摆放骰子消耗与其对应的费用，能量不足时该骰子不可摆放；未摆放的骰子留在手中不产生效果（状态一致性）",
+   "增益骰把自身点数加给范围内的其他骰子，同一次结算中被加成的攻击骰伤害相应提高；把增益骰移到不邻接任何骰子的位置后不再产生加成（状态一致性 + 对照）",
+   "两枚增益骰互相在范围内时，彼此不叠加加成；而地形骰在增益骰范围内时其加成被提高（不对称规则：状态一致性 + 对照）",
+   "镜像骰复制一定距离内的另一枚骰子的类型与点数；把被复制的骰子移出该距离后复制失效（状态一致性）",
+   "同一批骰子在两种不同摆放顺序下，结算结果不同：把增益骰摆在被加成的骰子左侧与右侧产生不同的最终数值（摆位顺序×结算核心断言）",
+   "带成长属性的骰子每次使用后点数或效果永久提高；带一次性移除属性的骰子使用后从本场牌库消失，同一场战斗中不再出现（状态一致性）"
+  ],
+  "hidden_checklist": [
+   "镜像骰与被复制骰子在同一次结算中互相引用时不产生无限递归，且复制到的是复制发生时刻的数值而非结算后的数值（循环引用的二阶情形，spec 未明说）",
+   "同时摆满盘面、多枚增益骰范围互相覆盖、地形骰逐回合衰减并发时，结算保持稳定，不出现同一枚骰子在一回合内被结算两次（规模与稳健）",
+   "盘面可用的格子被敌人全部占据或能量耗尽且手中骰子费用均不足时，系统有定义行为（跳过本回合或可判定停滞），不出现无法推进的死锁（退化局面）",
+   "暂停时结算与重掷次数冻结；同种子骰子点数序列与地图分支一致；重开新局后旧牌库、遗物与骰子属性不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（摆位顺序×结算核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "骰盘占用表：每格的骰子标识、类型、当前点数、已附加属性",
+   "手牌与牌库：未摆放的骰子列表、牌库剩余、弃牌堆",
+   "每回合状态：剩余能量、剩余重掷次数",
+   "敌人状态：已预告的行动与其目标",
+   "种子注入通道、玩家输入注入通道（摆放/移动骰子/重掷/结束回合）"
+  ],
+  "evidence": [
+   {
+    "claim": "官方数值：31 种骰子、142 件遗物、36 种药水、4 名青蛙英雄",
+    "source": "Steam 商店页（简体中文口径）",
+    "grade": "STORE"
+   },
+   {
+    "claim": "骰子按位置互相影响：紫色增益骰把点数加给相隔若干格的骰子，白色镜像骰复制相邻骰的能力",
+    "source": "Steam 商店页描述",
+    "grade": "STORE"
+   },
+   {
+    "claim": "增益骰加成范围为「等于自身点数」；镜像骰范围基础为 4；增益骰不受其他增益骰影响",
+    "source": "wiki",
+    "grade": "WIKI"
+   },
+   {
+    "claim": "地形骰会被增益骰加强，而增益骰不受地形加成影响",
+    "source": "wiki 明确写出这条不对称关系",
+    "grade": "WIKI"
+   },
+   {
+    "claim": "相邻按上下左右判定；效果按从左到右顺序结算，故摆放应体现流动方向",
+    "source": "wiki 与社区攻略",
+    "grade": "WIKI+GUIDE"
+   },
+   {
+    "claim": "骰子属性：留场衰减、整场保留、一次性移除、无费用、成长等；部分属性消耗特定资源购入",
+    "source": "wiki 与社区攻略",
+    "grade": "WIKI+GUIDE"
+   },
+   {
+    "claim": "敌人不摆放骰子，而是在回合开始预告行动、回合结束执行；恶魔蛙为例外",
+    "source": "wiki 与社区攻略",
+    "grade": "WIKI+GUIDE"
+   },
+   {
+    "claim": "地图行进同样由骰子决定：玩家掷最多四枚骰子来走分支路线",
+    "source": "开发者自述：dice decide your fate not only in combat, but also in moving through the world",
+    "grade": "DEV"
+   },
+   {
+    "claim": "棋盘几何为菱形骰盘",
+    "source": "源自 cases/ 原版 prompt；检索到菱形与 3×3 两种互斥说法，3×3 仅出自单一疑似内容农场页面",
+    "grade": "HELD",
+    "verify_priority": "highest"
+   },
+   {
+    "claim": "每放置 1 枚骰子消耗 1 行动点的规则",
+    "source": "源自 cases/ 原版 prompt；检索到两种互斥说法（面值即费用 vs 按骰子尺寸计费），且 D8 可能指难度而非骰型",
+    "grade": "HELD",
+    "verify_priority": "highest"
+   },
+   {
+    "claim": "盘面格被敌人占据导致不可用（敌人能用格子封你的摆位）",
+    "source": "社区攻略提及特定敌人会占据格子",
+    "grade": "GUIDE"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=骰盘摆位与相邻 × 骰子相互影响 × 结算顺序 × 骰子属性与费用 (4) | coupled_assertion=摆位顺序×结算 | tier_rationale=系统层完整但盘面规模有限，且概率与策略的配比接近对半，判 mid | ★重要=原版 prompt 写死的「菱形骰盘」与「每枚 1 行动点」两项均无可靠来源，本版已改为留白并标 HELD；prompt 只保留可证实的不对称规则与左到右结算 | 已删除=原版未见于任何来源的机制不写入 | 刻意留白=盘面形状与格数、每回合能量额度与费用换算、重掷次数、骰子与遗物数量",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_v1_batch2.json",
+  "source_meta": {
+   "name": "repro-cases-v1-batch2",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "note": "第二批 7 条。字段与 repro_cases_v1.json 完全一致。",
+   "provenance": "检索稿。机制信息来自商店页文案（经搜索索引或镜像转述，非逐字抓取实页）、官方 wiki、开发者日志、社区攻略与评测。未逐帧观看实况视频，无人实际游玩。",
+   "evidence_grades": "STORE / WIKI / DEV / GUIDE / REVIEW / INFER（出题人推断，无出处，优先核验）/ BADSOURCE（来源为疑似内容农场或外挂推广站，一律不可直接引用）/ REMOVED（曾误加，已删）/ HELD（因来源冲突而暂缓写入，待真人核验）",
+   "source_blacklist": [
+    {
+     "domain": "xmodhub.com",
+     "reason": "编造不存在于游戏内的公式与系统（回合制、GDP、税收滑条），目的是推广付费作弊客户端，对同一问题自相矛盾。全部内容不可引用。"
+    },
+    {
+     "domain": "games.gg",
+     "reason": "跨语言给出完全一致的精确格数与版本号，疑似 SEO 生成。改用 Hooded Horse 官方 wiki 与 Steam 官方手册。"
+    },
+    {
+     "domain": "cheatbook.de / chaptercheats.com",
+     "reason": "通用攻略文本或作弊工具推广，非编辑内容。"
+    },
+    {
+     "domain": "novaroma.org",
+     "reason": "同名不同物：真实世界的罗马重建主义组织，与游戏 Nova Roma 无关，检索时易误命中。"
+    }
+   ],
+   "authoritative_sources": {
+    "Nova Roma": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Nova_Roma/（含 /Citizens、/Infrastructure 子页）",
+     "Steam 官方手册（Ave Governor）: store.steampowered.com/manual/2426530"
+    ],
+    "Sandustry": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Sandustry/（Cloudflare 拦截，需人工访问）"
+    ],
+    "MENACE": [
+     "开发者日志 #7/#11/#13/#41/#42（Steam 公告，经镜像读取，逐字可用）",
+     "wiki.hoodedhorse.com/MENACE（Cloudflare 拦截）"
+    ],
+    "Pax Autocratica": [
+     "无官方 wiki（六次检索均为负结果）"
+    ]
+   },
+   "known_defects": [
+    "src_video 中 BV1wku962E7h 格式非法（BV 号不含小写字母），五次检索无结果，需人工从浏览器重新复制 URL",
+    "所有 [STORE] 引文均为搜索引擎或镜像转述，非逐字抓取实页；进论文前需人工复核并记录抓取日期",
+    "case repro_dieinthedungeon_2d_006 的棋盘几何与能量规则存在来源冲突，已按留白处理"
+   ]
+  }
+ },
+ {
+  "task_id": "repro_dreamcards_2d_020",
+  "repro_game": "Dreamcards（梦魇牌）| Soneka Games / Vsoo Games | Steam app 3726730 | 2026-08-19",
+  "src_video": "https://www.bilibili.com/video/BV19RtZ6ZEMh/",
+  "category": "Social & Tabletop",
+  "platform": "web",
+  "desc": "梦魇牌：敌人攻击的不是你的血条，是你的牌组 —— 怪物会抬高商店价格、缩小起手、让卡牌被遗忘；而你要在行动阶段滚出引擎、在购买阶段把它变成通关所需的那一种点数。",
+  "agent_ability": [
+   "C2",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C9",
+   "C11"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:social_tabletop",
+   "subtype:card_board",
+   "render:2d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】手绘 Roguelike 卡牌构筑：白天你重访自己的关系与记忆并把它们做成牌，夜里带着这套牌对抗内心的怪物。怪物不打你的血条，它打你的牌组本身。\n【核心机制】①昼夜双阶段：一局跨七个昼夜，白天构筑与购买，夜晚对战；白天做出的决定直接决定夜里可用的牌组，夜间的失败又改变次日的可选项。②回合两段式：每回合先进行行动阶段——打出卡牌循环牌组并累积想象点数；随后进入购买阶段——消耗想象点数购买新卡强化构筑，同时产出意识点数。意识点数是达成清醒梦的条件，也是击败梦魇的必要资源。③资源即引擎：基础动作（抽牌、获得行动、购买与扩张牌组、转化资源、重打牌）本身可以被放大与组合成引擎，卡牌的类型、所属角色策略、功能与印刷资源都是交互点；不同资源间可互相转化与回收。④卡牌分类：卡牌分角色、行动、自我、本我、罪疚、先天行动等类别，与母亲、父亲、挚友、恋人、兄弟姐妹、祖辈、自我等关系线各自提供不同的构筑基底，但可跨线混用。⑤怪物反击：内心怪物以多种形态介入，其手段包括抬高商店价格、缩小起手手牌、提高行动牌费用、强制遗忘卡牌、把新获得的牌直接丢入弃牌堆；这些干预叠加在构筑之上，且不设上限。⑥胜负与循环：在牌组被干预压垮前达成清醒梦并击败梦魇即为通关，反之失败并重开。\n【必须实现】1. 昼夜交替的双阶段进程，白天构筑结果直接决定夜间可用牌组；2. 每回合分行动阶段与购买阶段，购买阶段同时产出意识点数；3. 想象点数与意识点数的独立结算与各自用途；4. ≥5 类卡牌与≥6 条关系线，卡牌可跨线混用并产生交互；5. 怪物以多种形态干预牌组（改价、缩手牌、加费、遗忘、弃牌），干预实时反映到可用牌组；6. 达成清醒梦并击败梦魇判胜，牌组被压垮判负；7. 同种子牌序与商店进货一致。\n【自由发挥】卡牌美术与手绘风格、卡牌与关系线数量、贴纸自定义系统、原型进化方向、难度档位、无对白叙事的表现方式不作限制，鼓励自行设计。",
+  "checklist": [
+   "每回合按行动阶段→购买阶段的顺序推进，行动阶段产出的想象点数在购买阶段被消耗；点数不足时购买被拒绝（状态一致性 + 守恒）",
+   "购买阶段实际产出意识点数，其数值随购买行为累积；意识点数不足时无法达成清醒梦（状态一致性）",
+   "抽牌、获得行动、购买扩张、资源转化、重打这五类基础动作各自可被其他卡牌放大或组合，组合后的单回合产出显著高于单张卡牌之和（引擎组合核心断言）",
+   "不同关系线的卡牌可混用：一条关系线的资源产出确实可被另一条关系线消耗，跨线组合产生任一线单独都不具备的效果（状态一致性 + 对照）",
+   "怪物抬高商店价格后同一张卡的购买代价上升；缩小起手手牌后实际起手张数下降；被遗忘或弃置的牌不再出现在可用牌组中（状态一致性）",
+   "在牌组被干预压垮前达成清醒梦并击败梦魇判胜；牌组可用性降至无法推进时判负（胜负结算）"
+  ],
+  "hidden_checklist": [
+   "被怪物强制的弃牌或遗忘进入弃牌堆后，若存在可从弃牌堆取回的卡牌则应能被取回，且在取回后不重复触发其弃置时的效果（干预与回收的二阶交互，spec 未明说）",
+   "牌组规模接近上限、多资源种类同时产出、怪物多项干预并发时结算保持稳定，不出现资源为负或卡牌重复计数（规模与稳健）",
+   "起手被压缩至零张且行动阶段无牌可出时，进入可判定的停滞态而非死锁；资源全部耗尽时购买阶段可正常跳过（退化局面）",
+   "暂停时回合阶段推进、点数累积与怪物干预冻结；同种子牌序与商店进货一致；重开新局后旧牌组与已购卡不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 守恒"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（引擎组合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 胜负"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "牌组与手牌：卡牌列表、类别、所属关系线、印刷资源、费用修正",
+   "每回合阶段状态：当前处于行动阶段或购买阶段、本回合已产出想象点数与意识点数",
+   "资源池：各资源当前存量与转化流水",
+   "怪物状态：当前形态、已实施的干预类型与作用范围",
+   "进程状态：当前昼夜、难度档位、清醒梦达成条件进度",
+   "种子注入通道、玩家输入注入通道（出牌/购买/转化/重打）"
+  ],
+  "evidence": [
+   {
+    "claim": "一局跨七个昼夜，白天重访关系并构筑牌组、夜晚对抗内心怪物，目标是达成清醒梦",
+    "source": "官方 press release 与多家日文媒体",
+    "grade": "STORE+DEV"
+   },
+   {
+    "claim": "基础动作（抽牌、获得行动、购买扩张、资源转化、重打）本身可被放大与组合成引擎，不依赖毒/流血等常规状态效果",
+    "source": "press release 原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "卡牌的类型、所属角色策略、功能与印刷资源都是交互点",
+    "source": "日文媒体 gamebiz 描述",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "回合分 Action phase 与 Purchase phase；行动阶段循环牌组并累积 Imagination points，购买阶段消耗它强化构筑",
+    "source": "媒体描述（中文商店页口径）",
+    "grade": "REVIEW+STORE"
+   },
+   {
+    "claim": "购买阶段同时累积 Awareness/Consciousness points，用于达成清醒梦以击败梦魇",
+    "source": "媒体描述",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "怪物直接攻击牌组而非血条：抬高商店价格、缩小起手、提高行动牌费用、强制遗忘、把新牌直接弃置",
+    "source": "press release 与评测",
+    "grade": "DEV+REVIEW"
+   },
+   {
+    "claim": "卡牌分 Character / Action / Ego / Id / Guilt / Innate 等类别；关系线含母亲、父亲、挚友、恋人、兄弟姐妹、祖辈、自我",
+    "source": "日文媒体列举",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "100+ 张独特卡牌、六大策略系统可自由混用；怪物干预不设上限，设计意图是允许引擎滚到压倒性",
+    "source": "press release 与评测",
+    "grade": "DEV+REVIEW"
+   },
+   {
+    "claim": "十档难度、卡牌贴纸自定义、七种原型各有两个演化方向",
+    "source": "媒体列举",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "牌组规模上限的具体数值",
+    "source": "未见来源给出具体上限",
+    "grade": "INFER",
+    "verify_priority": "medium"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=昼夜双阶段 × 回合两段式与双点数 × 资源转化引擎 × 怪物牌组干预 (4) | coupled_assertion=引擎组合 | tier_rationale=资源转化引擎组合无上界且怪物干预不设限，判 ceiling | 注意=原 case 20「难度特质叠加/卡牌贴纸」在原作中确有其事（贴纸系统与多档难度已证实），本版据此保留并补入已证实的怪物干预系统 | 刻意留白=卡牌数量、点数数值、怪物干预强度、难度档位倍率",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_v1.json",
+  "source_meta": {
+   "name": "repro-cases-v1",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "provenance": "检索稿。机制信息来自 Steam 官方商店页文案、官方 wiki、社区攻略与评测转述；未逐帧观看实况视频，无人实际游玩。每条 case 的 evidence 用 [STORE] [WIKI] [GUIDE] [REVIEW] [DEV] [INFER] 标注来源等级，[INFER] 为出题人推断、无出处，是真人核验时优先检查项。",
+   "baseline_schema": "基线字段沿用 cases_150_platform.json 信封，新增 difficulty_tier / minimal_state_surface / evidence / checklist_detail / repro_game / src_video。",
+   "tier_policy": "本批 difficulty_tier 按原作实际机制强度重判（不复用 cases/ 原版的 18/18 mid）。口径：floor=2 个硬系统咬合；mid=3 个；ceiling=4 个或含高不确定性核心（连续物理模拟、确定性全量回放、无上界组合爆炸）。重判结果须经 pilot 实测校准。"
+  }
+ },
+ {
+  "task_id": "repro_esotericebb_2d_010b",
+  "repro_game": "Esoteric Ebb（奥秘消退）| Christoffer Bodegard / Raw Fury | Steam app 2057760 | 2026-03-03",
+  "src_video": "https://www.bilibili.com/video/BV1gnVAzCEnA/",
+  "category": "RPG",
+  "platform": "web",
+  "desc": "奥秘消退：生命值就是社交体力 —— 你在一场政治辩论里被羞辱到死，和在巷子里被砍死走的是同一条血条；而失败不是终点，是通往另一条分支的入口。",
+  "agent_ability": [
+   "C2",
+   "C4",
+   "C5",
+   "C7",
+   "C9",
+   "C11",
+   "C12"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:rpg",
+   "subtype:action_rpg",
+   "render:2d",
+   "tier:L5",
+   "incentive:single-player",
+   "cog:C2",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C9",
+   "cog:C11",
+   "cog:C12"
+  ],
+  "prompt": "【游戏】等距视角的调查式 CRPG：你是诺维克城的神职调查员，五天后就要举行第一次大选，而城里一间茶馆刚刚被炸。你要在有限的日子里查出真相——但你最大的风险不是被打死，是在一场辩论里被羞辱到死。\n【核心机制】①六项属性与检定：力量、敏捷、体质、智力、感知、魅力六分法，角色创建时以点数池分配且分配后不可重置；检定以二十面骰加属性调整值对抗难度值，早期难度集中在十余点、后期叙事检定可达三十点以上。属性值归零或低于要求时，对应的检定直接不可行而非降低成功概率。②生命值即社交体力：生命值同时充当心理承受力。跳落失败、盗窃失败、争执失败与被当众羞辱都会扣除生命值，扣除量与失败尝试次数相关；在政治辩论中被羞辱可以直接致死。整夜不休息会降低生命值并提高所有检定难度。③线索以幕后修正而非条目形式生效：与见证者对话不会生成可翻阅的线索列表，而是为后续的关键检定累积降低难度的修正——例如拿到某条物证给予较大减幅、另一位的证词给予较小减幅；这些修正不显示为清单，只体现在最终难度上。④内在声音与一致性：每一项属性都有一个与之冲突的声音人格，会在对话中主动插话打断；声音可提供的专属对话选项只在你保持人格一致性时出现——在激进的力量检定与鬼祟的敏捷检定之间反复横跳会被判定为不一致，从而锁住已承诺声音的选项。⑤掷骰失败的前进设计：失败不必然终止进程，多数检定失败会导向不同的分支与后果而非死路；同时游戏提供两条重投途径——消耗特定物品立即重投，或通过休息免费解锁重投。⑥任务树：任务日志、技能树与思维导图三合一，从一个中心向外生长的任务分支图；完成主要分支后该分支可以扎根，触发一场与自身属性人格的对话并从中选取一项专长，专长可同时生效的数量有限，但可自由替换。⑦胜负与循环：以五天的日程推进并在第六日的大选中收束；存在编号化的坏结局（如在不当时机跳入井中、或在谜题中接受某个选项），触发后本局结束。\n【必须实现】1. 六项属性的点数分配、不可重置，与二十面骰加调整值对抗难度值的检定流程；2. 生命值同时承受社交与物理扣除，羞辱类失败同样扣血且可致死，休息与不休息分别影响生命值与检定难度；3. 见证者与物证以降低后续检定难度的幕后修正生效，而非生成可读的线索清单；4. 每项属性对应一个会插话的声音人格，且声音专属选项受人格一致性约束；5. 检定失败导向不同分支而非一律死路，并提供消耗物品与休息两条重投途径；6. 任务树三合一且主要分支完成后可置入专长，专长数量有上限并可替换；7. 五日日程推进与第六日的大选收束，编号化坏结局的触发与结算；8. 同种子检定掷骰序列与分支结果一致。\n【自由发挥】职业与背景、法术与专长列表、同伴与关系、派系与政治、城区与地下城、战斗遭遇的数量与形态、美术与叙事风格不作限制，鼓励自行设计。",
+  "checklist": [
+   "属性在创建时以点数池分配且此后不可重置；检定以二十面骰加调整值对抗难度值，调整值变化时同一难度值的成功率随之改变（状态一致性）",
+   "跳落失败、盗窃失败与争执失败均扣除生命值，且同一动作的重复失败尝试继续扣血；生命值归零时角色死亡（状态一致性 + 对照）",
+   "辩论类遭遇中生命值可被扣至归零并致死，与物理伤害走同一条生命值（社交×生存耦合核心断言）",
+   "整夜不休息后生命值上限或当前值下降，且同一检定的难度值提高；休息后检定难度回落（对照实验式）",
+   "与不同见证者对话后，同一关键检定的实际难度值出现不同幅度的下降，且不生成可翻阅的线索条目；未与见证者对话时该检定维持原始难度（对照实验式）",
+   "某一属性对应的声音专属对话选项，在保持该属性行为一致的存档中可用，在反复切换两套属性行为的存档中不可用；检定失败后进入另一条分支而非一律终止，主要分支完成后可选入专长，专长同时生效数量达上限时需替换（一致性约束 + 胜负结算）"
+  ],
+  "hidden_checklist": [
+   "由线索累积的难度修正是否在重投后仍然保留——即在修正已生效的情况下重投，第二次检定应沿用已降低的难度值而不会重置为原始难度（修正持久性的二阶推论，spec 未明说）",
+   "单个存档内大量次数检定、多声音插话与任务分支并发时，修正累积与专长生效保持稳定，不出现同一修正被重复叠加或专长超出上限（规模与稳健）",
+   "在不当时机跳入井中或执行其他致命动作时进入编号化坏结局并结束本局，而非继续以零血运行；死局对话选项有定义行为（退化局面）",
+   "暂停或切出时不推进日程与检定；同种子掷骰序列与分支结果一致；重开新局后旧局的专长、线索修正与关系状态不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（社交×生存耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "合并断言（多对一）"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "六项属性当前值、点数池余量、背景聚焦余量",
+   "生命值当前值与上限、疲惫状态",
+   "线索修正台账：每条修正的来源与作用目标检定、当前累计减幅",
+   "声音一致性记录：各属性的行为计数与已承诺人格",
+   "任务树状态：已完成分支、已扎根分支、当前生效专长列表",
+   "日程：当前第几日、已消耗时间",
+   "种子注入通道、玩家输入注入通道（对话选择/检定执行/休息/移动）"
+  ],
+  "evidence": [
+   {
+    "claim": "六项属性为 D&D 式命名（力量/敏捷/体质/智力/感知/魅力），非三属性制",
+    "source": "Destructoid 属性解析与多份攻略一致",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "点数池 27 点、基础上限 15、另有 +2 熟练加值且可突破上限；分配后不可重置",
+    "source": "社区攻略",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "检定以 d20 + 调整值对抗难度值；早期难度约 15、后期叙事检定 30 以上；游戏第二房间存在一个刻意不可通过的 DC 33 感知检定作为反存档回溯教学",
+    "source": "社区攻略与开发者自述（I am your DM, trust me）",
+    "grade": "GUIDE+DEV"
+   },
+   {
+    "claim": "生命值同时充当心理承受力；跳落失败、盗窃失败、争执失败与羞辱均扣血；政治辩论中的羞辱可直接致死",
+    "source": "社区攻略原文：Getting humiliated in a political debate can kill you outright",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "跳落失败扣 1d4 生命值，同一动作的每次失败或放弃追加 1d4",
+    "source": "Neoseeker 流程攻略给出具体骰值",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "整夜不休息降低生命值并提高检定难度",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "线索不生成可翻阅的清单，而是作为隐形修饰符降低关键检定难度（如金链 -5、Viira 蓝焰 -2、Arn 蓝焰 -3）",
+    "source": "Neoseeker 茶馆调查攻略，给出具体减幅",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "每项属性对应一个会主动插话的冲突声音人格；名称如 The Nationalist/The Rebel/The Survivor/The Arcanist/The Empath/The Politician",
+    "source": "Steam 商店页与社区攻略",
+    "grade": "STORE+GUIDE"
+   },
+   {
+    "claim": "声音专属对话选项仅在保持人格一致性时出现，反复横跳会被锁出",
+    "source": "两份攻略一致描述，但无一手来源确认",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "属性推至 17 可解锁永久经验加成与专属声音选项",
+    "source": "单一攻略来源",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "失败常导向不同分支而非死路，是官方宣传的设计主张",
+    "source": "Steam 商店页原文：in true TTRPG fashion, failure can often be way more interesting",
+    "grade": "STORE"
+   },
+   {
+    "claim": "重投资源为 Shards of Jor（消耗物品立即重投），免费替代途径为休息；数量由物品持有量决定而非固定次数",
+    "source": "官方 wiki 与社区攻略",
+    "grade": "WIKI+GUIDE"
+   },
+   {
+    "claim": "智力决定可准备的法术数量、感知决定法术是否命中——纯智力加点会导致命中率极低",
+    "source": "社区攻略明确表述",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "任务树为任务日志/技能树/思维导图三合一，从中心向外生长；完成主要分支可扎根并选取专长",
+    "source": "Steam 商店页与开发者 Steam 公告",
+    "grade": "STORE+DEV"
+   },
+   {
+    "claim": "专长可同时生效四个、可自由替换；发售时约 51 项专长",
+    "source": "wiki 与评测；51 为单一来源",
+    "grade": "WIKI+REVIEW",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "五日日程加第六日大选；存在编号化坏结局（至少到 13 号）",
+    "source": "社区攻略与成就数据",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "同伴 Snell（哥布林）与可攻略角色 Ettir；同伴好感是否影响结局未记录",
+    "source": "评测与 wiki",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "存在回合制遭遇但为小体量且常可经对话规避；战斗前有对话阶段且其中的成功检定可降低敌人难度值",
+    "source": "Steam 商店页特性与社区攻略",
+    "grade": "STORE+GUIDE"
+   },
+   {
+    "claim": "原 case 10 的「六项核心属性 + 熟练度点数池 + 20 面骰对 DC」表述",
+    "source": "cases/ 原版 prompt；经核对与检索结果一致，本版予以保留并补入已证实的其余系统",
+    "grade": "STORE+GUIDE"
+   },
+   {
+    "claim": "「Intellect / Psyche / Physique 三属性」与「divine intervention 神授干预」两项",
+    "source": "出题人在派发检索任务时提出的假设，经核实不存在于任何来源；已从本版删除",
+    "grade": "REMOVED"
+   },
+   {
+    "claim": "等级上限为 1 至 6 级",
+    "source": "仅见于一份较旧的商店文案转述，未获确认",
+    "grade": "GUIDE",
+    "verify_priority": "medium"
+   },
+   {
+    "claim": "民族主义政党名称",
+    "source": "三个来源分别给出 Party of Norvik / Urth Party / Party of Urth，互相矛盾，本版未写入",
+    "grade": "HELD"
+   }
+  ],
+  "notes": "source=steam_repro | 对应视频 BV1gnVAzCEnA，经 api.bilibili.com 验证为《奥秘消退》试玩实况（2025-05-04，238 播放）；注意该视频早于发售且覆盖 Demo，机制可能已过时 | hard_systems=属性与检定 x 生命值双重身份 x 线索幕后修正 x 声音一致性与专长 (4) | coupled_assertion=社交x生存（羞辱可致死，生命值非战斗专属） | tier_rationale=4 硬系统且核心为失败即分支的非二元结果空间，判 ceiling | 与原 case 10 的关系=原版六属性/点数池/20面骰对DC 经核实成立予以保留，另两项假设不存在已删除并记录 | 全集价值=唯一的失败前进范式 + 生命值双重用途 | 刻意留白=属性数值与点数池细节、专长数量与效果、日程长度、坏结局数量 | gate 合并明细=声音一致性约束与专长/分支结算合并为一条",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_v1_batch2.json",
+  "source_meta": {
+   "name": "repro-cases-v1-batch2",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "note": "第二批 7 条。字段与 repro_cases_v1.json 完全一致。",
+   "provenance": "检索稿。机制信息来自商店页文案（经搜索索引或镜像转述，非逐字抓取实页）、官方 wiki、开发者日志、社区攻略与评测。未逐帧观看实况视频，无人实际游玩。",
+   "evidence_grades": "STORE / WIKI / DEV / GUIDE / REVIEW / INFER（出题人推断，无出处，优先核验）/ BADSOURCE（来源为疑似内容农场或外挂推广站，一律不可直接引用）/ REMOVED（曾误加，已删）/ HELD（因来源冲突而暂缓写入，待真人核验）",
+   "source_blacklist": [
+    {
+     "domain": "xmodhub.com",
+     "reason": "编造不存在于游戏内的公式与系统（回合制、GDP、税收滑条），目的是推广付费作弊客户端，对同一问题自相矛盾。全部内容不可引用。"
+    },
+    {
+     "domain": "games.gg",
+     "reason": "跨语言给出完全一致的精确格数与版本号，疑似 SEO 生成。改用 Hooded Horse 官方 wiki 与 Steam 官方手册。"
+    },
+    {
+     "domain": "cheatbook.de / chaptercheats.com",
+     "reason": "通用攻略文本或作弊工具推广，非编辑内容。"
+    },
+    {
+     "domain": "novaroma.org",
+     "reason": "同名不同物：真实世界的罗马重建主义组织，与游戏 Nova Roma 无关，检索时易误命中。"
+    }
+   ],
+   "authoritative_sources": {
+    "Nova Roma": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Nova_Roma/（含 /Citizens、/Infrastructure 子页）",
+     "Steam 官方手册（Ave Governor）: store.steampowered.com/manual/2426530"
+    ],
+    "Sandustry": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Sandustry/（Cloudflare 拦截，需人工访问）"
+    ],
+    "MENACE": [
+     "开发者日志 #7/#11/#13/#41/#42（Steam 公告，经镜像读取，逐字可用）",
+     "wiki.hoodedhorse.com/MENACE（Cloudflare 拦截）"
+    ],
+    "Pax Autocratica": [
+     "无官方 wiki（六次检索均为负结果）"
+    ]
+   },
+   "known_defects": [
+    "src_video 中 BV1wku962E7h 格式非法（BV 号不含小写字母），五次检索无结果，需人工从浏览器重新复制 URL",
+    "所有 [STORE] 引文均为搜索引擎或镜像转述，非逐字抓取实页；进论文前需人工复核并记录抓取日期",
+    "case repro_dieinthedungeon_2d_006 的棋盘几何与能量规则存在来源冲突，已按留白处理"
+   ]
+  }
+ },
+ {
+  "task_id": "repro_godsofsand_2d_018",
+  "repro_game": "Gods of Sand | Achenar Studios | Steam app 1431230 | EA 2022-02-07 / 1.0 2026-04-14",
+  "src_video": "https://www.bilibili.com/video/BV18Y4y1i71u/",
+  "category": "RPG",
+  "platform": "web",
+  "desc": "沙神：经营与战斗共用同一套账 —— 角斗士既是战斗单位也是资产，他在竞技场里的死亡会抹掉你投在他身上的全部金币；而每周固定支出让现金流和训练进度始终互相挤压。",
+  "agent_ability": [
+   "C2",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C9",
+   "C11"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L5",
+  "label": [
+   "genre:rpg",
+   "subtype:tactics_rpg",
+   "render:2d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】像素角斗士学校经营：你继承一座废弃的角斗场，靠派角斗士打比赛赚钱、再把钱投回训练与装备。角斗士不只是战斗单位，还是你资产负债表上的一项——他死了，投在他身上的钱一起消失。\n【核心机制】①双层循环：竞技场层为回合制战斗，学校层为资金与人员经营；两层的资源互相转化——比赛获胜换金币与声望，金币用于招募、训练、购置设施与装备，设施与装备再提升比赛胜率。②每周固定成本：运营按周结算固定支出，金币不足以支付时需卖掉资产（例如角斗士）以避免更大损失，形成持续现金流压力。③开放配装：任何技能、护甲与武器可装配到任何角斗士，没有职业限制；主动技能与被动技能分列两侧，被动自动触发，主动消耗回合内资源。④战斗资源与死亡：战斗中有生命与耐力两类损耗，耐力限制连续使用主动技能；属性与装备共同决定命中与伤害；首场之后的比赛可造成永久死亡，死亡者已投入的金币不会返还，身上装备回到库存。⑤装备与消耗品：商店按日刷新有限库存，高级装备在后期区域才出现；消耗品在战斗中可改变局势。⑥胜负与循环：赢下比赛与锦标赛推进声望与解锁更高等级竞技场，最终目标为征服塔；资金链断裂导致无法继续经营即为失败。\n【必须实现】1. 回合制战斗含生命与耐力两类资源，耐力限制主动技能使用；2. 主动技能与被动技能分列，被动自动触发；3. 任意角斗士可装配任意技能与装备，无职业限制；4. 商店按日刷新且单日库存有限、高级装备按进度解锁；5. 每周固定成本结算，金币不足时可处置资产；6. 角斗士永久死亡后其投入不返还、装备回库；7. 同种子商店刷新与对手生成一致。\n【自由发挥】角斗士数量与外貌、竞技场与地区主题、技能与装备种类、声望与派系、塔的推进节奏、美术风格不作限制，鼓励自行设计。",
+  "checklist": [
+   "同一角斗士装配不同技能与装备后，战斗中的命中或伤害结果随之改变；主动技能使用消耗耐力，耐力不足时该技能不可使用（状态一致性 + 对照）",
+   "被动技能在满足触发条件时自动生效，不占用回合行动；未装配该被动时同一条件下不出现该效果（状态一致性 + 对照）",
+   "任意角斗士可装配任意武器与护甲，不存在因职业或等级被拒绝的装配；装配结果实时反映到面板数值（状态一致性）",
+   "商店在同一游戏日内不重复上架同一件商品，单日可购数量有上限；进入更高等级区域后出现的装备档位高于早期区域（统计断言）",
+   "战斗胜出后金币与声望增加；每周结算时固定支出实际扣除，金币不足时须处置资产（如卖出角斗士）方能继续，不处置则经营进入失败态（经营×资产耦合核心断言）",
+   "角斗士在允许永久死亡的比赛中阵亡后，其已投入的金币不返还、装备回到库存、该角斗士不再出现在名册；击败塔的最终目标即通关（胜负结算）"
+  ],
+  "hidden_checklist": [
+   "卖出角斗士时其身上已装配的装备回到库存而非随人消失，且卖出所得与已投入成本不相等（资产处置的二阶后果，spec 未明说）",
+   "名册接近上限、库存装备接近上限且连续多周结算时，资金与库存数值保持稳定，不出现负数或溢出（规模与稳健）",
+   "全部角斗士阵亡且无力招募时，经营进入可判定的失败态而非可无限空转；无可用角斗士时比赛选项被拒绝（退化局面）",
+   "暂停或结算瞬间不出现重复扣款或重复结算；同种子商店刷新与对手生成一致；重开新局后旧存档资产不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "统计断言"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（经营×资产耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 胜负"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "名册：每个角斗士的属性、已装配技能（主动/被动）、装备、生命与耐力上限",
+   "资金与库存：金币余额、库存装备列表、设施解锁状态",
+   "周结算记录：固定支出额、实际扣款时刻、处置资产记录",
+   "商店状态：当日已上架商品与剩余可购数量",
+   "种子注入通道、玩家输入注入通道（训练/装配/比赛/购买/处置）"
+  ],
+  "evidence": [
+   {
+    "claim": "角斗士经营 + 回合制战斗，自述为 inspired by the Swords and Sandals series",
+    "source": "Steam 商店页原文",
+    "grade": "STORE"
+   },
+   {
+    "claim": "任何技能、护甲或武器可被任何角斗士使用，无职业锁",
+    "source": "商店页：any skill, armor, or weapon can be used by any gladiator",
+    "grade": "STORE"
+   },
+   {
+    "claim": "技能菜单左侧为每回合主动技能、右侧为自动触发的被动",
+    "source": "社区攻略明确写出",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "战斗指令含攻击、进退、用技能与用道具；生命归零结束比赛，输掉可致角斗士死亡",
+    "source": "日文实机博客描述",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "首场竞技场之后角斗士可永久死亡，已投入金币随之损失（装备保留在库存）",
+    "source": "社区攻略：perma-death wipes the coin invested in them (equipped items stay in inventory)",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "商店每日限购（约 5 件护甲、3 件武器），同一日不重复上架同一件商品；第二座竞技场后出现更强护甲",
+    "source": "社区攻略具体数字",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "每周有固定支出；若无法支付，卖掉角斗士可能比损失整队更好",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "合约板早期给钱但回报慢且不给角斗士经验；交通升级满可在 1 天内抵达竞技场",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "暴击倍率 1.5→1.6、Weak Point 2.5→2.2、Crack Armor 破甲 10%→33%、集中冷却 8→15 且加成 20%→50%",
+    "source": "0.4 版补丁说明（社区转述）",
+    "grade": "DEV"
+   },
+   {
+    "claim": "战斗含耐力资源且耐力限制连续使用主动技能",
+    "source": "源自 cases/ 原版 prompt 与常见同类设计，补丁说明未提及耐力条",
+    "grade": "INFER",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "声望作为独立数值驱动解锁",
+    "source": "未见来源记录 reputation 数值；可见的进程标记为竞技场顺序解锁与塔",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=回合制战斗(生命/耐力/主被动) × 开放配装 × 商店与装备进程 × 周结算经营 (4) | coupled_assertion=经营×资产 | tier_rationale=4 硬系统但各层为经典设计，暂判 mid | 注意=原 case 18「初始 100 金币/战败受伤倒计时」未见来源，本版替换为已证实的永久死亡与周结算 | 刻意留白=初始资金、技能与装备数值、周成本、名册上限",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_v1.json",
+  "source_meta": {
+   "name": "repro-cases-v1",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "provenance": "检索稿。机制信息来自 Steam 官方商店页文案、官方 wiki、社区攻略与评测转述；未逐帧观看实况视频，无人实际游玩。每条 case 的 evidence 用 [STORE] [WIKI] [GUIDE] [REVIEW] [DEV] [INFER] 标注来源等级，[INFER] 为出题人推断、无出处，是真人核验时优先检查项。",
+   "baseline_schema": "基线字段沿用 cases_150_platform.json 信封，新增 difficulty_tier / minimal_state_surface / evidence / checklist_detail / repro_game / src_video。",
+   "tier_policy": "本批 difficulty_tier 按原作实际机制强度重判（不复用 cases/ 原版的 18/18 mid）。口径：floor=2 个硬系统咬合；mid=3 个；ceiling=4 个或含高不确定性核心（连续物理模拟、确定性全量回放、无上界组合爆炸）。重判结果须经 pilot 实测校准。"
+  }
+ },
+ {
+  "task_id": "repro_menace_3d_009",
+  "repro_game": "MENACE | Overhype Studios / Hooded Horse | Steam app 2432860 | EA 2026-02-05",
+  "src_video": "https://www.bilibili.com/video/BV1n8PjzrEZD/",
+  "category": "Strategy",
+  "platform": "web",
+  "desc": "MENACE：压制会溅到隔壁，而且越被压制越打不痛 —— 每发子弹无论是否命中都会压制落点周围，却也让对方因被迫伏地而更抗打；同时全场没有警戒射击，你只能靠走位互相掩护。",
+  "agent_ability": [
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C9",
+   "C11"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:strategy",
+   "subtype:turn_based_4x",
+   "render:3d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】回合制战术 RPG：你带一支陆战队与雇佣兵在边疆星系作战。这里的战斗不靠警戒射击，而靠火力压制与走位——每一发打出去的子弹都在改变对方的行动能力，哪怕它没打中。\n【核心机制】①行动点经济：每个单位每回合拥有行动点，被压制时回合开始时行动点减少；使用技能、移动、转向、进入部署姿态各自消耗行动点，车辆转向同样消耗行动点而步兵不用。重武器消耗高额行动点且一回合内不可使用两次。②压制三层状态：单位在未受影响、被压制、被钉死三态之间迁移。被压制的单位行动点与命中率大幅下降；被钉死的单位被迫伏地、失去全部行动点、视野缩至一格。压制按每发子弹施加，射速高的武器压制量更大；掩体与重甲降低受到的压制；目标的纪律属性直接按比例削减压制；部分压制会溅射到目标格的**相邻格**，**不论那格上是敌人还是友军**。压制在每回合结束时自动衰减一部分。③反直觉耦合：一个单位被压制得越深，它受到的伤害反而越低——因为其成员被迫蹲伏或伏地。因此对同一目标的正确处理顺序是先射击造成伤害、再射击施加压制，而非反过来。④士气三态：未受影响、动摇、溃逃。动摇的单位命中率与行动点下降且在战斗中最后行动；溃逃的单位失去控制并尽可能远离敌人。士气与小队长的状态相关。⑤姿态与情报：单位可进入部署姿态以获得命中、防御、减伤与隐蔽加成，但移动前必须先站起；部分装备仅在部署姿态下可用。任务简报可提供情报，但敌情在执行中持续变化。⑥永久损失与战役层：小队长与其小队可被永久消灭；任何一次行动都不是单一战场，而是含分支的多任务链，玩家在其中的选择影响当地派系好感与可获得的支援；黑市与战利品是装备的来源。⑦胜负与循环：完成行动链推进战役，小队全灭或关键小队长阵亡造成不可逆损失。\n【必须实现】1. 行动点经济：技能、移动、转向、进出部署姿态各有消耗，车辆转向额外消耗行动点；2. 压制三态迁移，被压制者行动点与命中下降、被钉死者被迫伏地且视野缩至一格；3. 压制按每发施加、受射速影响、被掩体与纪律比例削减，并在回合末衰减；4. 压制按比例溅射到目标格的相邻格且不分敌我；5. 被压制程度越高受到的伤害越低（反向耦合）；6. 士气三态与溃逃后的失控行为；7. 小队长永久损失与含分支的多任务行动链；8. 同种子战斗地图与任务分支一致。\n【自由发挥】兵种与载具、武器与专精、装备与配件、地形与天气、星球与生物群系、派系与好感、角色背景与小队搭配不作限制，鼓励自行设计。",
+  "checklist": [
+   "每单位每回合拥有行动点，使用技能、移动、转向与进出部署姿态各自扣除对应量；行动点不足时该操作被拒绝；车辆转向扣除行动点而步兵转向不扣（状态一致性 + 对照）",
+   "重武器消耗高额行动点且在同一回合内无法使用第二次；轻武器可在一回合内多次使用（状态一致性）",
+   "压制按每发子弹施加：同等时间内射速更高的武器对同一目标造成的压制量更大；同一目标处于掩体后或穿着重甲时受到的压制更低；纪律更高的单位受到的压制按比例减少（对照实验式 + 统计断言）",
+   "射击命中点旁边的相邻格同样获得部分压制，且该格上的友军单位同样被压制（不分敌我的溅射：状态一致性）",
+   "对同一目标连续射击时，先前已被压制的目标在同一发子弹下受到的伤害低于未压制时；未压制目标受同一发子弹的伤害更高（压制→减伤反向耦合核心断言）",
+   "被钉死的单位被迫伏地、失去全部行动点且视野缩至一格，只能以极慢速度爬行；转移到被压制态后行动点部分恢复；回合结束时压制自动衰减（状态一致性）；小队长阵亡后其小队进入不可恢复的损失状态；完成一条行动链推进战役，分支选择改变当地派系好感（胜负结算）"
+  ],
+  "hidden_checklist": [
+   "对射程边缘或误伤的友军开火时，落在其上或相邻格的子弹同样对其施加压制，而按 prompt 只写了「不分敌我」——即压制是位置效果而非意图效果，己方火力推进时须自行规避（溅射逻辑的二阶推论，spec 未明说压制与命中判定无关）",
+   "大规模交战中多小队、多载具、天气效果与压制衰减同时结算时保持稳定，不出现同一单位在一回合内被重复施加或重复衰减压制（规模与稳健）",
+   "单位被钉死且周围无可移动格、或行动点被压制至零时，系统有定义行为（原地待命或可判定停滞），不出现无法结束回合的死锁（退化局面）",
+   "暂停时行动点、压制衰减与士气结算冻结；同种子战斗地图与任务分支一致；重开新局后旧战役的角色、装备与好感不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式 + 统计断言"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（压制→减伤反向耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "合并断言（多对一）"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "每单位：当前行动点、本回合已执行动作、压制累积量、士气状态、姿态、位置与视野范围",
+   "每格压制值（用于验证相邻格溅射）",
+   "载具：类型、表面通行代价、转向消耗记录",
+   "战役层：小队长存活状态、派系好感、当前行动链进度与分支选择",
+   "种子注入通道、玩家输入注入通道（移动/转向/射击/使用技能/切换姿态/结束回合）"
+  ],
+  "evidence": [
+   {
+    "claim": "每单位每回合 100 行动点；被压制时回合开始少 30 点",
+    "source": "开发者日志 #11 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "典型技能消耗 40 行动点；重武器约 60 点且一回合不能使用两次",
+    "source": "开发者日志 #11 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "移动消耗行动点，数值取决于移动类型与地表；轮式通常比履带式每格更省，但某些地表轮式不可通行；车辆转向需行动点而步兵不需要",
+    "source": "开发者日志 #11 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "压制三态：未受影响 / 被压制 / 被钉死。被压制者 −30 行动点、−50% 命中；被钉死者被迫伏地、失去全部行动点、视野缩至一格",
+    "source": "开发者日志 #7 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "压制按每发施加，射速高的武器压制更多；掩体与重甲降低压制；纪律按 (100 − 纪律)% 比例削减压制",
+    "source": "开发者日志 #7 与 #13 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "部分压制会施加到相邻格，而不仅是目标格",
+    "source": "开发者日志 #7 逐字原文：A portion of the suppression also gets applied to neighbouring tiles",
+    "grade": "DEV"
+   },
+   {
+    "claim": "压制每回合结束时自动减少 1/3",
+    "source": "开发者日志 #7 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "被压制越深受到伤害越低，因成员被迫伏地；因此应先造成伤害再施加压制",
+    "source": "开发者日志 #7 逐字原文，开发者亲自写出的反直觉耦合",
+    "grade": "DEV"
+   },
+   {
+    "claim": "每发子弹无论是否命中都会对落点相邻的小队造成压制，不分敌我",
+    "source": "Steam 商店页原文：whether they were the intended target or not, and whether friend or foe",
+    "grade": "STORE"
+   },
+   {
+    "claim": "压制带来的姿态改变是强制的，不是玩家或 AI 的选择",
+    "source": "开发者日志 #7 逐字原文",
+    "grade": "DEV"
+   },
+   {
+    "claim": "士气三态：未受影响 / 动摇（命中与行动点 −20% 且最后行动）/ 溃逃（失去控制、远离敌人）",
+    "source": "开发者日志 #13（报告在此处截断，逃逸态的完整规则未取到）",
+    "grade": "DEV"
+   },
+   {
+    "claim": "刻意没有 overwatch 警戒射击系统；Counter Strike 是被攻击时的一次反击而非预备射击扇区",
+    "source": "社区攻略与 Steam 讨论帖；开发者理由为 Discord 转述，非一手书面声明",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "同一次行动含分支多任务链，选择影响派系好感与可得支援；小队长与小队的永久损失",
+    "source": "Steam 商店页原文",
+    "grade": "STORE"
+   },
+   {
+    "claim": "车辆免疫压制",
+    "source": "wiki 与攻略推断，未见明确的「免疫」表述",
+    "grade": "INFER",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "被钉死单位只能爬行两格且不能跨越半掩体",
+    "source": "wiki（经搜索索引读取）",
+    "grade": "WIKI"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=行动点 × 压制三态与溅射 × 士气 × 战役分支与永久损失 (4) | coupled_assertion=压制→减伤（开发者日志原文，反向耦合，价值高） | tier_rationale=压制与行动的互相改写构成高不确定性核心，且无警戒射击使防守只能靠走位，判 ceiling | ★红线=原作刻意取消 overwatch，本 case 未写入任何警戒射击要求，加深时不可往该方向走 | 待补=开发者日志 #13 的溃逃态完整规则因检索报告截断未取到 | 刻意留白=技能与载具数值、地形表、行动点上限、地图尺寸 | gate 合并明细=士气三态与溃逃失控（本 case 未写入，因检索报告在开发者日志 #13 处截断，溃逃态完整规则未取到）",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.3D_eval.Eval3DScenario.eval",
+  "source_file": "repro_cases_v1_batch2.json",
+  "source_meta": {
+   "name": "repro-cases-v1-batch2",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "note": "第二批 7 条。字段与 repro_cases_v1.json 完全一致。",
+   "provenance": "检索稿。机制信息来自商店页文案（经搜索索引或镜像转述，非逐字抓取实页）、官方 wiki、开发者日志、社区攻略与评测。未逐帧观看实况视频，无人实际游玩。",
+   "evidence_grades": "STORE / WIKI / DEV / GUIDE / REVIEW / INFER（出题人推断，无出处，优先核验）/ BADSOURCE（来源为疑似内容农场或外挂推广站，一律不可直接引用）/ REMOVED（曾误加，已删）/ HELD（因来源冲突而暂缓写入，待真人核验）",
+   "source_blacklist": [
+    {
+     "domain": "xmodhub.com",
+     "reason": "编造不存在于游戏内的公式与系统（回合制、GDP、税收滑条），目的是推广付费作弊客户端，对同一问题自相矛盾。全部内容不可引用。"
+    },
+    {
+     "domain": "games.gg",
+     "reason": "跨语言给出完全一致的精确格数与版本号，疑似 SEO 生成。改用 Hooded Horse 官方 wiki 与 Steam 官方手册。"
+    },
+    {
+     "domain": "cheatbook.de / chaptercheats.com",
+     "reason": "通用攻略文本或作弊工具推广，非编辑内容。"
+    },
+    {
+     "domain": "novaroma.org",
+     "reason": "同名不同物：真实世界的罗马重建主义组织，与游戏 Nova Roma 无关，检索时易误命中。"
+    }
+   ],
+   "authoritative_sources": {
+    "Nova Roma": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Nova_Roma/（含 /Citizens、/Infrastructure 子页）",
+     "Steam 官方手册（Ave Governor）: store.steampowered.com/manual/2426530"
+    ],
+    "Sandustry": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Sandustry/（Cloudflare 拦截，需人工访问）"
+    ],
+    "MENACE": [
+     "开发者日志 #7/#11/#13/#41/#42（Steam 公告，经镜像读取，逐字可用）",
+     "wiki.hoodedhorse.com/MENACE（Cloudflare 拦截）"
+    ],
+    "Pax Autocratica": [
+     "无官方 wiki（六次检索均为负结果）"
+    ]
+   },
+   "known_defects": [
+    "src_video 中 BV1wku962E7h 格式非法（BV 号不含小写字母），五次检索无结果，需人工从浏览器重新复制 URL",
+    "所有 [STORE] 引文均为搜索引擎或镜像转述，非逐字抓取实页；进论文前需人工复核并记录抓取日期",
+    "case repro_dieinthedungeon_2d_006 的棋盘几何与能量规则存在来源冲突，已按留白处理"
+   ]
+  }
+ },
+ {
+  "task_id": "repro_novaroma_3d_007",
+  "repro_game": "Nova Roma（罗马之城）| Lion Shield / Hooded Horse | Steam app 2426530 | EA 2026-03-26",
+  "src_video": "https://www.bilibili.com/video/BV1NBAuzFERo/",
+  "category": "Simulation & Sandbox",
+  "platform": "web",
+  "desc": "罗马之城：水往低处流，而你的城市在水下游 —— 引水渠必须靠重力输水，取水口要低于水面却高于城区，一座水塔不能给另一座水塔供水；同时水覆盖范围还决定火灾损失。",
+  "agent_ability": [
+   "C3",
+   "C4",
+   "C7",
+   "C8",
+   "C9",
+   "C11"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L5",
+  "label": [
+   "genre:simulation_sandbox",
+   "subtype:city_management",
+   "render:3d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C3",
+   "cog:C4",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】罗马城建经营：帝国衰亡后，你带一小批市民寻找新地建立罗马之城。这里的核心不是堆建筑，而是把水从山上引到城里——水靠重力走，你的引水渠坡度必须成立，而水既养活城区也决定火灾烧到什么程度。\n【核心机制】①水文与地形改造：河流自山地下行、沿最小阻力路径流动；玩家可抬升或降低地形来筑坝、灌溉，但改造会改变河道与水位，可能淹掉自己的农田。多雨时河流可漫过堤岸。②重力输水链：取水口必须位于水面之下、但其高度必须高于城区，水才能靠重力下行；引水渠放置时会显示坡度，坡度不当则无法建造。水库用于缓冲季节变化并与分配环节相连。**一座水塔不能给另一座水塔供水**，每个街区必须由主渠或分水支线直接供给。水塔显示流入量与流出量，流入不足则其覆盖范围内的喷泉、浴场与大型公寓停止运作。③水与城市的多重耦合：水用于居住、卫生、农业与工业冷却；水的覆盖范围同时降低其内建筑的火灾损失；引水渠可跨路或架在路上，但不可架在桥上。④市民与劳动力：市民不走抽象的层级晋升，全部计入同一人口池，职业分配通过在一个集中的职业面板中**拖动优先级**完成；人口上限等于床位数，增长来自乘船抵达的移民，其去留取决于幸福度。市民走真实路径，通勤过远会导致市民回家时处于疲惫状态，进而在工作场所产生产能惩罚。⑤生产与运输：原料开采→加工→运输，**没有任何东西瞬移**，所有货物由搬运者逐格搬运，骡车单次运量与人力不同；仓储按货物类型过滤。⑥宗教与科技：神殿必须奉献给特定神祇，从而开启神任务队列；完成任务获得恩宠，恩宠是解锁新建筑与作物类型的唯一货币而非金币。神殿按辐射范围为周边提供加成（如某神在 5 格内提供幸福度），神祇有荣誉等级，低于期望值会降下诅咒，诅咒可与洪水、瘟疫、干旱、火灾叠加。⑦胜负与循环：无固定胜利画面；水供应失败会使市民在短时间内弃屋离开，人口流失殆尽即实质失败。\n【必须实现】1. 河流沿最小阻力路径流动，地形改造改变河道与水位并可导致漫堤；2. 取水口的水位与高度双重约束与坡度校验，水库与分水支线构成的分配链，且水塔不可串联；3. 水塔流入/流出读数与覆盖范围内的用水建筑可用性联动；4. 水覆盖范围降低其内建筑的火灾损失；5. 市民走真实路径，通勤时长导致疲惫并转化为工作场所产能惩罚；6. 人口上限等于床位数、移民去留由幸福度决定；7. 神殿开启神任务、恩宠作为解锁新建筑与作物的唯一货币；8. 同种子地图生成与神任务序列一致。\n【自由发挥】建筑与生产链数量、神祇与诅咒表现、纪念碑（竞技场/万神殿/灯塔）的解锁与效果、军事与入侵、贸易与港口、地图规模与模式不作限制，鼓励自行设计。",
+  "checklist": [
+   "河流自山地下行并沿最小阻力路径流动；改变地形后河道随之改向，抬升某处可使上游水位上升并漫过堤岸（状态一致性）",
+   "取水口低于水面但高于城区时可建渠并靠重力输水；把取水口降到城区高度以下或坡度超限时无法建成（状态一致性 + 对照）",
+   "两座水塔直接相连时下游水塔得不到有效供水；由主渠或分水支线直接供给后，同一街区的用水建筑恢复运作（水塔不可串联：对照实验式）",
+   "水塔的流入量低于流出量时，其覆盖范围内的用水建筑停止运作；提高上游供给后恢复（守恒断言 + 状态一致性）",
+   "同一栋建筑位于水覆盖范围内与范围外两种工况下，同等火情造成的损失前者显著更低（水×火灾耦合核心断言）",
+   "水塔的流入量低于流出量时，其覆盖范围内的用水建筑停止运作；提高上游供给后恢复；通勤路径显著变长的市民回家后处于疲惫状态，其工作场所产出低于通勤短的对照组（守恒断言 + 对照实验式）；无床位时人口不增长；提供空床位且幸福度为正时移民乘船抵达并定居；幸福度转负且持续较久时市民弃屋离开（胜负结算）"
+  ],
+  "hidden_checklist": [
+   "玩家改道河流导致原本依水而建的城区失去水位或反被淹没时，受影响建筑的用水与火灾加成同步失效，而非保留旧状态（地形改造的二阶后果，spec 只说改道会改变河道）",
+   "人口上千、通勤路径、火灾蔓延与水分配同时活跃时连续运行 60 秒保持稳定，不出现市民卡死或水流分配数值发散（规模与稳健）",
+   "河道被完全阻断或水源枯竭时，下游用水建筑进入可判定的停滞态；水塔流入流出读数不出现负值或无源增加（退化局面）",
+   "暂停时市民移动、货物运输与火灾蔓延全部冻结；同种子地图生成与神任务序列一致；重开新局后旧城建筑与解锁不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "守恒断言 + 状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（水×火灾耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "合并断言（多对一）"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "水量与水压：各取水口/水库/水塔的流入与流出读数、覆盖范围",
+   "每栋建筑：类型、位置、是否在供水覆盖内、当前是否运作、火灾损失累积",
+   "市民：当前路径、通勤时长、疲惫状态、工作场所与岗位",
+   "人口与床位：人口总数、可用床位数、幸福度各分项",
+   "天气与河位：当前降雨、各河段水位、土壤肥力",
+   "种子注入通道、时间控制（暂停/倍速）、玩家输入注入通道（建造/地形改造/职业优先级）"
+  ],
+  "evidence": [
+   {
+    "claim": "基于物理的水：河流自山地沿最小阻力路径流动；地形改造可筑坝或灌溉；暴雨可使河流漫堤",
+    "source": "Steam 商店页特性描述（经搜索索引转述）",
+    "grade": "STORE"
+   },
+   {
+    "claim": "水用于居住、卫生、农业与生产，同时是持续的环境危害",
+    "source": "Steam 商店页",
+    "grade": "STORE"
+   },
+   {
+    "claim": "玩家对水系统的干预会影响土壤肥力；洪水与干旱与火灾、疾病并列为事件",
+    "source": "Steam 商店页原文",
+    "grade": "STORE"
+   },
+   {
+    "claim": "一条明确的耦合：把市民征入民兵抵御入侵者，但时间过长会导致收成受损",
+    "source": "Steam 商店页原文：but not for too long or harvests suffer",
+    "grade": "STORE"
+   },
+   {
+    "claim": "取水口必须低于水面但高于城区，靠重力输水；引水渠放置时显示坡度，过陡则禁止建造",
+    "source": "社区攻略；Hooded Horse 官方 wiki 存在 /Infrastructure 子页",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "一座水塔不能给另一座水塔供水，不可串联",
+    "source": "社区攻略明确写出",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "水塔显示流入与流出，流入须大于流出否则用水建筑停摆",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "水覆盖范围降低其内建筑的火灾损失",
+    "source": "Hooded Horse 官方 wiki（Infrastructure），经搜索索引读取",
+    "grade": "WIKI"
+   },
+   {
+    "claim": "市民不做层级晋升，全部计入同一人口池，职业分配在集中面板拖动优先级；长通勤导致疲惫并产生产能惩罚",
+    "source": "设计师自述 + 补丁说明（Update 5 标题为 Less Sleepiness）",
+    "grade": "DEV"
+   },
+   {
+    "claim": "人口上限等于床位数，移民乘船抵达、去留由幸福度决定",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "无任何东西瞬移，全部货物逐格搬运；人力搬运与骡车运量不同",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "神殿须奉献给特定神祇并开启神任务；恩宠是解锁新建筑与作物的唯一货币；神殿辐射范围为周边提供加成",
+    "source": "Steam 商店页 + 社区攻略",
+    "grade": "STORE+GUIDE"
+   },
+   {
+    "claim": "神祇有荣誉等级，低于期望触发诅咒且诅咒可叠加；满足愿望会重置一个隐形倒计时",
+    "source": "社区攻略",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "建筑随时间老化坍塌、砌石场自动修缮；坍塌通常是食物短缺之后的连锁失败",
+    "source": "社区攻略；专项检索未返回有效结果，置信度低",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "竞技场解锁需 10,000 人口且其中 2,000 名骑士阶级；造价 50,000 金币、5,000 石块、2,000 大理石、1,000 铁锭",
+    "source": "社区攻略给出精确数值",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "税收办公室覆盖 11 格半径、税率 0–60%；过度征税导致约 40% 产能惩罚",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "无固定胜利画面，实质失败为人口流失殆尽",
+    "source": "社区攻略：your city won't be built in a day, but it can be destroyed in one",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "6×6 住宅街区与喷泉覆盖格数等精确数值",
+    "source": "games.gg（已在来源黑名单）",
+    "grade": "BADSOURCE"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=水文与地形改造 × 重力输水链 × 市民通勤与劳动 × 火灾与宗教 (4) | coupled_assertion=水×火灾（水覆盖降低火灾损失，两端均有出处） | 备选耦合=民兵×收成（商店页原文，如评审认为水×火灾不够强可替换） | tier_rationale=4 硬系统但各层为城建经典结构，判 mid | 注意=原 case 07 的「居民涉水溺水」「商船资源交易面板」未见来源，本版未写入；权威源为 Hooded Horse 官方 wiki 与 Steam 官方手册 | 刻意留白=建筑与生产链数量、税率数值、纪念碑造价、地图规模 | gate 合并明细=通勤时长与产能惩罚（并入第 4 条）",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.3D_eval.Eval3DScenario.eval",
+  "source_file": "repro_cases_v1_batch2.json",
+  "source_meta": {
+   "name": "repro-cases-v1-batch2",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "note": "第二批 7 条。字段与 repro_cases_v1.json 完全一致。",
+   "provenance": "检索稿。机制信息来自商店页文案（经搜索索引或镜像转述，非逐字抓取实页）、官方 wiki、开发者日志、社区攻略与评测。未逐帧观看实况视频，无人实际游玩。",
+   "evidence_grades": "STORE / WIKI / DEV / GUIDE / REVIEW / INFER（出题人推断，无出处，优先核验）/ BADSOURCE（来源为疑似内容农场或外挂推广站，一律不可直接引用）/ REMOVED（曾误加，已删）/ HELD（因来源冲突而暂缓写入，待真人核验）",
+   "source_blacklist": [
+    {
+     "domain": "xmodhub.com",
+     "reason": "编造不存在于游戏内的公式与系统（回合制、GDP、税收滑条），目的是推广付费作弊客户端，对同一问题自相矛盾。全部内容不可引用。"
+    },
+    {
+     "domain": "games.gg",
+     "reason": "跨语言给出完全一致的精确格数与版本号，疑似 SEO 生成。改用 Hooded Horse 官方 wiki 与 Steam 官方手册。"
+    },
+    {
+     "domain": "cheatbook.de / chaptercheats.com",
+     "reason": "通用攻略文本或作弊工具推广，非编辑内容。"
+    },
+    {
+     "domain": "novaroma.org",
+     "reason": "同名不同物：真实世界的罗马重建主义组织，与游戏 Nova Roma 无关，检索时易误命中。"
+    }
+   ],
+   "authoritative_sources": {
+    "Nova Roma": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Nova_Roma/（含 /Citizens、/Infrastructure 子页）",
+     "Steam 官方手册（Ave Governor）: store.steampowered.com/manual/2426530"
+    ],
+    "Sandustry": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Sandustry/（Cloudflare 拦截，需人工访问）"
+    ],
+    "MENACE": [
+     "开发者日志 #7/#11/#13/#41/#42（Steam 公告，经镜像读取，逐字可用）",
+     "wiki.hoodedhorse.com/MENACE（Cloudflare 拦截）"
+    ],
+    "Pax Autocratica": [
+     "无官方 wiki（六次检索均为负结果）"
+    ]
+   },
+   "known_defects": [
+    "src_video 中 BV1wku962E7h 格式非法（BV 号不含小写字母），五次检索无结果，需人工从浏览器重新复制 URL",
+    "所有 [STORE] 引文均为搜索引擎或镜像转述，非逐字抓取实页；进论文前需人工复核并记录抓取日期",
+    "case repro_dieinthedungeon_2d_006 的棋盘几何与能量规则存在来源冲突，已按留白处理"
+   ]
+  }
+ },
+ {
+  "task_id": "repro_oneturnkill_2d_016",
+  "repro_game": "One Turn Kill | DenDen / Waku Waku Games | Steam app 3151270 | 2026-01-15",
+  "src_video": "https://www.bilibili.com/video/BV1cSTfzzESt/",
+  "category": "Social & Tabletop",
+  "platform": "web",
+  "desc": "一回合斩杀：牌组就是费用 —— 打出一张 3 费牌意味着从牌组顶抽走 3 张，你的资源池和你的手牌是同一叠东西；而敌人会在你连招途中往这叠牌里塞垃圾。",
+  "agent_ability": [
+   "C2",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C9",
+   "C11"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L5",
+  "label": [
+   "genre:social_tabletop",
+   "subtype:card_board",
+   "render:2d",
+   "tier:L5",
+   "incentive:competitive",
+   "cog:C2",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】单回合卡牌对战：整场战斗在你自己的第一个回合内结束，击杀敌人算赢，一旦选择结束回合就算输。整个谜题围绕一个反直觉的设定展开——你的费用和你的牌是同一叠东西。\n【核心机制】①牌组即费用：不存在独立能量池，打出一张 N 费牌的代价是从牌组顶抽走 N 张；牌组剩余不足 N 张时该牌不可打出。每一次出牌同时扩大手牌（多拿到牌）与缩小未来（牌组变薄）。②上限与反直觉：牌组总张数有上限，且不存在「抽牌」这一概念——抽就是费用本身；因此堆低费牌并非正解，连续打出高费牌会把牌组迅速耗尽。手牌无上限。③敌人干扰：中后期敌人会在玩家连招进行中主动干预，向牌组中混入无用牌以破坏抽牌节奏、封锁部分卡牌使其暂时不可用，或施加实时压力；这些干预在连招途中发生，使得一次性背好的长连招会中途失效。④可选难度：玩家可自愿提高敌方难度档位，档位越高敌人血量越高，构成风险报酬取舍。⑤胜负与循环：击杀敌人通关；牌组剩余数归零或主动结束回合直接判负。\n【必须实现】1. 打出 N 费牌时从牌组顶抽走 N 张，牌组不足时拒绝打出；2. 牌组总张数上限生效，手牌无上限；3. 敌人于玩家回合内混入无用牌或封锁卡牌，干预后手牌与牌组状态实时更新；4. 难度档位可自愿提高并实际改变敌人血量；5. 伤害实时累加并从敌人血量扣除，归零判胜；6. 牌组剩余归零或结束回合判负，结算完整；7. 同种子同出牌序列结果一致。\n【自由发挥】卡牌与技能种类、卡面美术与动效、剧情与角色、局外进程、音效编排不作限制，鼓励自行设计。",
+  "checklist": [
+   "不同费用的牌打出时从牌组顶抽走的数量与其费用一致；牌组剩余不足时该牌不可打出并给出提示（状态一致性）",
+   "连续打出高费牌使牌组剩余数快速下降；牌组剩余归零时直接判负且不触发后续结算（状态一致性 + 胜负）",
+   "牌的打出被拒绝时不产生任何抽牌副作用，牌组与手牌状态与打出前完全一致（状态一致性）",
+   "敌人混入无用牌后，同样一张牌在混入前与混入后达成的连招链长度不同；被封锁的卡牌在封锁期内不可打出（敌人干扰×连招耦合核心断言）",
+   "提高难度档位后敌人血量上升，同一出牌序列不再能一回合击杀；低档位下同一序列可以击杀（对照实验式）",
+   "伤害累加至敌人血量归零即判胜；主动结束回合或牌组归零即判负（胜负结算）"
+  ],
+  "hidden_checklist": [
+   "敌人混入的无用牌进入牌组后被抽走时占用费用抽牌额，因而对后续连招的影响在数步之后才显现，而非即时（干扰的二阶延迟效应，spec 未明说）",
+   "牌组接近耗尽且敌人持续混入废牌时，出牌可用性判定保持稳定，不出现牌组张数为负或重复抽牌（规模与稳健）",
+   "牌组已完全耗尽而敌人未死时，进入可判定的判负态而非可继续无代价出牌；手牌为空且无牌可出时有定义行为（退化局面）",
+   "暂停时抽牌结算与敌人干预冻结；同种子同出牌序列结果一致；重开新局后旧牌组与手牌不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 胜负"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（敌人干扰×连招耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 胜负"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "牌组：有序牌列表、剩余张数、牌组上限",
+   "手牌：卡牌列表与各牌费用；被封锁卡牌的封锁剩余时长",
+   "敌人状态：血量、难度档位、已实施的干预记录",
+   "结算流水：每次出牌消耗的抽牌额与造成的伤害",
+   "种子注入通道、玩家输入注入通道（出牌/结束回合/调整难度档位）"
+  ],
+  "evidence": [
+   {
+    "claim": "不存在能量池，牌组剩余张数即资源：打出 3 费牌会从牌组顶抽走 3 张，不足 3 张则不能打出",
+    "source": "AUTOMATON 与日文媒体明确描述",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "牌组上限 20 张；因「抽牌即费用」，不存在抽牌概念，堆低费牌是陷阱",
+    "source": "评测明确写出 deck capped at 20 cards",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "手牌无上限",
+    "source": "评测",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "后期敌人会在玩家连招途中干预：混入死牌/垃圾牌扰乱抽牌、封锁随机卡牌、施加实时压力",
+    "source": "评测详细描述三种干预方式",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "玩家可自愿提高敌人难度最多 5 档，第 5 档血量为第 1 档的 4–5 倍",
+    "source": "评测",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "存在可随时使用的独立技能（固定伤害、复制卡牌等），与出牌连招组合",
+    "source": "评测",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "击杀即胜、结束回合即负；整场战斗在单回合内解决",
+    "source": "商店与评测",
+    "grade": "STORE+REVIEW"
+   },
+   {
+    "claim": "敌人干预影响在数步之后才显现的延迟效应",
+    "source": "未见来源，为出题人由混入牌进入牌组后的抽牌顺序推断",
+    "grade": "INFER",
+    "verify_priority": "medium"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=牌组即费用 × 牌组上限与耗尽 × 敌人实时干预 × 难度档位 (4) | coupled_assertion=敌人干扰×连招 | tier_rationale=单回合内高密度决策但与概率/随机强相关，暂判 mid | 注意=原 case 16 的「牌组剩余数」表述已被原作证实，本版据此改写并删去原版未提及的「返还牌组」操作 | 刻意留白=卡牌费用分布、牌组上限具体值、敌人血量、难度档位倍率",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_v1.json",
+  "source_meta": {
+   "name": "repro-cases-v1",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "provenance": "检索稿。机制信息来自 Steam 官方商店页文案、官方 wiki、社区攻略与评测转述；未逐帧观看实况视频，无人实际游玩。每条 case 的 evidence 用 [STORE] [WIKI] [GUIDE] [REVIEW] [DEV] [INFER] 标注来源等级，[INFER] 为出题人推断、无出处，是真人核验时优先检查项。",
+   "baseline_schema": "基线字段沿用 cases_150_platform.json 信封，新增 difficulty_tier / minimal_state_surface / evidence / checklist_detail / repro_game / src_video。",
+   "tier_policy": "本批 difficulty_tier 按原作实际机制强度重判（不复用 cases/ 原版的 18/18 mid）。口径：floor=2 个硬系统咬合；mid=3 个；ceiling=4 个或含高不确定性核心（连续物理模拟、确定性全量回放、无上界组合爆炸）。重判结果须经 pilot 实测校准。"
+  }
+ },
+ {
+  "task_id": "repro_paxautocratica_3d_010",
+  "repro_game": "Pax Autocratica（暗星铁律）| Multiverse | Steam app 1067360 | EA 2026-08-10",
+  "src_video": "https://www.bilibili.com/video/BV1wku962E7h/ （此 ID 格式非法，待人工核对）",
+  "category": "Simulation & Sandbox",
+  "platform": "web",
+  "desc": "暗星铁律：你在统治一群会反应的人 —— 恐惧最容易用处刑拉高，却只能靠逐个安抚慢慢降低；一次公开奖惩会顺着 Social Ripple 扩散到整个基地，而同一条法令对不同公民的效果取决于各自的恐惧耐受度与宣传易感度。",
+  "agent_ability": [
+   "C4",
+   "C7",
+   "C8",
+   "C9",
+   "C11",
+   "C12"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:simulation_sandbox",
+   "subtype:city_management",
+   "render:3d",
+   "tier:L5",
+   "incentive:mixed-motive",
+   "cog:C4",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11",
+   "cog:C12"
+  ],
+  "prompt": "【游戏】极权殖民地模拟与 FPS Roguelite 混合：你建设一个政权，也亲自带队上前线。殖民地里的公民不是数字——他们会因你的法案而感激或反抗，而恐惧是最容易拉高、最难降低的那根杠杆。\n【核心机制】①四维民心：恐惧、幸福、饥饿、忠诚各自独立结算并向相反方向拉扯。恐惧可通过公开处刑、电刑、处决俘虏等高压手段迅速拉高，但**每日自然衰减**，且**没有直接拉高的反面手段——只能通过逐个安抚降低，速度很慢**。恐惧过低会丢失治理与战斗加成，过高则公民精神崩溃、生产停摆。②Social Ripple：一次公开奖惩会影响附近的士兵，并可能扩散到整个基地；同时叠加多项高压政策时，无法判断是哪一条触发了反应。③个体异质性：每个公民带有恐惧耐受度与宣传易感度两个特质，因此**同一条法令对不同公民产生不同效果**，不存在对全体统一的「安全数值」。④政策与执行链：政策需先研究再通过指令面板发布，发布后全殖民地生效；个别疑难分子可用再教育单独处置而非改全局政策。⑤生产与运输：公民被分配到采矿、采集、搬运、研究与制造；搬运是独立的生产步骤，资源运输站负责把产出自动运回仓库中心。殖民地产出决定军队强度，而战场收获反哺殖民地发展。⑥俘虏转化：打残敌人后可实施捕获，俘虏可被监禁、洗脑、转为公民、回收为资源、或献祭以给现有部队升级；士兵训练中心只能消耗同族士兵。⑦远征与统一：战斗层为节点选择式地图，向星系深处推进，**越深入敌方强度越高**（远征进度到一定比例后敌方强度档位上升），玩家可在任意节点提前撤离；行动失败或返回基地会重置本次远征的统一进度（roguelite 设计）。⑧胜负与循环：无固定胜利画面；每个星区需击败其头目并达成统一进度方能进入下一区，公民全面叛乱或政权崩解为实质失败。\n【必须实现】1. 恐惧/幸福/饥饿/忠诚四维独立结算，恐惧每日自然衰减且无直接拉高之外的高效降低手段；2. 一次公开奖惩的影响会扩散到附近乃至全基地；3. 每个公民带有独立的恐惧耐受度与宣传易感度，同法令效果因人而异；4. 政策须先研究再经指令面板发布，发布后对全殖民地生效；5. 公民分配与资源运输站构成的搬运链，搬运为独立生产步骤；6. 俘虏的捕获、监禁、洗脑、转化为公民/资源/献祭的完整链路；7. 远征越深入敌方强度越高、可提前撤离，失败重置本次统一进度；8. 同种子远征节点与政策事件一致。\n【自由发挥】政策与法令种类、建筑与生产链、武器核心与组合核心、兵种与载具、星区与头目、大臣与内阁、美术与叙事不作限制，鼓励自行设计。",
+  "checklist": [
+   "发布提高恐惧的法令后恐惧值上升，但在其后若干日内自然衰减；同期通过安抚手段降低恐惧的速率显著低于法令提升的速率（状态一致性 + 统计断言）",
+   "恐惧值处于低位与高位两种工况下，同等政策的公民服从表现不同：过低时治理与战斗加成不生效，过高时出现精神崩溃与生产下降（对照实验式）",
+   "同一条法令施加于恐惧耐受度与宣传易感度不同的两类公民时，其效果出现可观测差异；不存在对全体统一的成效（个体异质性：对照实验式）",
+   "一次公开奖惩后，受影响范围从被直接作用的单位向外扩散到附近单位乃至全基地；未实施奖惩的对照组不出现同等扩散（Social Ripple：对照实验式）",
+   "同时叠加多项高压政策时，公民反应幅度大于逐项发布之和，即无法从结果反推是哪一条触发（状态一致性）",
+   "一次公开奖惩后，受影响范围从被直接作用的单位向外扩散到附近单位乃至全基地；同时叠加多项高压政策时公民反应幅度大于逐项之和，无法从结果反推触发源（Social Ripple：对照实验式）；俘虏可被转化为公民、回收为资源或用于升级部队，各路径互相排斥；士兵训练中心只能消耗同族士兵，异族士兵无法作为素材（状态一致性 + 胜负）"
+  ],
+  "hidden_checklist": [
+   "把恐惧压到极低时，此前靠恐惧维持的服从消失，此前被压制的异议在同一时点集中显现而非平滑过渡（恐惧衰减与异议积压的二阶交互，spec 只写了恐惧会衰减）",
+   "公民数量上规模、多项政策并发、Social Ripple 扩散与搬运链同时运行时结算保持稳定，不出现数值为负或同一公民被重复结算（规模与稳健）",
+   "四维民心同时触底（幸福与忠诚归零、饥饿与恐惧满值）时，系统仍有定义行为：进入可判定的叛乱态而非继续正常生产（退化局面）",
+   "暂停时恐惧衰减、政策冷却与搬运结算冻结；同种子远征节点与政策事件一致；重开新局后旧殖民地状态与解锁不串入（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性 + 统计断言"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（个体异质性）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（Social Ripple）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "合并断言（多对一）"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "四维民心当前值与每单位时间的增减流水",
+   "每个公民：恐惧耐受度、宣传易感度、当前状态（正常/不满/罢工/崩溃）、岗位",
+   "政策状态：已研究列表、当前生效法令、发布时刻与作用范围",
+   "Social Ripple 记录：一次奖惩的源头、扩散路径与受影响单位集合",
+   "远征状态：当前星区、节点进度、敌方强度档位、统一进度",
+   "种子注入通道、时间控制、玩家输入注入通道（发布法令/分配岗位/安抚/远征）"
+  ],
+  "evidence": [
+   {
+    "claim": "官方四维为 恐惧、幸福、饥饿、忠诚；政策对士气、生产力与异议有真实后果，异议可升级为全面叛乱",
+    "source": "Steam 商店页原文（简体中文口径）",
+    "grade": "STORE"
+   },
+   {
+    "claim": "政策工具含宵禁、配给、洗脑中心、公共盛宴、宣传、监控塔、集会、鞭刑、公开处刑、监禁",
+    "source": "Steam 商店页特性列表",
+    "grade": "STORE"
+   },
+   {
+    "claim": "殖民地产出决定军队实力，战场收获反哺殖民地发展",
+    "source": "中文评测转述",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "公民可被分配采矿、采集、搬运、研究与制造武器护甲食物补给",
+    "source": "Steam 商店页",
+    "grade": "STORE"
+   },
+   {
+    "claim": "俘虏可被监禁、洗脑、转为忠诚公民、处决、回收为资源、或献祭以提升现有部队等级",
+    "source": "Steam 商店页特性列表",
+    "grade": "STORE"
+   },
+   {
+    "claim": "恐惧通过公开处刑最快拉高，每日自然衰减；只能靠逐个安抚降低且速度很慢",
+    "source": "社区攻略",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "幸福低于一定值次日可能罢工，归零进入 Frenzy 状态",
+    "source": "次级攻略站给出的具体数值",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "Social Ripple：一次公开奖惩影响附近士兵并可扩散到整个基地；攻略警告不要同时叠加多项高压政策",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "每个公民带恐惧耐受度与宣传易感度两个特质，同法令效果因人而异",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "政策需先研究再通过指令面板发布；再教育用于个别分子而非全局政策",
+    "source": "社区攻略含具体步骤",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "资源运输站为最关键的自动化建筑；搬运是独立生产步骤",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "远征进度达约 30% 时敌方强度升档、约 60% 时再升一档；远征进度与统一进度不是同一件事",
+    "source": "社区攻略",
+    "grade": "GUIDE"
+   },
+   {
+    "claim": "返回基地或死亡重置本次远征的统一进度，开发者在官方论坛明确回复这是 roguelite 的核心特征",
+    "source": "开发者回复",
+    "grade": "DEV"
+   },
+   {
+    "claim": "间谍与大臣忠诚系统（大臣有个人野心、可能发动政变，可用资源行贿化解）",
+    "source": "单一葡语预览，且其描述的回合制与其他来源的实时制矛盾",
+    "grade": "GUIDE",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "监控→不满→加监控→更不满 的自我强化回路",
+    "source": "xmodhub（已在来源黑名单，该站同页编造了不存在的公式）",
+    "grade": "BADSOURCE"
+   },
+   {
+    "claim": "存在三条胜利路径（霸权者/经济巨头/意识形态偶像）",
+    "source": "同一黑名单站点，且与该站另一篇文章称「无固定胜利画面」矛盾",
+    "grade": "BADSOURCE"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=四维民心 × 政策与 Ripple × 个体异质 × 生产搬运与俘虏转化 (4) | coupled_assertion=个体异质性（同法令对不同公民效果不同，且已由攻略证实） | tier_rationale=玩家统治而公民会反抗，构成真正的 mixed-motive，且个体异质使不存在统一最优解，判 ceiling | 本 case 是全集唯一的 mixed-motive，用于补齐 S1 覆盖缺口 | ★src_video ID 格式非法，待人工核对 | 注意=大臣政变系统的来源矛盾（回合制 vs 实时制）未写入 prompt | 刻意留白=政策数量、民心数值阈值、建筑与兵种、星区与头目 | gate 合并明细=政策须先研究再发布（并入第 7 条的语义由 prompt 覆盖）",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.3D_eval.Eval3DScenario.eval",
+  "source_file": "repro_cases_v1_batch2.json",
+  "source_meta": {
+   "name": "repro-cases-v1-batch2",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "note": "第二批 7 条。字段与 repro_cases_v1.json 完全一致。",
+   "provenance": "检索稿。机制信息来自商店页文案（经搜索索引或镜像转述，非逐字抓取实页）、官方 wiki、开发者日志、社区攻略与评测。未逐帧观看实况视频，无人实际游玩。",
+   "evidence_grades": "STORE / WIKI / DEV / GUIDE / REVIEW / INFER（出题人推断，无出处，优先核验）/ BADSOURCE（来源为疑似内容农场或外挂推广站，一律不可直接引用）/ REMOVED（曾误加，已删）/ HELD（因来源冲突而暂缓写入，待真人核验）",
+   "source_blacklist": [
+    {
+     "domain": "xmodhub.com",
+     "reason": "编造不存在于游戏内的公式与系统（回合制、GDP、税收滑条），目的是推广付费作弊客户端，对同一问题自相矛盾。全部内容不可引用。"
+    },
+    {
+     "domain": "games.gg",
+     "reason": "跨语言给出完全一致的精确格数与版本号，疑似 SEO 生成。改用 Hooded Horse 官方 wiki 与 Steam 官方手册。"
+    },
+    {
+     "domain": "cheatbook.de / chaptercheats.com",
+     "reason": "通用攻略文本或作弊工具推广，非编辑内容。"
+    },
+    {
+     "domain": "novaroma.org",
+     "reason": "同名不同物：真实世界的罗马重建主义组织，与游戏 Nova Roma 无关，检索时易误命中。"
+    }
+   ],
+   "authoritative_sources": {
+    "Nova Roma": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Nova_Roma/（含 /Citizens、/Infrastructure 子页）",
+     "Steam 官方手册（Ave Governor）: store.steampowered.com/manual/2426530"
+    ],
+    "Sandustry": [
+     "Hooded Horse 官方 wiki: wiki.hoodedhorse.com/Sandustry/（Cloudflare 拦截，需人工访问）"
+    ],
+    "MENACE": [
+     "开发者日志 #7/#11/#13/#41/#42（Steam 公告，经镜像读取，逐字可用）",
+     "wiki.hoodedhorse.com/MENACE（Cloudflare 拦截）"
+    ],
+    "Pax Autocratica": [
+     "无官方 wiki（六次检索均为负结果）"
+    ]
+   },
+   "known_defects": [
+    "src_video 中 BV1wku962E7h 格式非法（BV 号不含小写字母），五次检索无结果，需人工从浏览器重新复制 URL",
+    "所有 [STORE] 引文均为搜索引擎或镜像转述，非逐字抓取实页；进论文前需人工复核并记录抓取日期",
+    "case repro_dieinthedungeon_2d_006 的棋盘几何与能量规则存在来源冲突，已按留白处理"
+   ]
+  }
+ },
+ {
+  "task_id": "repro_taskforceadmiral_3d_002",
+  "repro_game": "Task Force Admiral Vol.1: American Carrier Battles | Drydock Dreams / MicroProse | Steam app 1281220 | EA 2026-01-27",
+  "src_video": "https://www.bilibili.com/video/BV1Bp4y1P7Xa/",
+  "category": "Strategy",
+  "platform": "web",
+  "desc": "特遣舰队司令：搜索即命运 —— 1942 年航母特混舰队指挥，你没在打数值，你在管理信息的到达时间；侦察报告会迟到、会失真，而甲板循环与损管在你看不见的地方同时消耗时间。",
+  "agent_ability": [
+   "C2",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C9",
+   "C11"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:strategy",
+   "subtype:rts",
+   "render:3d",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C9",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】1942 年太平洋航母特混舰队指挥：你坐在旗舰的作战室里，命令要经过航程、无线电与人为判断才能变成事实。敌人不是被数值描述出来的，是被你一点点搜索出来的——而在你搜索的同时，甲板、燃油与损管都在消耗你的时间窗口。\n【核心机制】①信息延迟与失真：侦察机、雷达与目视接触各自按距离与方位产生带延迟的报告，延迟随距离增长；报告位置存在随距离与观测方式增大的误差半径，同一目标在不同来源下可能给出互相矛盾的位置；通信不保证即时到达，部分报告会在途中丢失或滞后。玩家只能基于已到达的报告作决策，未知区域保持在迷雾中。②搜索与航程：飞机按航程、油量、载弹与起飞点计算可覆盖区域，搜索扇区由玩家分配，未搜索区域不会被自动揭示；返航与迫降由油量决定。③甲板循环：航母甲板的起飞、编队、回收是串行的占据式流程，单次循环有时间长度上限，同时甲板上只能容纳有限飞机；甲板受损或堵塞会直接降低单位时间内的出击架次，甲板作业与舰队机动（迎风起飞需转向）互相约束。④损害与浮力：舰船按部位承受损伤，进水改变浮力与航速，火势沿舱室蔓延并可能引爆弹药，损管队是有限的、需要分配的处置资源；进水与火势互相加剧，且都反写航速与作战能力。⑤胜负与循环：以侦察→判情→集结→出击→回收的循环完成交战目标；未发现敌主力即出击、或在敌打击窗口内暴露自身编队会导致任务失败。\n【必须实现】1. 带延迟与误差半径的侦察报告系统，报告到达时刻不早于实际接触时刻；2. 航程/油量约束下的搜索扇区分配与返航判定；3. 串行占用的甲板循环，含同时容量上限与受损导致的架次下降；4. 分部位损伤、进水改浮力与航速、火势蔓延与损管资源分配；5. 时间压缩与暂停，压缩倍率不影响模拟结果；6. 侦察信息驱动的判情与出击，胜负结算完整；7. 同种子同指挥序列的结果一致。\n【自由发挥】指挥视角（作战室第一人称或上帝视角）、舰船与机型数量、海况与天气影响、声呐与电子侦察、历史或假想剧本、战后回放不作限制，鼓励自行设计。",
+  "checklist": [
+   "同一目标在近距与远距被侦察时，报告到达延迟与位置误差半径随距离增大；报告到达时刻不早于实际接触时刻（时序断言）",
+   "分配搜索扇区后，未分配扇区的目标在指定时长内不被揭示；已分配扇区内的接触按侦察机实际飞抵时刻才产生报告（状态一致性）",
+   "同时对同一目标产生两份来源不同的报告时，位置可以不一致，玩家可见的判情结果随之分歧（状态一致性）",
+   "甲板循环呈串行占用：前一架次未回收完成时无法发起超出同时容量的下一架次；甲板受损后单位时间出击架次下降（统计断言）",
+   "对同一舰船施加同量进水与火势两种损伤，火势蔓延会加剧进水速度；损管队分配灭火后火势下降但进水处置暂停；进水导致航速与浮力下降（损伤×损管耦合核心断言）",
+   "以时间压缩 1×/4×/16× 运行同一指挥序列，交战结果与各舰终态一致；未发现敌主力即出击、或编队在敌打击窗口内暴露则判负（胜负结算 + 确定性）"
+  ],
+  "hidden_checklist": [
+   "已起飞但尚未回收的机群在下达转向命令后仍须按油量自行判定能否返航，不得因指挥变更而凭空获得燃油（航程×指挥的二阶推论，spec 未明说）",
+   "多艘舰船同时进水、火势蔓延与损管并发、且玩家在压缩倍率下持续下令时保持稳定，不出现浮力或火势的数值发散（规模与稳健）",
+   "全部侦察来源同时失效（侦察机损失、雷达受损）时，系统仍有定义行为：迷雾区块不自动揭示、已判情信息保留其原始误差（退化局面）",
+   "暂停时进水、火势、航程与甲板流程全部冻结；压缩倍率切换不产生跨倍率的状态跳变或重复结算（边界时序 + 确定性）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "时序断言"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态一致性"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "统计断言"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "对照实验式（损伤×损管耦合核心断言）"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "收敛/一致性哈希 + 胜负"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "规模与稳健"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序 + 确定性"
+   }
+  ],
+  "minimal_state_surface": [
+   "报告队列：每条报告的生成时刻、到达时刻、目标标识、位置与误差半径",
+   "各舰状态：部位损伤、进水量、火势强度、航速、浮力余量",
+   "甲板状态：当前占用架次、循环阶段、同时容量、单位时间出击架次计数",
+   "机群状态：起飞时刻、油量、当前位置、航程余量",
+   "时间控制（暂停/压缩倍率）、玩家输入注入通道（命令下达）"
+  ],
+  "evidence": [
+   {
+    "claim": "无骰子判定、无技能树、无抽象属性，靠雷达/侦察/目视实际发现敌人",
+    "source": "AUTOMATON 与官方 press release：能力值判定なし",
+    "grade": "REVIEW+STORE"
+   },
+   {
+    "claim": "侦察报告、雷达接触与通信存在延迟且可能出错，设计为 real-time crisis management",
+    "source": "官方 press release 与媒体预览",
+    "grade": "STORE+REVIEW"
+   },
+   {
+    "claim": "两种指挥视角（旗舰作战室第一人称 / 上帝视角），两种视角下时间都在流动，可暂停与时间压缩",
+    "source": "Steam 商店页 + press release",
+    "grade": "STORE"
+   },
+   {
+    "claim": "飞行物理为真实物理模拟，非轨道式飞行；飞机经升降机起飞、回收",
+    "source": "媒体预览描述 physics-based air operations",
+    "grade": "REVIEW"
+   },
+   {
+    "claim": "高级弹道与损伤建模；EA 版本玩法功能约完成 60%",
+    "source": "Steam 商店页 + 官方说明",
+    "grade": "STORE"
+   },
+   {
+    "claim": "官方明确写出 no selective fog of war or supernatural crystal-clear communications，玩家在 advanced fog of war 下被致盲",
+    "source": "Steam 商店页原文",
+    "grade": "STORE"
+   },
+   {
+    "claim": "甲板循环为串行占用、同时容量有限、受损降低出击架次",
+    "source": "未见任何来源明确描述甲板循环的具体占位与容量规则",
+    "grade": "INFER",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "进水与火势互相加剧、损管队为有限需分配的资源",
+    "source": "商店页仅写 advanced realistic ballistics and damage modelling，未描述损管机制",
+    "grade": "INFER",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "航空燃油消耗与被迫放弃载荷的权衡",
+    "source": "未见来源，为出题人按同类战术模拟补充",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=steam_repro | hard_systems=延迟失真侦察 × 航程搜索 × 甲板循环 × 损害损管 (4) | coupled_assertion=损伤×损管 | tier_rationale=4 硬系统且核心为信息延迟下的判情，属高不确定性核心 | 注意=原作明确无骰子判定，本 case 的概率断言只用于报告误差而非战斗结算，已避开与原作哲学冲突 | 刻意留白=舰船/机型数量、误差半径数值、甲板循环时长",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.3D_eval.Eval3DScenario.eval",
+  "source_file": "repro_cases_v1.json",
+  "source_meta": {
+   "name": "repro-cases-v1",
+   "version": "1.0",
+   "date": "2026-09-17",
+   "provenance": "检索稿。机制信息来自 Steam 官方商店页文案、官方 wiki、社区攻略与评测转述；未逐帧观看实况视频，无人实际游玩。每条 case 的 evidence 用 [STORE] [WIKI] [GUIDE] [REVIEW] [DEV] [INFER] 标注来源等级，[INFER] 为出题人推断、无出处，是真人核验时优先检查项。",
+   "baseline_schema": "基线字段沿用 cases_150_platform.json 信封，新增 difficulty_tier / minimal_state_surface / evidence / checklist_detail / repro_game / src_video。",
+   "tier_policy": "本批 difficulty_tier 按原作实际机制强度重判（不复用 cases/ 原版的 18/18 mid）。口径：floor=2 个硬系统咬合；mid=3 个；ceiling=4 个或含高不确定性核心（连续物理模拟、确定性全量回放、无上界组合爆炸）。重判结果须经 pilot 实测校准。"
+  }
+ },
+ {
+  "task_id": "repro_cardcrawl2_mobile_2d_007",
+  "repro_game": "Card Crawl 2 | Arnold Rauers | US App Store iOS 2026-03-26 | app 6744351421",
+  "src_video": "",
+  "category": "Card & Board",
+  "platform": "mobile",
+  "desc": "四列叠牌的纸牌地牢：最多十六张地牢牌构成局面，玩家在覆盖关系下排序、装备、出售和打怪。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:card_board",
+   "subtype:solitaire_dungeon",
+   "render:2d",
+   "input:drag_tap",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】手机上的纸牌地牢。中央为四列叠牌，最多十六张地牢牌；覆盖关系决定当前能处理哪些牌。玩家用装备、法术和金币清理整副地牢牌并活下来。\n【核心机制】①牌分怪物、武器/防具、金币、法术；四列仅按覆盖规则开放可操作牌。拖动牌可装备、攻击、施法或出售，非法目标不改变状态。②武器、护甲影响生存，法术改变牌局，取金币可能与装备选择竞争。③操作后揭露被压住的下一张牌，不可跳过未揭露牌。④清空地牢牌且存活通关，生命耗尽失败；至少两种英雄能力或初始装备形成策略差异。\n【必须实现】四列叠牌与覆盖、至少四种牌类、装备与伤害、法术和卖牌、逐步揭牌、通关/失败及英雄差异。\n【移动端额外要求】单指拖牌有合法落点高亮且可取消；被手指挡住的牌可点开查看；触觉可用时有效出牌和受伤反馈不同。\n【自由发挥】具体卡名、牌组大小、数值和英雄主题不作限定。",
+  "checklist": [
+   "被覆盖牌不可直接使用；移除上层后正确揭露下层，牌总数守恒（叠牌）",
+   "武器打怪后战果变化，装备防具与未装备的受伤量不同（装备×战斗）",
+   "金币牌只可被一次收集或出售，不能同牌既出售又装备（互斥资源）",
+   "法术改变可用牌、装备或战斗状态后，覆盖关系仍合法（法术×牌局）",
+   "同牌局下不同英雄能力或初始装备改变操作路径或战果（英雄对照）",
+   "地牢牌清空且英雄存活通关；生命归零失败并阻止继续拖牌（胜负）"
+  ],
+  "hidden_checklist": [
+   "法术移走顶牌并改变另一列时，可操作集合重算，不沿用旧触摸区（二阶覆盖）",
+   "装备被替换时旧效果失效、新效果仅生效一次，不双重减伤（状态时序）",
+   "某列清空但其他列有牌时，空列不生成虚构牌，仍可完成（退化局面）",
+   "拖牌松到无效位置后回原列，牌序、金币和生命不变（输入事务）"
+  ],
+  "mobile_checklist": [
+   "拖牌有效目标高亮、无效目标回弹；越过屏幕边缘不丢牌（触控精度）",
+   "点开顶牌能读规则，手指挡住的列仍能辨认剩余张数，无需悬停（小屏可读）",
+   "触觉支持时出牌、无效落点和受伤不同；关闭时视觉结果一致（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "叠牌"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "装备×战斗"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "互斥资源"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "法术×牌局"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "英雄对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "胜负"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶覆盖"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "状态时序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "输入事务"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触控精度"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏可读"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "四列牌身份、类别、顺序和覆盖状态",
+   "英雄生命、装备、金币、法术",
+   "剩余牌数和胜负",
+   "拖动起止、合法目标和触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "四列最多 16 张叠牌、排序/装备/出售、法术与英雄",
+    "source": "https://apps.apple.com/us/app/card-crawl-2/id6744351421",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-03-26 上架",
+    "source": "https://itunes.apple.com/lookup?id=6744351421&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "具体可操作规则、装备公式与触觉是最小可测设计，待实玩核对",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=四列覆盖×装备战斗×法术变局×金币与英雄 | tier_rationale=四类系统互锁，暂判 mid | source_gap=精确合法出牌规则未从商店文案得出 | scope=离线单局，不测排行和付费",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_chariotrivals_mobile_2d_015",
+  "repro_game": "Chariot Rivals | Towering Towers / BABAR SAEED JANJUA | US App Store iOS 2026-07-27 | app 6766568254",
+  "src_video": "",
+  "category": "Racing",
+  "platform": "mobile",
+  "desc": "俯视战车竞速：触屏转向争夺内外线，撞车和残骸改变后车路线；雨天的低抓地力放大碰撞后果，并与圈数和名次判定相互作用。",
+  "agent_ability": [
+   "C1",
+   "C3",
+   "C4",
+   "C6",
+   "C9"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:racing",
+   "subtype:chariot_contact_racing",
+   "render:2d",
+   "input:touch",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C1",
+   "cog:C3",
+   "cog:C4",
+   "cog:C6",
+   "cog:C9"
+  ],
+  "prompt": "【游戏】制作俯视像素风古罗马战车竞速。马匹牵引战车沿椭圆赛场前进，玩家通过触屏转向选择内外线、争夺位置，既要超越对手也要躲开碰撞后的残骸。\n【核心机制】①本题用自动向前行驶、手指控制转向作为最小输入方案，转向改变连续运动轨迹；不能瞬间跳道。至少有玩家和三辆对手车，对手沿赛道推进并能互相碰撞。②车辆接触影响速度、朝向或稳定，严重碰撞导致翻车/解体并留下可碰撞残骸，人物有可见的受力倒下表现；马匹碰到残骸可将其推开。③提供干燥和雨天两种条件，雨天打滑应改变相同转向或碰撞后的实际位移，画面须提示当前天气。④计圈通过按顺序经过赛道区段和终点线实现，名次由完整圈数加当前圈内进度决定，不能以离终点的直线距离排序。完成规定圈数给出名次和成绩，玩家车辆无法继续行驶则失败；重试重新生成合法起跑状态并清空本场残骸和圈数，保留合法完成的最佳成绩。\n【必须实现】触屏连续转向；至少四车竞赛；碰撞、残骸与推动；天气影响抓地/滑移；合法计圈和实时名次；完成/撞毁结算及重试。赛道规模、抓地系数、碰撞阈值和圈数可自定并说明。\n【移动端额外要求】转向连续按住或拖动时响应稳定，松手/触摸取消/后台中断后不残留旧输入；额外手指不能劫持当前转向。可选触觉提示碰撞强度与撞毁，连续接触只产生受控事件反馈，画面在无震动时仍可读。\n【自由发挥】地区、人物、服饰和叙事自由；完整六地区战役、联网排行榜及付费模式可省略。",
+  "checklist": [
+   "同一起点施加不同方向或持续时间的触屏输入，车辆轨迹连续且可区分；角色不能瞬移到赛道另一侧，越界按公开规则处理。",
+   "四车同时跑动时车辆相互接触造成速度/朝向/稳定变化；严重碰撞可使车失去继续参赛资格，幸存车仍继续比赛。",
+   "撞毁后的残骸持续占用物理空间，后车碰到会受阻或改向；马匹碰到残骸可推动，残骸位置变化真实影响后续行驶。",
+   "固定初态和同一输入序列，在干燥与雨天比较轨迹或碰撞恢复距离，存在符合说明的滑移差异，天气不只是视觉效果。",
+   "完成一整圈合法区段顺序才增加圈数；领先一圈的车即使画面位置落后也排在前面，完成目标圈数只结算一次名次。",
+   "正常完赛显示成绩，撞毁给出失败且不再允许该车争排名；重试清空旧残骸、圈数与本场成绩，历史合法成绩按规则保存。"
+  ],
+  "hidden_checklist": [
+   "在终点线附近往返或碰撞弹回多次，未重新走完赛道区段时不能累计圈数或重复触发完赛。",
+   "三车在短时间连撞时，各车辆身份与损坏状态仍独立，残骸不复制、碰撞速度不无源持续增长。",
+   "到达终点与严重碰撞落在同一模拟步时，按公开规则给唯一结果；成绩、名次和失败记录不互相矛盾。",
+   "同初态同时间标注输入，在两种渲染频率下无额外圈数或漏算检查点，轨迹误差保持在参考实现标定的容差内。"
+  ],
+  "mobile_checklist": [
+   "按住转向时第二根手指触屏和离开不会改变第一根手指的控制归属；松手后按规则回中，输入不粘连。",
+   "转向过程中触摸被取消或切后台，恢复时暂停/继续状态明确且旧转向清除；只按住暂停按钮不会继续操纵车辆。",
+   "支持触觉时普通碰撞和撞毁反馈可区分，持续摩擦不会每帧排入震动；关闭/不支持时碰撞警示与车辆行为仍一致。"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "连续转向"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "接触物理"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "残骸×路线"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "天气×控制"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "计圈与名次"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "终局与重试"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "终点抖动"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "多车连撞"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "完赛撞毁次序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "帧率独立"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "连续输入归属"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "系统中断"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉事件节流"
+   }
+  ],
+  "minimal_state_surface": [
+   "车辆与马匹身份、位置、朝向、速度、稳定/损坏状态",
+   "残骸碰撞体、接触事件、天气与抓地配置",
+   "每车合法检查点序列、圈数、进度、名次和终局记录",
+   "模拟时间和渲染频率、主触点归属、输入取消和触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "美区 iOS releaseDate=2026-07-27；查询日 2026-09-18；指该商店条目上架日，不等于其他平台首发或全球最早测试日。",
+    "source": "https://itunes.apple.com/lookup?id=6766568254&country=us&entity=software",
+    "grade": "STORE",
+    "accessed_at": "2026-09-18"
+   },
+   {
+    "claim": "官方介绍战车竞速、竞争碰撞、布娃娃表现、六地区、自由比赛和成绩排行。",
+    "source": "https://www.toweringtowers.com/",
+    "grade": "DEV"
+   },
+   {
+    "claim": "商店 1.02 更新说明残骸可被马匹推开、撞毁后散马继续跑；1.05 说明雨天路滑会影响撞车。",
+    "source": "https://apps.apple.com/us/app/chariot-rivals/id6766568254",
+    "grade": "STORE"
+   },
+   {
+    "claim": "自动前进加触屏转向、四车、检查点算法、接触阈值、帧率容差和触觉为本题最小实现/验收设计；原作具体输入与物理参数待实玩确认。",
+    "source": "本 case 的竞速切片与移动端验收设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=连续驾驶×多体碰撞和残骸×天气抓地×计圈排名 | tier_rationale=连续物理加四系统交互，暂判 ceiling | scope=椭圆赛场与干湿两状态 | source_gap=输入手势与物理参数未实玩；不要求未证实的武器或油门系统",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_clashofcritters_mobile_2d_004",
+  "repro_game": "Clash of Critters | Farlight Games | US App Store iOS 2026-05-20 | app 6741567125",
+  "src_video": "",
+  "category": "RPG",
+  "platform": "mobile",
+  "desc": "宠物收集与布阵战斗：捕获不同生物、进化至更高阶段，再以属性/位置配队对抗逐波敌人；营地提供轻经营的长期反馈。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:rpg",
+   "subtype:pet_collection_autobattle",
+   "render:2d",
+   "input:drag_tap",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】做一款手机上的宠物收集与阵容冒险。玩家获取多种生物，培养并进化它们，选择队形挑战连续敌人波次，结束战斗后返回营地。\n【核心机制】①至少六种宠物，具有种类、等级、生命、攻击和可见的特性；重复获取与培养可以推进进化阶段，进化应改变战力或技能而非只换立绘。②阵容槽有限，至少含前后排或其他位置差异；不同宠物组合形成可说明的协同或克制，对同一敌人改变阵容可改变结果。③敌人波次逐关增强，战斗自行推进但伤害与技能触发可查看；胜利发放培养资源，失败不能领取胜利奖励。④营地允许摆放宠物、收集资源或触发简单互动，获得的资源可回到培养流程；不复刻原作上百种宠物和实时运营系统。\n【必须实现】宠物获取、培养与分阶段进化；有限阵容与位置效果；至少两组真实协同/克制；可观察的多波战斗；资源奖励与营地回流；完整的胜负和成长保存。\n【移动端额外要求】拖动换位与点击详情不冲突，宠物缩略图在小屏能辨认等级和属性；可选触觉反馈只作为行动确认与结算辅助，无触觉设备仍可完整游玩。\n【自由发挥】宠物名字、属性数值、营地外观、具体进化材料与敌人主题不作限定。",
+  "checklist": [
+   "获取新宠物后列表可见且可入队，阵容人数上限生效；重复宠物或材料足够后进化，属性或技能发生真实变化（获取×进化）",
+   "同一阵容调整前后排后承伤对象或技能覆盖范围变化，角色不能占用同一阵容槽（布阵）",
+   "选出两种具有明确协同的宠物，组合时效果强于单独部署；被克制组合对指定敌人表现下降（协同对照）",
+   "阵容等级或进化变化能改变对同一敌方波次的战果，而敌人生命与伤害不是静态演出（成长×战斗耦合）",
+   "胜利发放可用于进化或营地的资源，失败不给同等资源；消耗资源后数值正确扣除（经济闭环）",
+   "营地交互产生可见状态或资源变化，并影响后续养成；重新打开游戏后宠物、进化阶段与关卡进度保持一致（持久化）"
+  ],
+  "hidden_checklist": [
+   "同种宠物同时作为进化材料与已上阵单位时，资源扣除和阵容引用保持一致，不出现已消耗宠物继续参战（跨系统一致性）",
+   "波次中前排全部倒下后后排成为合法目标，目标选择及时更新而非继续攻击空槽（战斗边界）",
+   "营地奖励与战斗胜利奖励几乎同时领取时，每项奖励仅入账一次且资源不为负（边界时序）",
+   "背包满、阵容满或材料不足时获取/进化操作提供可恢复状态，不吞宠物、不软锁（退化局面）"
+  ],
+  "mobile_checklist": [
+   "手指拖动宠物至阵容槽后准确落位，滑出有效区域能取消；点详情与拖动不相互误触（触控换位）",
+   "小屏中宠物等级、进化阶段和关键特性可辨，长名称有可展开详情，不能依赖悬停（信息可读）",
+   "触觉可用时入队、进化与失败反馈可区分；禁用震动时仍有同等视觉提示且数值无差异（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "获取×进化"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "布阵"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "协同对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "成长×战斗耦合"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "经济闭环"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "持久化"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "跨系统一致性"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "战斗边界"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触控换位"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "信息可读"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "宠物身份、等级、进化阶段、属性和技能",
+   "阵容槽、前后排、敌人波次与战斗日志",
+   "培养材料与营地资源、关卡胜负",
+   "触控落点、详情状态、触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "收集宠物、最多四阶进化、策略布阵、波次战斗及宠物家园",
+    "source": "https://apps.apple.com/us/app/clash-of-critters/id6741567125",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-05-20 上架",
+    "source": "https://itunes.apple.com/lookup?id=6741567125&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "前后排具体结算、重复宠物消耗、营地资源回流和触觉反馈是最小复刻设计，原作精确规则待核对",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=收集进化×阵容位置×波次战斗×营地资源 | tier_rationale=四系统但可收窄至单机局部闭环，暂判 mid | source_gap=阵容规则与营地资源链待实玩 | scope=不测联网、公会、抽卡概率或付费经济",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_coilbloom_mobile_2d_012",
+  "repro_game": "Coilbloom | Steven Wemyss / Seneku Design | US App Store iOS 2026-08-19 | app 6796681788",
+  "src_video": "",
+  "category": "Puzzle",
+  "platform": "mobile",
+  "desc": "六边形回路解谜：每次放置管线增加热量，闭合的同色回路消除并排热充能；临时模块改变冒险收益，永久研究与本局成长分开。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C7",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:puzzle",
+   "subtype:hex_circuit_heat",
+   "render:2d",
+   "input:touch",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C7",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】制作竖屏六边形反应堆解谜。玩家从候选管线中选一块，旋转方向并放入反应堆；同色管口对接形成闭环，反应堆才能充能并降温。\n【核心机制】①后期反应堆使用十九格六边形棋盘，管线各边有颜色和连接关系。只有相接边颜色匹配且回路闭合才放电，开口路径不算闭环；放电移除本次回路的管线、增加阶段能量并排热。②每次实际放置增加热量；只选块或旋转预览不增加。达到熔毁条件失败；棋盘塞满且不存在合法后续操作则堵死。高收益的长回路需要先承担多次放置的热量风险。③提供多色和至少两类特殊格，例如放置时降温、闭环时额外排热或增加能量；其效果依放置位置和是否入环触发。④阶段充能达标后从三个临时模块选一项，效果包括提高热量上限、增加排热、改变回路能量或降低拆除成本；重复选择同模块可提升本局等级。⑤本局胜利、熔毁或堵死均结算研究碎片，永久研究可提升以后开局；本局模块随重开清空。拆除要有公开成本。热量增加、回路检测、排热和终局判定的次序由游戏内规则明确。\n【必须实现】十九格六边形管口旋转连接；闭环清除/充能/排热；热量与堵死失败；特殊格与回路耦合；阶段三选一及模块叠级；研究碎片、永久研究与本局状态隔离。至少做一段多阶段可通关挑战。\n【移动端额外要求】落点与旋转预览清楚可见，拖出棋盘可取消；颜色有额外纹理或符号标记；触觉可用时放置与放电有反馈和关闭选项，后台恢复保留最近一次已提交动作。\n【自由发挥】热量数值、模块数值、主题和关卡数量自由，完整五反应堆、印章与无尽模式可省略。",
+  "checklist": [
+   "旋转管线改变其六边管口方向；两块颜色不匹配的相邻管口不连通，同色开链不放电，闭环才触发一次清除。",
+   "同一初态下连续放置开链会加热，完成回路则清除管线、增加能量并降温；变化量符合游戏内说明，选择和旋转预览不加热。",
+   "固定同一闭环，把关键一块从普通格换到排热或能量特殊格，对应收益发生说明中的变化；未触发条件时不给奖励。",
+   "阶段达标后三选一只领取一项；提高热上限和提高回路收益的模块分别改变不同状态，重复选择同模块按显示等级生效。",
+   "热量满足熔毁条件时结束，满盘无合法后续动作时判堵死；阶段目标全部完成时通关，不能同时给出失败和成功。",
+   "胜利、熔毁、堵死均按公开规则给研究碎片；花费碎片的研究影响后续开局，临时模块重开后清空，拆除成本准确扣除。"
+  ],
+  "hidden_checklist": [
+   "一次落块若触发含共享格的多个回路，按公开规则计算收益；共享实体只移除一次，无负数管线和重复回收。",
+   "最后一块同时让热量到达阈值并完成可排热的回路时，严格按已公开的结算次序判断终局，重复执行结果一致。",
+   "拆掉一个开链的中间块后，该链分成不连通部分，后续闭环判定不沿用删除前的连通缓存。",
+   "在研究碎片结算或模块选择后恢复存档，奖励、模块等级和资源扣款各提交一次，不重发也不丢失。"
+  ],
+  "mobile_checklist": [
+   "拖动管线时目标六边格和旋转方向有预览；无效落点、取消或额外手指介入不会消耗候选块或增加热量。",
+   "十九格在手机屏幕可逐格选择，彩色管口有纹理/符号辅助；旋转按钮与落块确认不会互相误触。",
+   "支持触觉时成功放置和闭环放电有对应反馈且开关有效；无触觉仍有完整热量/能量提示，恢复前台不补发整段旧震动。"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "连接几何"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "放置×热量"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "特殊格×回路"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "临时模块成长"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "双失败与通关"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "局内外经济"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "闭环去重"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "同动作阈值"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "拆除改变连通"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "奖励提交恢复"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "放置事务"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "颜色与触达"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉与恢复"
+   }
+  ],
+  "minimal_state_surface": [
+   "十九格管口方向、颜色、格位属性和连通关系",
+   "候选块、旋转预览、热量、上限、能量、拆除资源",
+   "模块等级、阶段和一次动作的结算日志",
+   "研究碎片、永久研究、存档提交状态、触控和触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "美区 iOS releaseDate=2026-08-19；查询日 2026-09-18；指该商店条目上架日，不等于其他平台首发或全球最早测试日。",
+    "source": "https://itunes.apple.com/lookup?id=6796681788&country=us&entity=software",
+    "grade": "STORE",
+    "accessed_at": "2026-09-18"
+   },
+   {
+    "claim": "官方说明十九格后期反应堆、同色回路、放置加热、闭环清除/充能/排热、特殊格、三选一临时模块叠级、拆除与永久研究。",
+    "source": "https://apps.apple.com/us/app/coilbloom/id6796681788",
+    "grade": "STORE"
+   },
+   {
+    "claim": "官方列出竖屏、离线、打断后续局、高对比与触觉控制；精确颜色辅助方案和反馈节奏为本 case 的附加验收设计。",
+    "source": "https://apps.apple.com/us/app/coilbloom/id6796681788",
+    "grade": "STORE+INFER",
+    "verify_priority": "medium"
+   },
+   {
+    "claim": "同动作热阈值优先级、共享回路计分和精确数值公开资料未说明，要求实现自洽并展示规则，待原作核验。",
+    "source": "本 case 的验收边界设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "查询时美区评分数为 0，未证实热门；以回路、热管理及触觉的机制代表性入选。",
+    "source": "https://itunes.apple.com/lookup?id=6796681788&country=us&entity=software",
+    "grade": "STORE"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=多色六边连通×热量能量预算×局内外模块成长 | tier_rationale=三个系统互锁，暂判 mid | scope=一段多阶段挑战 | source_gap=共享回路和熔毁优先级需实玩 | heat=未证实热门",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_colonyflow_mobile_2d_002",
+  "repro_game": "Colony Flow! | ABI GLOBAL LTD. | US App Store iOS 2026-06-13 | app 6779167923",
+  "src_video": "",
+  "category": "Puzzle",
+  "platform": "mobile",
+  "desc": "单指选蚂蚁盒的颜色清除谜题：五个开放槽位限制放盒次序；放出蚂蚁只能搬走对应颜色的像素块，错误的颜色选择会占住工作槽。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:puzzle",
+   "subtype:slot_queue_color_clear",
+   "render:2d",
+   "input:one_tap",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】在手机竖屏上经营一支像素搬运蚁群。上方是一幅由多种颜色方块组成的像素图，下方是成叠的蚂蚁盒和恰好五个开放工作槽。目标是搬空画面上的方块。\n【核心机制】①点选可见蚂蚁盒，它进入空槽并放出该盒颜色的蚂蚁；蚂蚁只搬同色的块，搬运过程与剩余块数可见。②盒中有有限的蚂蚁/搬运能力；任务完成后盒子离场、槽位释放。所选颜色若暂时没有可搬目标，盒仍占槽，不能凭空清空。③盒子以层叠形式出现，上层取走后下层才可选。有限槽位与隐藏的后续颜色构成规划压力；五槽全占且没有可继续释放的盒时进入明确的失败态。④清空整幅像素图后揭示图案并进入下一关；至少提供多色、分层、需要利用槽位释放顺序的数个关卡。\n【必须实现】五槽、同色搬运、有限盒容量、工作槽释放、堆叠解锁、通关与堵死判负；每步局面变化应可被观察，不能只做点击即消除的表面动画。\n【移动端额外要求】单指点盒与拖动页面的输入区分清楚，误触不连续激活两个盒；槽位/颜色/余量在手机屏幕可辨；可选触觉反馈只提示有效选择、完成或失败，不支持震动时有等价视觉信息。\n【自由发挥】像素图内容、蚂蚁外观、关卡与颜色数量、辅助提示不作限定；不得让辅助提示替代槽位规划。",
+  "checklist": [
+   "选择某色盒后仅同色像素块逐步减少，其他颜色计数不变；蚂蚁盒剩余能力同步消耗（颜色与容量）",
+   "盒完成搬运后从工作槽离场并释放一个槽；无同色目标的盒继续占槽，不会因播放完动画自行消失（占位状态）",
+   "未露出的下层盒无法直接选取；取走覆盖盒后变为可选，且不改变已入槽盒状态（堆叠解锁）",
+   "设计需要先释放某颜色槽位才能打开下层关键颜色的关卡，正确次序可清盘，错误次序五槽塞满导致失败（槽位×堆叠耦合）",
+   "剩余搬运能力不足以清除同色目标时，不把盒误判为已完成；后续选择可以继续清除该色（容量边界）",
+   "清空所有颜色方块时通关并揭示图案；无可用槽且无可释放盒时明确判负或提供明确可恢复路径（终局）"
+  ],
+  "hidden_checklist": [
+   "多个同色盒同时在槽时，搬运总量不会重复消去同一像素；消去顺序变化不影响最终剩余计数（并发结算）",
+   "屏幕上只剩一种颜色但对应盒被压在堆叠下时，不能跳过堆叠规则直接调用；若五槽均被无目标盒占满则正确识别死局（二阶阻塞）",
+   "快速连续点击同一盒两次只入槽一次；满槽时点击盒不扣容量、不揭露下层盒（输入边界）",
+   "暂停、恢复或重开关卡后盒容量、槽位与像素块数量一致，不出现幽灵蚂蚁继续搬运（状态一致性）"
+  ],
+  "mobile_checklist": [
+   "单指点击盒有按下反馈与有效/无效区分；连续触摸或页面滚动不重复激活盒，手指离开后才提交选择（触屏输入）",
+   "手机屏幕下五槽的占用、盒颜色与剩余搬运量能清楚辨认，颜色还具有形状或文字辅助而非只能靠色差（小屏与可辨性）",
+   "具有可用触觉执行器时有效选盒、清盘、堵死有可区分反馈；关闭或不支持震动时视觉状态与游戏结果保持相同（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "颜色与容量"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "占位状态"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "堆叠解锁"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "槽位×堆叠耦合"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "容量边界"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "终局"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "并发结算"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶阻塞"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "输入边界"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "状态一致性"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触屏输入"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏与可辨性"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "像素块坐标和颜色、每色剩余数",
+   "每个蚂蚁盒颜色、容量、层叠关系与是否可选",
+   "五槽盒身份及搬运任务状态",
+   "关卡完成/堵死/暂停状态、触控与触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "点盒放蚂蚁、只搬同色像素块、五槽、堆叠解锁、堵槽失败",
+    "source": "https://apps.apple.com/us/app/colony-flow/id6779167923",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-06-13 上架",
+    "source": "https://itunes.apple.com/lookup?id=6779167923&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "盒容量与细化的死局判定、触觉反馈均为本 benchmark 的最小机制/移动适配规格，原作精确值待实玩核对",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=颜色搬运×五槽队列×盒容量×堆叠解锁 | tier_rationale=三个以上系统互锁，暂判 mid | scope=数关可验证闭环，不复刻广告/道具经济 | source_gap=未实玩；盒容量与触觉为适配规格",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_dawnfolk_mobile_2d_009",
+  "repro_game": "Dawnfolk | Short Circuit Studio | US App Store iOS 2026-08-17 | app 6759442443",
+  "src_video": "",
+  "category": "Strategy",
+  "platform": "mobile",
+  "desc": "短局暗影城建：用有限资源探索被黑暗覆盖的格子、点亮土地、放置建筑，并通过短小的操作小游戏获取额外资源。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:strategy",
+   "subtype:micro_city_builder",
+   "render:2d",
+   "input:tap_drag",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】在手机上重建被黑暗吞没的微型王国。玩家用火光探索和点亮地图，再把有限地块变成农田、居住区与生产设施；小游戏为建设提供额外资源。\n【核心机制】①地图由可见与被暗影覆盖的格子构成，探索消耗资源或行动，点亮后才可建设；不同地块给建筑不同收益。②至少三种建筑分别生产食物、人口容量和建设资源，维护或人口需求会消耗产出，盲目扩张可导致资源不足。③一类可重复的短小游戏按玩家表现给不同数量的奖励，奖励回流城建；失败不得给满额奖励。④选择建设与探索会改变后续可用地块和资源，阶段目标要求城市存续并点亮指定区域。可选择回合式或实时模式，但两者结算规则应一致。\n【必须实现】暗影探索、格子建设、三类建筑和资源生产/消耗、小游戏奖励、存续与阶段目标、可暂停并保存短局。\n【移动端额外要求】点格建设与拖动/缩放地图不冲突，手指遮挡时可查看地块数据；小游戏按钮可单手触达；触觉可用时事件反馈可关闭。\n【自由发挥】地图形状、建筑数值、暗影形象、故事分支和小游戏主题不作限定。",
+  "checklist": [
+   "未点亮格不可建设，探索并点亮后才能放置；探索资源正确扣除（暗影门槛）",
+   "农田、住宅与材料建筑的产出/容量不同，资源生产与人口消耗逐步结算（城建经济）",
+   "同初态中把生产建筑放到不同地块，至少一种产出或扩张路径变化（位置对照）",
+   "小游戏优秀表现比失败得到更多资源，奖励入账后可用于建筑或探索（操作×经营耦合）",
+   "资源不足时无法继续负担人口或建设，系统给出明确衰退或限制；达到点亮与存续目标时通关（胜负）",
+   "暂停和恢复后资源、建筑与暗影状态一致，保存再加载不重复领取小游戏奖励（持久化）"
+  ],
+  "hidden_checklist": [
+   "探索打开关键资源格但同时增加维护开销时，净资源按两个系统共同结算，不只计算新收入（二阶经济）",
+   "人口容量刚好达到上限时建住宅或消耗食物，需求与容量在同一结算序中不短暂变负（边界时序）",
+   "没有可探索边界或生产全停时局面给出可恢复/失败结果，不无限空转（退化局面）",
+   "实时与回合模式在相同操作和相同游戏时间下资源趋势一致，不因暂停多算产出（模式一致性）"
+  ],
+  "mobile_checklist": [
+   "单指点击地块与拖动地图/双指缩放区分清楚，手指离开前不会误建（手势隔离）",
+   "选中地块后关键产出、维护和暗影状态在手机屏幕可读，小游戏可单手完成（小屏可达）",
+   "支持触觉时点亮、建设与危机反馈不同；关闭或不支持时视觉提示完整（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "暗影门槛"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "城建经济"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "位置对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "操作×经营耦合"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "胜负"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "持久化"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶经济"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "模式一致性"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "手势隔离"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏可达"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "地图格明暗、地块、建筑及收益",
+   "食物、人口容量、建设资源、维护成本",
+   "小游戏表现、奖励、阶段目标",
+   "暂停/模式/存档、触控缩放和触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "暗影世界探索、资源管理与建城、小游戏奖励、短局及实时/回合模式",
+    "source": "https://apps.apple.com/us/app/dawnfolk/id6759442443",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-08-17 上架",
+    "source": "https://itunes.apple.com/lookup?id=6759442443&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "具体三建筑资源模型、维护与触觉反馈为最小可测设计，原作数值待核对",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=暗影探索×地块城建×资源经济×小游戏回流 | tier_rationale=四系统短局耦合，暂判 mid | source_gap=建筑效果与小游戏操作需实玩 | scope=不测完整剧情或内购",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_dicero_mobile_2d_003",
+  "repro_game": "Dicero! | HABBY | US App Store iOS 2026-04-21 | app 6740966864",
+  "src_video": "",
+  "category": "RPG",
+  "platform": "mobile",
+  "desc": "骰面驱动的短局 Roguelite：每次掷骰触发技能，玩家在战斗间选择技能与装备，构筑改变骰面收益和生存能力。",
+  "agent_ability": [
+   "C2",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C11"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:rpg",
+   "subtype:dice_roguelite",
+   "render:2d",
+   "input:tap",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】一款为短时手机游玩设计的骰子战斗 Roguelite。玩家进入连续战斗，在每轮掷骰后发动技能，再用胜利奖励构筑下一轮。\n【核心机制】①骰子至少有三种可区分的结果类型；结果会触发不同技能或强化同一技能，动画结束前后给出清晰的骰面和触发记录。②战斗中敌方有可见生命与行动意图，玩家掷骰后按骰面结算攻击、防御或资源效果，敌方随后反击；胜负不能预先写死。③胜利后从多个技能/装备奖励中选一个加入本局，至少两种奖励能互相改变触发率、伤害或防御，形成构筑差异。④局外可解锁初始装备或技能，但本局奖励在失败重开时清空；相同初始条件和骰序可复现结算。\n【必须实现】可见骰面与技能映射、敌我回合结算、至少三种骰面效果、至少两类可形成组合的奖励、连续遭遇和死亡重开、局内/局外状态隔离。\n【移动端额外要求】单手点击掷骰、奖励选择和角色详情；掷骰时阻止重复提交，手机小屏能读出骰面与触发效果；触觉反馈为可选适配，不支持时由动画与文字说明补足。\n【自由发挥】骰面图案、具体点数、技能和装备池、敌人主题与关卡长度不作限定；关键是骰面、构筑和战斗间真实因果。",
+  "checklist": [
+   "固定骰序下不同骰面触发可区分的技能与日志，生命或护盾变化与显示效果一致（骰面映射）",
+   "敌方行动只在本轮玩家骰子效果结算后发生；敌人被击败则不再进行已失效的反击（战斗时序）",
+   "选取强化特定骰面的技能奖励后，同一骰序的该类结果收益上升，其他结果不会无故同步增强（奖励对照）",
+   "装备改变资源、攻击或防御后，至少一种骰面技能的效果发生可观测变化，构筑组合优于孤立效果（装备×骰面耦合）",
+   "连续战斗的敌人和奖励逐轮推进，成功后可继续，角色生命归零则本局失败且临时奖励消失（循环）",
+   "局外解锁只改变合法初始选项，不把上一局的临时强化带到新局；相同初态与骰序得相同战果（状态隔离与确定性）"
+  ],
+  "hidden_checklist": [
+   "同次掷骰触发攻击与回血时，若攻击先击败敌人，后续自身效果仍按清楚次序结算，不出现负血量或重复胜利（复合结算）",
+   "技能效果改变骰面权重后，显示概率与实际抽样趋势方向一致，结果仍落在合法面集合内（概率一致性）",
+   "奖励选择与战斗开始几乎同时触发时只允许一个相位转换，奖励不重复领取（边界时序）",
+   "未解锁装备池为空或某类骰面暂时无可触发技能时，掷骰仍有合法空效果，不软锁（退化局面）"
+  ],
+  "mobile_checklist": [
+   "一次触摸掷骰只产生一次结果，连点、长按或动画期间重复点击不消耗第二次行动（单手输入）",
+   "骰面与技能说明可在手机屏幕查看，奖励卡不会被手指或安全区域遮住确认位置（小屏可读性）",
+   "支持触觉时掷骰落定、强技能和战败反馈可区分；关闭或不可用时动画/文字保持相同信息（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "骰面映射"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "战斗时序"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "奖励对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "装备×骰面耦合"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "循环"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "状态隔离与确定性"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "复合结算"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "概率一致性"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "单手输入"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏可读性"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "骰面集合、权重、固定种子与每次结果",
+   "技能和装备及本局奖励",
+   "敌我生命/护盾、行动意图、结算日志",
+   "局外解锁与本局状态、触控/触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "掷骰发动技能、技能与装备构筑、短局 Roguelite",
+    "source": "https://apps.apple.com/us/app/dicero/id6740966864",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-04-21 上架",
+    "source": "https://itunes.apple.com/lookup?id=6740966864&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "敌人意图、回合先后、局外解锁边界及触觉设计是可测试的最小复刻规则；原作细节待实玩",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=骰面概率×技能效果×奖励构筑×连续战斗 | tier_rationale=至少三系统耦合，暂判 mid | source_gap=商店描述偏概括，优先实玩确认骰面和行动经济 | scope=单局机制，不测公会/付费/赛季",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_flickshotrogues_mobile_2d_010",
+  "repro_game": "Flick Shot Rogues | Noodlecake | US App Store iOS 2026-09-16 | app 6758023730",
+  "src_video": "",
+  "category": "Action",
+  "platform": "mobile",
+  "desc": "拖拽瞄准的回合制弹射 Roguelite：英雄撞击敌人和墙壁产生反弹与连击，战利品、技能和诅咒改变每次发射的路线价值。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C7",
+   "C8"
+  ],
+  "difficulty_tier": "ceiling",
+  "level": "L5",
+  "label": [
+   "genre:action",
+   "subtype:flick_physics_roguelite",
+   "render:2d",
+   "input:drag_release",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】把英雄像桌面棋子一样弹出去的回合制 Roguelite。玩家用手指拉出方向和力度，松手发射，英雄在小型战场上撞击敌人与墙壁，反弹产生多段攻击；每场战斗后选择能力、装备或带代价的诅咒。\n【核心机制】①拖动显示发射向量和短距离轨迹预览，松手才发射；撞墙/撞敌按照连续运动反弹，同次发射可多次命中，但需防止极低速无限抖动。②撞敌触发武器效果，敌人被击退且生命下降，特殊敌人或场景障碍改变反弹路线。③至少两名能力不同的英雄与至少三种局内物品/技能，其中两种可以组合产生额外连击或变化的轨迹收益。④每关战后在奖励与诅咒之间取舍，敌人和奖励随新一局重排；战败结束本局，重新开始不继承临时加成。\n【必须实现】拖拽瞄准与松手发射、连续碰撞和反弹、击退/伤害/多段命中、英雄差异、奖励与诅咒构筑、关卡推进与重开。\n【移动端额外要求】触摸目标被手指遮挡时仍能看到方向和力度；拖出界面可取消，误触不发射；震动可用时撞击和连击可区分，不可用时画面仍可读。\n【自由发挥】海岛主题、英雄名字、武器外观、具体物理系数和关卡长度不作限定。",
+  "checklist": [
+   "同起点改变拖拽角度或长度后，发射方向或速度改变；未松手与取消不发射（瞄准输入）",
+   "英雄撞墙后方向按可见几何反射；连续碰撞可产生多段运动，速度最终衰减并停下（反弹物理）",
+   "撞敌时敌人受伤和位移，未撞到的敌人不受同等伤害；同次发射可按规则命中多个目标（碰撞×战斗）",
+   "两名英雄在同轨迹/同敌人条件下，技能或武器效果造成可见战果差异（英雄对照）",
+   "选择奖励或带代价诅咒后下一场战斗的轨迹收益、伤害或风险变化，两种能力组合可产生额外连击（构筑耦合）",
+   "清除敌人推进关卡，角色阵亡结算失败；重开后敌人与奖励重排且临时加成清空（局循环）"
+  ],
+  "hidden_checklist": [
+   "同一发射同时碰到墙和敌人时，按明确次序结算反射、伤害和击退，不穿墙或重复伤害（二阶碰撞）",
+   "低速反复接触墙角时运动有限步结束，不发生无限循环或飞出边界（数值稳定）",
+   "敌方指挥单位死亡导致随从消失时，已产生的撞击仍按明确定义处理，不重复给战利品（死亡连锁）",
+   "从系统中断恢复后若手指已离开，不自动发射或保留半拉伸状态（移动生命周期）"
+  ],
+  "mobile_checklist": [
+   "拖动方向、力度和轨迹预览在手指遮挡下仍可辨；滑出取消不消耗行动（触控瞄准）",
+   "小屏可查看英雄、物品和诅咒效果，瞄准线不遮住关键敌人生命（小屏可读）",
+   "触觉可用时普通撞击与多段连击不同，关闭或不支持时伤害与连击可视化不缺失（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "瞄准输入"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "反弹物理"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "碰撞×战斗"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "英雄对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "构筑耦合"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "局循环"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶碰撞"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "数值稳定"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "死亡连锁"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "移动生命周期"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触控瞄准"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏可读"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "英雄位置、速度、半径和碰撞体",
+   "敌人位置、生命、击退和死亡状态",
+   "物品/诅咒、关卡种子、局内结算",
+   "触摸拖动向量、轨迹预览、前后台和触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "手指弹射式回合战斗、连击、角色/物品/技能和诅咒、新局重排",
+    "source": "https://apps.apple.com/us/app/flick-shot-rogues/id6758023730",
+    "grade": "STORE"
+   },
+   {
+    "claim": "碰墙反弹、击退敌人、指挥敌人死亡可清除随从",
+    "source": "https://apps.apple.com/us/iphone/story/id6788563235",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-09-16 上架",
+    "source": "https://itunes.apple.com/lookup?id=6758023730&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "精确碰撞系数、能力组合和触觉为最小可测设计，原作细节待实玩",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=连续碰撞×击退战斗×英雄技能×奖励诅咒 | tier_rationale=连续物理和连锁触发有高不确定性，暂判 ceiling | source_gap=刚上架且未实玩，物理与触觉需优先核验 | scope=不测完整战役或付费解锁",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_orderautomatica_mobile_2d_001",
+  "repro_game": "Order Automatica | New Beings / better. publishing / Pixel Perfect Dude | iOS + PC 同步正式发售 2026-09-04",
+  "src_video": "",
+  "category": "Strategy & Card",
+  "platform": "mobile",
+  "desc": "九格仪式盘自动战斗：备战时在有限格位中布置单位、合并同类、装备物品、利用有利或有害地块；开战后单位自行行动，战果由布阵、触发顺序与局内修正共同决定。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C7",
+   "C8",
+   "C11"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L5",
+  "label": [
+   "genre:strategy_card",
+   "subtype:autobattler_roguelite",
+   "render:2d",
+   "input:touch",
+   "tier:L5",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C7",
+   "cog:C8",
+   "cog:C11"
+  ],
+  "prompt": "【游戏】复刻一款适合手机触屏的九格布阵 Roguelite。每次遭遇先备战，再观看自动战斗，随后领取奖励并进入下一次遭遇。玩家的关键决策在开战之前，而非战斗中连续点技能。\n【核心机制】①九格布阵：玩家有 3×3 格的仪式盘，每格至多一个单位，拖动可交换或移动位置。单位具有攻击、生命、可见的触发条件与效果。至少实现四种有差异的单位职能，例如前排承伤、相邻友军增益、召唤/追加攻击、受伤反击；具体数值与美术可自行设计，但位置改变必须能改变至少一类触发关系或自动战斗结果。备战时可预览下一波敌方阵容。②商店与成长：每轮备战有有限资源，可购买单位和物品；两个同类单位可合并升级，但合并占用与释放格位会改变队形。物品装备于单位并影响攻击、防御或触发效果。③格位与局内修正：一些格位有正面或负面效果；单位进入相应格位才受影响。每轮奖励可选择持续到本局后续遭遇的增益，诅咒则持续施加不利条件；至少各实现两种相互不同的效果，并在界面中说明生效范围。④自动结算：确认布阵后开始战斗，单位依可见次序自动攻击和触发技能，玩家不能在战斗中重新布阵。伤害、死亡、召唤及连锁触发按明确次序结算，避免循环触发卡死；加速播放仅改变观感耗时，不改变战果。⑤局的推进：敌人逐轮增强；单战胜负反馈到本局进度和失败容错，获得目标胜场则通关，容错耗尽则本局结束，重开应清空本局购买、格位修正和队伍。\n【必须实现】1. 3×3 格、单格占位、拖动布阵与可见敌方预览；2. 有资源约束的购买、装备与同类合并，且合并后的战力和占位真实变化；3. 至少四种单位职能，位置/相邻关系与出手次序影响自动战斗；4. 正负格位效果和可持续的局内增益/诅咒能与单位、装备发生作用；5. 备战与自动战斗严格分相，结算可读、连锁有界、播放加速不改结果；6. 多轮推进、胜负容错与通关/失败/重开的完整闭环。\n【移动端额外要求】支持手指拖动摆位，误触可取消且不会暗中改变队伍；在手机屏幕上能查看单位、物品和格位的说明，缩放或等效的局部放大不能触发布阵；运行环境具有可用触觉执行器时，关键的确认、合并及失败事件提供可关闭的触觉反馈；不支持震动、系统禁用或用户关闭时，游戏规则和视觉/文字反馈仍完整。此段属于 benchmark 的移动端适配要求，不表示原作一定有触觉反馈。\n【自由发挥】单位与物品名称、数值、敌人主题、奖励池、胜场目标、失败容错、画风与叙事不作限定；应保持所有机制可读、可观察、可重复测试。",
+  "checklist": [
+   "同一队伍在 3×3 盘内调整承伤者与相邻增益者的位置，界面占位合法且自动战斗中的受益对象或生存结果随之改变；敌方下一波阵容在确认前可见（布阵×触发耦合）",
+   "资源不足时购买被拒绝且资源不变；资源足够时购买扣费并增加可摆放单位；两个同类单位合并后等级或能力提高、占位释放，装备影响相应结算（经济×合并）",
+   "把同一单位放入正面、普通、负面格位做对照，所示格位效果分别在战斗中体现；改变格位而不改单位与装备时结果按规则变化（格位×战斗）",
+   "领取不同的持续增益或诅咒后，在后续至少一场遭遇中仍生效；其效果与单位触发或物品效果可形成可见的组合，而非仅改变文本（局内修正×构筑）",
+   "确认开战后无法移动、购买或改装备；攻击、死亡、召唤与追加触发依显示的次序逐步结算，可能的连锁在有限时间内结束（相位与结算）",
+   "连续获胜推进遭遇并最终通关；连续失利耗尽容错后失败；重开新局不保留上一局的队伍、金币、格位状态及临时修正（胜负闭环）"
+  ],
+  "hidden_checklist": [
+   "合并某个提供相邻增益的单位后，虽然该单位自身升级，但腾出的格位改变邻接关系；战斗按合并后的实际队形重新结算，不沿用合并前的增益缓存（二阶耦合）",
+   "同一触发链中单位先死亡再发生后续效果时，死亡单位不再作为合法受益或攻击目标；若死亡触发会召唤，召唤物只占合法空格且不覆盖已有单位（边界时序）",
+   "在增益、装备与追加触发相互激活的构筑中，重复触发可计数且最终停机；播放速度变化前后，同一战斗初态的胜负、资源和最终队伍一致（稳健与确定性）",
+   "商店售空、仪式盘已满或剩余资源为零时，仍可明确结束备战并进行一场有定义结果的战斗，不发生负资源、幽灵单位或软锁（退化局面）"
+  ],
+  "mobile_checklist": [
+   "在手机尺寸的触屏上拖动单位跨格摆放、交换与拖出取消；手指抬起前目标格有反馈，取消或无效落点不扣资源也不改变队形，连续快速拖动不会把一次操作执行两次（触控精度与误触恢复）",
+   "通过长按、轻触详情或等效手势能阅读单位、装备和格位效果；双指缩放或等效局部放大只改变视图，不会触发购买、布阵或开战；缩放后仍可准确选择九格（小屏可读性与手势隔离）",
+   "在具有可用触觉执行器的运行环境中，开启触觉反馈后确认、合并和战败产生可区分的轻重或节奏；关闭开关、设备不支持或系统禁用震动时没有错误，且画面/文字保留完整反馈，战斗数值与触觉开关无关（触觉反馈与降级；无触觉设备时不考核实际振动波形）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "布阵×触发耦合"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "经济×合并"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "格位×战斗对照"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "局内修正×构筑"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "相位与结算"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "胜负与重开"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二阶耦合"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "稳健与确定性"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触控精度与误触恢复",
+    "source_relation": "benchmark_adaptation"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏可读性与手势隔离",
+    "source_relation": "benchmark_adaptation"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉反馈与降级",
+    "source_relation": "benchmark_adaptation_not_original_claim"
+   }
+  ],
+  "minimal_state_surface": [
+   "每格单位身份、等级、攻击/生命、装备、相邻关系、格位效果",
+   "备战资源、商店库存、下一波敌方预览、可选增益与诅咒",
+   "战斗阶段、行动序列、触发队列、召唤位置、双方存活单位",
+   "本局胜场、失败容错、局内持续修正、结局状态",
+   "触控输入记录（按下、移动、抬起、取消、双指手势）、视图缩放状态、触觉开关与触觉事件记录；由 harness 约定观察方式"
+  ],
+  "evidence": [
+   {
+    "claim": "正式版 2026-09-04 同步登陆 iOS 与多平台",
+    "source": "https://newbeings.itch.io/order-automatica/devlog/1625074/release-date-september-4th-2026 及 https://newbeings.itch.io/order-automatica/devlog",
+    "grade": "DEV"
+   },
+   {
+    "claim": "iOS 商店页确认 iPhone/iPad 版本及九格自动战斗、合并、格位效果、遗物、诅咒",
+    "source": "https://apps.apple.com/us/app/order-automatica/id6778029370",
+    "grade": "STORE"
+   },
+   {
+    "claim": "开发者确认备战商店购买、布阵、物品及持续升级，然后进入自动战斗",
+    "source": "https://steamcommunity.com/app/2105840/allnews/ （2026-08-14 What Happens Between Battles?）",
+    "grade": "DEV"
+   },
+   {
+    "claim": "开发者确认相邻增益、正负格位效果、出手先后均影响战斗，并公布 20 种玩家单位、19 件物品、18 种格位效果、9 个诅咒和 24 个持续增益",
+    "source": "https://steamcommunity.com/app/2105840/allnews/ （Why Placement Feels So Powerful / How Much Content Awaits You）",
+    "grade": "DEV"
+   },
+   {
+    "claim": "旧版开发者日志给出敌人预览、3 次失败容错与 9 场胜利；正式版中预览和具体胜负阈值仍需实玩复核",
+    "source": "https://newbeings.itch.io/order-automatica/devlog/440537/030-lives-enemy-preview-how-to-play-video",
+    "grade": "DEV",
+    "verify_priority": "high"
+   },
+   {
+    "claim": "开发者 2026-09 补丁记录提到部分组合触发过长及停止连锁的处理，因此有界触发是核心健壮性测试点",
+    "source": "https://steamcommunity.com/app/2105840/allnews/ （2026-09-06 patch / 2026-09-11 speed update）",
+    "grade": "DEV"
+   },
+   {
+    "claim": "手指拖动、详情手势、缩放隔离、触觉反馈是本 benchmark 的移动端交互规格；未找到原作触觉反馈的官方证据",
+    "source": "本 case 的移动端适配设计，不作原作事实陈述",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | release=2026-09-04（开发者确认，非 Apple 页面缓存的 Expected 字样） | hard_systems=九格位置/相邻关系 × 购买合并装备 × 正负格位和持续修正 × 自动战斗触发次序（4） | tier_rationale=四系统耦合，但棋盘仅 9 格且非连续物理，暂判 mid，待 pilot 实测 | scope=原作内容量不全量复刻，测试最小机制闭环 | source_gap=未实际游玩正式 iOS 版；移动触觉为额外要求而非原作特性 | score_policy=原 6 gate + 4 hidden 与 mobile_extra 单独报告，不把 mobile_extra 偷塞进 gate 分",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ },
+ {
+  "task_id": "repro_spacetteokbokki_mobile_2d_005",
+  "repro_game": "Space Tteokbokki Tycoon | Minipact Games | US App Store iOS 2026-08-22 | app 6780835418",
+  "src_video": "",
+  "category": "Simulation & Sandbox",
+  "platform": "mobile",
+  "desc": "触屏烹饪小店：读取订单、控水和火候、出餐；顾客反馈与收入推动工作台自动化。",
+  "agent_ability": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C8"
+  ],
+  "difficulty_tier": "mid",
+  "level": "L4",
+  "label": [
+   "genre:simulation_sandbox",
+   "subtype:cooking_shop",
+   "render:2d",
+   "input:tap_drag_hold",
+   "tier:L4",
+   "incentive:single-agent",
+   "cog:C2",
+   "cog:C3",
+   "cog:C4",
+   "cog:C5",
+   "cog:C8"
+  ],
+  "prompt": "【游戏】经营一家宇宙炒年糕小店。客人逐个给出不同要求，玩家在手机触屏上备料、注水、加热、加配料与出餐，赚取收入并升级工作台。\n【核心机制】①订单有至少两个独立要求，如份量、配料或口味，制作前和制作中可查看。②烹饪不是点一下即完成：注水有可见刻度，火候随时间变化，食材组合改变成品；偏离目标降低评价。③多单排队，顾客耐心或营业时段有限，准备顺序影响收益。④收入升级至少两种工作台自动化，如自动停火或减少备料步骤，升级必须改变操作或容错。⑤营业日结束汇总收入、好评与未完成订单，随后进入下一日。\n【必须实现】不同订单、分步烹饪、至少两种精度或计时要求、多单排队、收入评价和工作台升级、营业日闭环。\n【移动端额外要求】单手可取料、注水、停火和出餐，误触能在确认前修正；小屏能查看订单与刻度；触觉可用时提示完成或过火，不可用时视觉信息完整。\n【自由发挥】菜名、配料、升级成本、营业日长度不作限定；不复刻付费和广告系统。",
+  "checklist": [
+   "同原料制作两张不同订单，准确匹配者评价高于份量或配料错误者；订单随时可查看（订单×配方）",
+   "注水在目标刻度附近与明显偏离时评价不同，松手后不继续注水（精度）",
+   "同配方在适当火候与过火时结果不同；停火后不继续升温（火候时序）",
+   "多单排队时后做前单会消耗其耐心或营业时间，出餐顺序影响结果（排队×计时）",
+   "购买自动停火或备料升级后，下一单的实际操作或容错变化，评价仍按订单结算（经营×烹饪）",
+   "日终正确汇总收入、评价和未完成订单；下一日升级状态按规则保留（营业闭环）"
+  ],
+  "hidden_checklist": [
+   "自动停火启动时玩家又手动停火，只产生一次状态转移，不重复给奖励（二次触发）",
+   "订单耐心恰好耗尽时出餐，按确定次序只结算一次，收入不重复（边界时序）",
+   "缺少某种配料时仍可判定结果或提供替代，不锁死界面或凭空补料（退化局面）",
+   "暂停、切后台再恢复时烹饪和排队遵循同一时钟策略，不出现只有一方偷跑（生命周期）"
+  ],
+  "mobile_checklist": [
+   "单手完成取料、注水、停火及出餐；滑出区域后不继续注水或误出餐（触控精度）",
+   "订单、水位和火候在手机尺寸可同时辨认，查看订单详情不意外触发烹饪（小屏可读）",
+   "触觉可用时完成步骤与过火警告不同；关闭或不支持时视觉警示和结算仍完整（触觉降级）"
+  ],
+  "checklist_detail": [
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "订单×配方"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "精度"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "火候时序"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "排队×计时"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "经营×烹饪"
+   },
+   {
+    "layer": "gate",
+    "in_prompt": true,
+    "category": "营业闭环"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "二次触发"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "边界时序"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "退化局面"
+   },
+   {
+    "layer": "hidden",
+    "in_prompt": false,
+    "category": "生命周期"
+   }
+  ],
+  "mobile_checklist_detail": [
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触控精度"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "小屏可读"
+   },
+   {
+    "layer": "mobile_extra",
+    "in_prompt": true,
+    "category": "触觉降级"
+   }
+  ],
+  "minimal_state_surface": [
+   "订单要求、耐心和队列",
+   "锅内材料、水量、温度/火候、操作阶段",
+   "营业日时钟、收入、评价、升级",
+   "触摸与后台/前台事件、触觉事件"
+  ],
+  "evidence": [
+   {
+    "claim": "宇宙炒年糕小店、不同顾客、烹饪操作与自动停火升级",
+    "source": "https://apps.apple.com/us/app/space-tteokbokki-tycoon/id6780835418",
+    "grade": "STORE"
+   },
+   {
+    "claim": "美区 iOS 2026-08-22 上架",
+    "source": "https://itunes.apple.com/lookup?id=6780835418&country=us&entity=software",
+    "grade": "STORE"
+   },
+   {
+    "claim": "精确评分、耐心时限与触觉反馈是最小可测设计，原作细节待实玩",
+    "source": "本 case 设计",
+    "grade": "INFER",
+    "verify_priority": "high"
+   }
+  ],
+  "notes": "source=ios_repro | hard_systems=订单×分步烹饪×排队计时×升级自动化 | tier_rationale=四系统，暂判 mid | source_gap=水量/火候公式及耐心需实玩；触觉非原作事实 | scope=不测充值与能量",
+  "attachment": [],
+  "result_verify": "",
+  "verify": "llm-eval.2D_eval.Eval2DScenario.eval",
+  "source_file": "repro_cases_mobile_pilot.json",
+  "source_meta": {
+   "name": "repro-cases-mobile-v1",
+   "version": "0.3-research-draft",
+   "date": "2026-09-18",
+   "status": "research_draft_not_playtested",
+   "provenance": "十五条研究草案。上架日以美国区 Apple iTunes Lookup API 的 releaseDate 为准；机制依据 App Store 官方商店页、Apple 编辑内容与部分开发者公告。未实际游玩 iOS 正式版，未逐帧核对视频。原作可证实机制与 benchmark 为可测性补充的最小规则，在 evidence 中分开标记。",
+   "selection_policy": "以 2026 年 3–9 月美区 iOS 首发、触屏适配、至少三个相互作用的可测系统和类型覆盖为优先；部分游戏曾先在 PC 推出，这里只以 iOS 上架日判定移动端新作，不宣称移动独占。热度以榜单/评分为发现信号，不作为每条 case 的必备条件。",
+   "schema_note": "沿用 repro_cases_v1 的 6 条 checklist + 4 条 hidden_checklist；新增独立的 3 条 mobile_checklist，不混入原 10 项得分。mobile_checklist 评估移动端交互质量；原作明确记载的触觉或手势功能见各 case 的 evidence，其余触觉反馈、开关和中断处理作为 benchmark 附加要求，不默认原作具有该功能；实际震动只在运行设备支持时考核。"
+  }
+ }
+]
