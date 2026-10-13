@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or code, please cite it as below."
+title: "Rezona H5 Benchmark: Evaluating Coding Agents on HTML5 Game Generation"
+authors:
+  - name: "Rezona"
+    email: "hi@rezona.ai"
+repository-code: "https://github.com/Rezonalab/rezona-h5-benchmark"
+license: MIT
+type: software
+date-released: "2026-10-13"
+keywords:
+  - benchmark
+  - llm-evaluation
+  - coding-agents
+  - html5-games

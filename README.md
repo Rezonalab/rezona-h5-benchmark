@@ -75,3 +75,14 @@ python3 playground/build_play.py --zips-dir /path/to/zips --cases data/cases_150
 No credential is stored in this repository. `configs/keys.env` and `.env` are git-ignored; the committed
 `*.example` files hold placeholders only. `run_bench.py` passes each vendor key to its agent process through the
 environment and never writes it to disk or transcripts.
+
+## License
+
+Code (everything outside `data/`) is released under the [MIT License](LICENSE). The benchmark cases in `data/` are
+released under [CC BY 4.0](data/LICENSE). Game titles referenced by `repro_` cases are trademarks of their respective
+owners; see [NOTICE.md](NOTICE.md) for third-party notices and the attribution format.
+
+## Citation
+
+See [`CITATION.cff`](CITATION.cff) (GitHub shows a "Cite this repository" button). A paper citation will be added
+on publication.
