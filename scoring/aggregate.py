@@ -2,7 +2,7 @@
 """Aggregate harness status (run_bench.py status → status.csv) and judge results (eval/run_eval.py →
 eval_results/<model>.csv) into one per-model table, optionally restricted to a case subset.
 
-    python scoring/aggregate.py --status status_web.csv --eval-dir eval_results --subset data/h5bench_180_zh.jsonl --out my_results.md
+    python scoring/aggregate.py --status status_web.csv --eval-dir eval_results --subset data/octave_180_zh.jsonl --out my_results.md
 
 Columns: cases, build success (dist/index.html), terminal failures by kind, cost USD (from token usage ×
 configs/models.json prices), mean wall minutes, mean checklist pass ratio, gate-fail count, mean aux dims.

@@ -5,7 +5,7 @@ For every (model zip, task_id) it extracts <model>/<task>/project/dist/ out of t
 root-absolute asset paths ("/assets/…") to relative ones so Vite builds work under a sub-path, and writes
 one HTML table per set (web / mobile) with a ▶ link per cell. Cells without a built dist show "—".
 
-    python playground/build_play.py --zips-dir /tmp/zips --cases data/h5bench_180_zh.jsonl --select data/play_selection.json \
+    python playground/build_play.py --zips-dir /tmp/zips --cases data/octave_180_zh.jsonl --select data/play_selection.json \
         --web-zip-prefix "" --mobile-zip-prefix m_ --out site --bucket gs://my-public-bucket
 
 --select is a JSON {"web_models": [...], "mobile_models": [...], "cases": [...task_id...]}; without it, a

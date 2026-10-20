@@ -1,8 +1,10 @@
-# Rezona H5 Benchmark
+# OCTAVE
+
+**A Capability-Resolved Benchmark for Complete HTML5 Game Generation**
 
 [中文](README_zh.md) · [Dataset card](data/README.md) · [Results](results/README.md) · [Reproduce](docs/reproduce.md)
 
-**Can a coding agent build a complete, playable game from a design brief?** The Rezona H5 Benchmark has 180 HTML5
+**Can a coding agent build a complete, playable game from a design brief?** OCTAVE has 180 HTML5
 game-generation tasks. Each task gives an agent such as Claude Code or Codex a multi-system game design and checks
 the built project against 10 falsifiable assertions: 6 public checklist items and 4 hidden probes the brief only
 implies. That is 1,800 assertions in total.
@@ -51,24 +53,24 @@ Notes on reading these numbers:
 ## Quick start
 
 ```bash
-git clone https://github.com/Rezonalab/rezona-h5-benchmark.git && cd rezona-h5-benchmark
+git clone https://github.com/Rezonalab/octave-bench.git && cd octave-bench
 pip install -r requirements.txt
 
 # 1. Look at the tasks
-python3 -c "import json; c=[json.loads(l) for l in open('data/h5bench_180_en.jsonl')]; print(len(c), c[0]['prompt'][:300])"
+python3 -c "import json; c=[json.loads(l) for l in open('data/octave_180_en.jsonl')]; print(len(c), c[0]['prompt'][:300])"
 
 # 2. Rebuild the leaderboard from the released judge results (no API key needed)
 python3 scoring/leaderboard.py
 
 # 3. Generate games for a few tasks with one agent, then judge them (needs API keys; see docs/reproduce.md)
-python3 harness/run_bench.py run --models cc_opus_5 --cases data/h5bench_180_zh.jsonl --limit 3
-python3 eval/run_eval.py --runs $HOME/bench/runs --cases data/h5bench_180_zh.jsonl --models cc_opus_5 --limit 3
+python3 harness/run_bench.py run --models cc_opus_5 --cases data/octave_180_zh.jsonl --limit 3
+python3 eval/run_eval.py --runs $HOME/bench/runs --cases data/octave_180_zh.jsonl --models cc_opus_5 --limit 3
 ```
 
 ## Repository layout
 
 ```
-data/         h5bench_180_{zh,en}.jsonl — the 180 tasks (CC BY 4.0) · README.md dataset card
+data/         octave_180_{zh,en}.jsonl — the 180 tasks (CC BY 4.0) · README.md dataset card
 results/      leaderboard, per-case and per-item judge results, generation cost/time (v1, judge gpt-6-astra)
 harness/      run_bench.py — runs Claude Code / Codex over the tasks, one isolated process per (model, task) · scripts/
 llm-eval/     judge rubrics: {2D,3D}_eval.py (web), {2D,3D}_mobile_eval.py (mobile)

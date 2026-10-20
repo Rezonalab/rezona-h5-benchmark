@@ -6,14 +6,14 @@ Layout (BENCH_HOME, default ~/bench):
   configs/models.json      model registry (agent, base_url, model id, key_env, ...)
   configs/keys.env         KEY=value lines, never copied anywhere else
   configs/prompt_template.md  wrapper around the case prompt ({prompt})
-  (cases)                  any .jsonl / .json case file, e.g. data/h5bench_180_zh.jsonl from this repo
+  (cases)                  any .jsonl / .json case file, e.g. data/octave_180_zh.jsonl from this repo
   runs/<model_key>/<task_id>/{prompt.md,transcript.jsonl,stderr.log,meta.json,project/}
   cc_home/<model_key>/     CLAUDE_CONFIG_DIR per model (keeps ~/.claude untouched)
   codex_home/<model_key>/  CODEX_HOME per model (own config.toml)
 
 Usage:
-  run_bench.py run   --models cc_glm_5_3,codex_gpt_5_5 --cases data/h5bench_180_zh.jsonl --limit 3
-  run_bench.py run   --models all --cases data/h5bench_180_zh.jsonl
+  run_bench.py run   --models cc_glm_5_3,codex_gpt_5_5 --cases data/octave_180_zh.jsonl --limit 3
+  run_bench.py run   --models all --cases data/octave_180_zh.jsonl
   run_bench.py smoke --models all            # trivial prompt through every model that has a key
   run_bench.py status [--models all]         # summarize meta.json into a table + CSV
 """

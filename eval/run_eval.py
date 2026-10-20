@@ -9,8 +9,8 @@ Judge : llm-eval/{2D,3D}_eval.py (web) or {2D,3D}_mobile_eval.py (mobile), picke
 Output: eval_results/<model_key>/<task_id>.json (judge verdict + meta) and
         eval_results/<model_key>.csv (one row per case: gate, public/hidden passed, aux dims).
 
-    python eval/run_eval.py --runs ~/bench/runs --cases data/h5bench_180_zh.jsonl --models cc_opus_5,codex_gpt_5_5
-    python eval/run_eval.py --runs ~/bench/runs --cases data/h5bench_180_zh.jsonl --concurrency 4 --limit 5
+    python eval/run_eval.py --runs ~/bench/runs --cases data/octave_180_zh.jsonl --models cc_opus_5,codex_gpt_5_5
+    python eval/run_eval.py --runs ~/bench/runs --cases data/octave_180_zh.jsonl --concurrency 4 --limit 5
 
 Judge credentials: ANTHROPIC_API_KEY in .env or the shell (see utils/llm_invoke.py). Verdicts that
 already exist are skipped unless --force. A case with no project/ directory is recorded as

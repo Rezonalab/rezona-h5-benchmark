@@ -38,8 +38,8 @@ section (not in this release; see [`data/README.md`](../data/README.md)).
 
 ```bash
 python3 harness/run_bench.py smoke --models all                                    # hello-world through every model with a key
-python3 harness/run_bench.py run --models cc_opus_5 --cases data/h5bench_180_zh.jsonl --limit 3
-harness/scripts/run_set.sh cc_opus_5 15 data/h5bench_180_zh.jsonl 120 opus5       # detached full run, log in $BENCH_HOME/logs
+python3 harness/run_bench.py run --models cc_opus_5 --cases data/octave_180_zh.jsonl --limit 3
+harness/scripts/run_set.sh cc_opus_5 15 data/octave_180_zh.jsonl 120 opus5       # detached full run, log in $BENCH_HOME/logs
 python3 harness/run_bench.py status --models cc_opus_5                             # → $BENCH_HOME/status.csv
 ```
 
@@ -88,8 +88,8 @@ Output for each case: `$BENCH_HOME/runs/<model_key>/<task_id>/{project/, prompt.
 
 ```bash
 cp .env.example .env    # judge credentials (see below)
-python3 eval/run_eval.py --runs $BENCH_HOME/runs --cases data/h5bench_180_zh.jsonl --models cc_opus_5 --concurrency 4
-python3 scoring/aggregate.py --status $BENCH_HOME/status.csv --eval-dir eval_results --subset data/h5bench_180_zh.jsonl
+python3 eval/run_eval.py --runs $BENCH_HOME/runs --cases data/octave_180_zh.jsonl --models cc_opus_5 --concurrency 4
+python3 scoring/aggregate.py --status $BENCH_HOME/status.csv --eval-dir eval_results --subset data/octave_180_zh.jsonl
 ```
 
 `eval/run_eval.py` picks the rubric per case: 2D or 3D from `render`, web or mobile from `platform`. It scores the 6

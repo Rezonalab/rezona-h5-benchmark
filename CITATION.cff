@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this benchmark or code, please cite it as below."
-title: "Rezona H5 Benchmark: Evaluating Coding Agents on HTML5 Game Generation"
+title: "OCTAVE: A Capability-Resolved Benchmark for Complete HTML5 Game Generation"
 authors:
   - name: "Rezona"
     email: "hi@rezona.ai"
-repository-code: "https://github.com/Rezonalab/rezona-h5-benchmark"
+repository-code: "https://github.com/Rezonalab/octave-bench"
 license: MIT
 type: software
 date-released: "2026-10-13"

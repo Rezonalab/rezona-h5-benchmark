@@ -1,8 +1,10 @@
-# Rezona H5 Benchmark
+# OCTAVE
+
+**A Capability-Resolved Benchmark for Complete HTML5 Game Generation**
 
 [English](README.md) · [数据集说明](data/README.md) · [结果](results/README.md) · [复现](docs/reproduce.md)
 
-**编程 agent 能否根据一份设计说明，做出一个完整可玩的游戏？** Rezona H5 Benchmark 包含 180 道 HTML5 游戏生成题。每道题把一份多系统耦合的游戏设计交给 Claude Code、Codex 等 agent，再用 10 条可证伪的断言检查生成的项目：6 条公开检查项，加 4 条题面只隐含、没有明说的隐藏探针。全集共 1,800 条断言。
+**编程 agent 能否根据一份设计说明，做出一个完整可玩的游戏？** OCTAVE 包含 180 道 HTML5 游戏生成题。每道题把一份多系统耦合的游戏设计交给 Claude Code、Codex 等 agent，再用 10 条可证伪的断言检查生成的项目：6 条公开检查项，加 4 条题面只隐含、没有明说的隐藏探针。全集共 1,800 条断言。
 
 - **180 道题，分三个赛道**：
   - `main`：桌面 Web 75 道 + 移动端 75 道，由玩家的游戏需求改写扩写而来
@@ -43,18 +45,18 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/Rezonalab/rezona-h5-benchmark.git && cd rezona-h5-benchmark
+git clone https://github.com/Rezonalab/octave-bench.git && cd octave-bench
 pip install -r requirements.txt
 
 # 1. 查看题目
-python3 -c "import json; c=[json.loads(l) for l in open('data/h5bench_180_zh.jsonl')]; print(len(c), c[0]['prompt'][:200])"
+python3 -c "import json; c=[json.loads(l) for l in open('data/octave_180_zh.jsonl')]; print(len(c), c[0]['prompt'][:200])"
 
 # 2. 用公开的判分结果复算排行榜（不需要 API key）
 python3 scoring/leaderboard.py
 
 # 3. 用一个 agent 生成几道题，再判分（需要 API key，见 docs/reproduce.md）
-python3 harness/run_bench.py run --models cc_opus_5 --cases data/h5bench_180_zh.jsonl --limit 3
-python3 eval/run_eval.py --runs $HOME/bench/runs --cases data/h5bench_180_zh.jsonl --models cc_opus_5 --limit 3
+python3 harness/run_bench.py run --models cc_opus_5 --cases data/octave_180_zh.jsonl --limit 3
+python3 eval/run_eval.py --runs $HOME/bench/runs --cases data/octave_180_zh.jsonl --models cc_opus_5 --limit 3
 ```
 
 目录结构、题目字段和能力编号（C1 核心规则 / C2 AI 与 NPC 行为 / C3 数值设计与平衡 / C4 交互与输入 / C5 关卡与场景 / C6 动画与渲染 / C7 反馈与打击感 / C8 引导与元 UI）的完整说明见 [README.md](README.md) 和 [数据集说明](data/README.md)。

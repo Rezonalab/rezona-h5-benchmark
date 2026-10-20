@@ -10,7 +10,7 @@
 Copyright (c) 2026 Rezona.
 
 When you use or redistribute the benchmark cases, attribute them as
-"Rezona H5 Benchmark, Rezona (2026), https://github.com/Rezonalab/rezona-h5-benchmark, CC BY 4.0"
+"OCTAVE, Rezona (2026), https://github.com/Rezonalab/octave-bench, CC BY 4.0"
 and indicate if you modified them. See [`CITATION.cff`](CITATION.cff) for the preferred citation.
 
 ## Third-party games and trademarks
