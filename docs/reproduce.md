@@ -87,17 +87,50 @@ Output for each case: `$BENCH_HOME/runs/<model_key>/<task_id>/{project/, prompt.
 ## Judge and score
 
 ```bash
-cp .env.example .env    # judge credentials (see below)
-python3 eval/run_eval.py --runs $BENCH_HOME/runs --cases data/octave_180_zh.jsonl --models cc_opus_5 --concurrency 4
+cp .env.example .env    # judge credentials: OPENAI_API_KEY (or the Azure / Anthropic variables)
+python3 eval/run_eval.py --runs $BENCH_HOME/runs --cases data/octave_180_zh.jsonl --models cc_opus_5 --concurrency 8
 python3 scoring/aggregate.py --status $BENCH_HOME/status.csv --eval-dir eval_results --subset data/octave_180_zh.jsonl
 ```
 
-`eval/run_eval.py` picks the rubric per case: 2D or 3D from `render`, web or mobile from `platform`. It scores the 6
-checklist items and the 4 hidden probes separately.
+`eval/run_eval.py` picks the rubric per case: 2D or 3D from `render`, web or mobile from `platform`.
 
-> The v1 results were judged with **gpt-6-astra**. The `utils/llm_invoke.py` backend in this repo currently calls
-> Anthropic models (default `claude-opus-5`, or the `claude -p` fallback with `EVAL_ALLOW_CC_FALLBACK=1`). Scores
-> from a different judge model are not directly comparable with `results/`.
+### The v1 judge
+
+All v1 results were judged by **gpt-6-astra** with the rubrics in `llm-eval/` exactly as committed. The default
+backend (`EVAL_JUDGE_PROVIDER=openai`, `utils/openai_judge.py`) reproduces the call:
+
+| Setting | Value |
+|---|---|
+| API | Chat Completions (not the Responses API), OpenAI or Azure OpenAI (`EVAL_JUDGE_PROVIDER=azure`) |
+| Model | `gpt-6-astra` (on Azure, a deployment of that name; the body then carries no `model` field) |
+| `max_completion_tokens` | 16000 (the model rejects `max_tokens`) |
+| `temperature`, `reasoning_effort` | not set (server defaults) |
+| Timeout / retries | 900 s per request; up to 10 retries on 408/409/429/5xx and Cloudflare 520–527, honouring `Retry-After`, otherwise exponential backoff capped at 180 s. Out-of-credit errors fail at once |
+| Source packing | `utils/tools.collect_source_code` defaults: 50,000 chars per file, 400,000 per project, middle-elided with a marker the rubric tells the judge to ignore |
+| Output handling | `utils/eval_json.invoke_json_with_retry`: local JSON salvage, then up to 2 re-asks with the parse/contract error; `normalize_verdict` recomputes `total_score` from the item marks |
+
+How each judge batch was run:
+
+| Batch | Cases | Rubric | Hidden probes |
+|---|---|---|---|
+| PC-75 | `track=main`, `platform=web` | `2D_eval` / `3D_eval` | Second call with the 4 probes as the checklist: `--hidden-mode separate` |
+| Mobile-75 | `track=main`, `platform=mobile` | `2D_mobile_eval` / `3D_mobile_eval` | Same call (`hidden_probes`, `hidden_score`): `--hidden-mode inline` (default) |
+| Final-30 | `expert` + `repro` | per case, from `platform` × `render` | Same call: `--hidden-mode inline` |
+
+PC-75 and the other two batches were judged by separate pipelines; the judge model and rubrics are the same.
+
+Practical notes:
+
+* **Concurrency.** OpenAI direct ran cleanly at 8–15 parallel calls. Azure needs 2–10: its tokens-per-minute quota
+  is tighter, and at 10 large projects produced long retry storms.
+* **Keep `project/dist/`.** The judge's runnability gate is told whether `dist/index.html` and `dist/assets/*.js`
+  exist. A successful build rules out compile-time gate failures (syntax, unresolved imports); without `dist/` the
+  gate is judged from source alone, and scores come out systematically lower.
+* **Two kinds of zero.** A gate failure zeroes every item of the case (reasons start with `代码无法运行`). Report
+  runnable rate and functional pass rate separately, as `results/` does, rather than reading those zeros as missing
+  features.
+* **Other judges.** `--judge-provider anthropic` (default model `claude-opus-5`) works with the same rubrics, but
+  scores from a different judge model are not comparable with `results/`.
 
 ## Things that bit us
 

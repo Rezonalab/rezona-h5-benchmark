@@ -5,14 +5,17 @@ Input : a runs directory laid out as <runs>/<model_key>/<task_id>/project/ (what
         writes), plus the case file that produced it (.jsonl or a .json list).
 Judge : llm-eval/{2D,3D}_eval.py (web) or {2D,3D}_mobile_eval.py (mobile), picked per case from its
         `render` and `platform` fields (--mobile forces the mobile rubrics). The judge scores the 6 public
-        checklist items and, separately, the 4 hidden probes.
+        checklist items and, separately, the 4 hidden probes: in the same call (--hidden-mode inline, as
+        for Mobile-75 / Final-30 in v1) or in a second call (--hidden-mode separate, as for PC-75).
 Output: eval_results/<model_key>/<task_id>.json (judge verdict + meta) and
         eval_results/<model_key>.csv (one row per case: gate, public/hidden passed, aux dims).
 
     python eval/run_eval.py --runs ~/bench/runs --cases data/octave_180_zh.jsonl --models cc_opus_5,codex_gpt_5_5
     python eval/run_eval.py --runs ~/bench/runs --cases data/octave_180_zh.jsonl --concurrency 4 --limit 5
 
-Judge credentials: ANTHROPIC_API_KEY in .env or the shell (see utils/llm_invoke.py). Verdicts that
+Judge: gpt-6-astra via OpenAI (default, the v1 paper judge) or Azure OpenAI, or Claude, chosen with
+--judge-provider / EVAL_JUDGE_PROVIDER; credentials in .env or the shell (see .env.example and
+utils/llm_invoke.py). Verdicts that
 already exist are skipped unless --force. A case with no project/ directory is recorded as
 status=no_project and scored 0 without calling the judge.
 """
@@ -61,7 +64,7 @@ _lock = threading.Lock()
 def log(msg): 
     with _lock: print(time.strftime("[%m-%d %H:%M:%S] ") + msg, flush=True)
 
-def eval_one(model: str, case: dict, runs: Path, out_dir: Path, mobile: bool, force: bool) -> dict:
+def eval_one(model: str, case: dict, runs: Path, out_dir: Path, mobile: bool, force: bool, hidden_mode: str = "inline") -> dict:
     tid = case["task_id"]; proj = runs / model / tid / "project"; out = out_dir / model / f"{tid}.json"
     if out.exists() and not force:
         return json.loads(out.read_text())
@@ -75,13 +78,20 @@ def eval_one(model: str, case: dict, runs: Path, out_dir: Path, mobile: bool, fo
         rec.update(status="no_project", passed=0, total=rec["checklist_n"], verdict=None)
     else:
         try:
+            hidden = case.get("hidden_checklist", [])
             base_info = {"prompt": case["prompt"], "checklist": case["checklist"],
-                         "hidden_checklist": case.get("hidden_checklist", []), "attachment": case.get("attachment", [])}
-            v = pick_judge(case, mobile).eval(base_info, str(proj))
+                         "hidden_checklist": hidden if hidden_mode == "inline" else [], "attachment": case.get("attachment", [])}
+            judge = pick_judge(case, mobile)
+            v = judge.eval(base_info, str(proj))
             p, t = parse_total(v)
-            hp, ht = parse_total({"total_score": v.get("hidden_score", "")})
+            vh = None
+            if hidden_mode == "separate" and hidden:  # PC-75 style: a second call with the probes as the checklist
+                vh = judge.eval({**base_info, "checklist": hidden, "hidden_checklist": []}, str(proj))
+                hp, ht = parse_total(vh)
+            else:
+                hp, ht = parse_total({"total_score": v.get("hidden_score", "")})
             rec.update(status="judged", passed=p, total=t, hidden_passed=hp, hidden_total=ht, gate_failed=(p == 0 and any("代码无法运行" in str(x) for x in v.values())),
-                       aux_levels=aux(v, "关卡"), aux_juice=aux(v, "Juice"), verdict=v)
+                       aux_levels=aux(v, "关卡"), aux_juice=aux(v, "Juice"), hidden_mode=hidden_mode, verdict=v, verdict_hidden=vh)
         except Exception as e:  # noqa: BLE001
             rec.update(status="judge_error", passed=0, total=rec["checklist_n"], error=repr(e)[:500], verdict=None)
     out.parent.mkdir(parents=True, exist_ok=True); out.write_text(json.dumps(rec, ensure_ascii=False, indent=1))
@@ -98,16 +108,25 @@ def main():
     ap.add_argument("--concurrency", type=int, default=3)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--judge-provider", choices=["openai", "azure", "anthropic"],
+                    help="judge backend (default: $EVAL_JUDGE_PROVIDER or openai)")
+    ap.add_argument("--hidden-mode", choices=["inline", "separate"], default="inline",
+                    help="inline: hidden probes scored in the same judge call (Mobile-75, Final-30); "
+                         "separate: a second call with the probes as the checklist (PC-75)")
+    ap.add_argument("--judge-model", help="judge model id (default: gpt-6-astra, or claude-opus-5 for anthropic)")
     a = ap.parse_args()
+    if a.judge_provider: os.environ["EVAL_JUDGE_PROVIDER"] = a.judge_provider
+    if a.judge_model: os.environ["EVAL_JUDGE_MODEL"] = a.judge_model
     runs = Path(a.runs).expanduser(); out_dir = Path(a.out)
     cases = load_cases(a.cases)
     if a.limit: cases = cases[: a.limit]
     models = sorted(p.name for p in runs.iterdir() if p.is_dir()) if a.models == "all" else a.models.split(",")
     jobs = [(m, c) for m in models for c in cases]
-    log(f"{len(models)} models × {len(cases)} cases = {len(jobs)} judgements, concurrency {a.concurrency}")
+    log(f"{len(models)} models × {len(cases)} cases = {len(jobs)} judgements, concurrency {a.concurrency}, "
+        f"judge {os.environ.get('EVAL_JUDGE_PROVIDER', 'openai')}/{os.environ.get('EVAL_JUDGE_MODEL', 'default')}")
     results = []
     with ThreadPoolExecutor(max_workers=a.concurrency) as ex:
-        for f in as_completed([ex.submit(eval_one, m, c, runs, out_dir, a.mobile, a.force) for m, c in jobs]):
+        for f in as_completed([ex.submit(eval_one, m, c, runs, out_dir, a.mobile, a.force, a.hidden_mode) for m, c in jobs]):
             results.append(f.result())
     for m in models:
         rows = sorted((r for r in results if r["model_key"] == m), key=lambda r: r["task_id"])

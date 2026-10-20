@@ -1,9 +1,14 @@
 """Thin wrapper for invoking LLMs in eval pipelines.
 
-Currently supports Anthropic Claude only; designed so other providers
-(OpenAI, Gemini, etc.) can be added behind the same `invoke()` entrypoint later.
+`invoke()` routes on EVAL_JUDGE_PROVIDER:
+    openai (default)  gpt-6-astra via Chat Completions, the v1 paper judge (utils/openai_judge.py)
+    azure             the same model on Azure OpenAI
+    anthropic         Claude via the Anthropic SDK (invoke_claude below), or `claude -p`
+                      with EVAL_ALLOW_CC_FALLBACK=1
+EVAL_JUDGE_MODEL overrides the model id for whichever provider is active.
 
 Setup:
+    Anthropic path only:
     1. pip install "anthropic>=0.50"
     2. Put ANTHROPIC_API_KEY=YOUR_KEY_HERE in the project-root .env file
        (or export it in your shell). The .env is read by a built-in loader,
@@ -379,4 +384,18 @@ def invoke_claude(
     )
 
 
-invoke = invoke_claude
+JUDGE_PROVIDER_ENV = "EVAL_JUDGE_PROVIDER"  # openai (default) | azure | anthropic
+JUDGE_MODEL_ENV = "EVAL_JUDGE_MODEL"
+
+
+def invoke(user_prompt: str, system: str | None = None, **kwargs: Any) -> LLMResponse:
+    """Judge entrypoint used by the eval chain; routes on EVAL_JUDGE_PROVIDER."""
+    provider = os.environ.get(JUDGE_PROVIDER_ENV, "openai").lower()
+    if os.environ.get(JUDGE_MODEL_ENV):
+        kwargs.setdefault("model", os.environ[JUDGE_MODEL_ENV])
+    if provider == "anthropic":
+        return invoke_claude(user_prompt, system, **kwargs)
+    if provider in ("openai", "azure"):
+        from utils.openai_judge import invoke_openai  # noqa: PLC0415
+        return invoke_openai(user_prompt, system, provider=provider, **kwargs)
+    raise RuntimeError(f"unknown {JUDGE_PROVIDER_ENV}={provider!r} (openai | azure | anthropic)")

@@ -29,7 +29,6 @@ from pathlib import Path
 from typing import Any, Callable
 
 from utils.eval_json import VALIDATION_ERROR_KEY, invoke_json_with_retry
-from utils.llm_invoke import invoke_claude
 from utils.tools import (
     build_artifact_status,
     build_file_manifest,
@@ -179,7 +178,7 @@ def run_static_eval(
             `project_root`.
         project_root: Repository root used to resolve relative paths.
         invoke: LLM call, `invoke(user_prompt=..., thinking=...) -> .text`.
-            Defaults to `utils.llm_invoke.invoke_claude` **looked up at call
+            Defaults to `utils.llm_invoke.invoke` **looked up at call
             time** (late-bound), so test taps / usage meters that monkeypatch
             the module attribute are honored — a def-time default would freeze
             the original function and silently bypass them.
@@ -189,9 +188,9 @@ def run_static_eval(
         model never produced a contract-conforming object, the best attempt is
         returned with the problem under `_validation_error`.
     """
-    if invoke is None:  # late-bind so monkeypatched invoke_claude is honored
+    if invoke is None:  # late-bind so a monkeypatched invoke is honored
         from utils import llm_invoke as _li
-        invoke = _li.invoke_claude
+        invoke = _li.invoke
     user_prompt = str(base_info["prompt"])
     checklist_items = coerce_checklist(base_info.get("checklist"))
     hidden_raw = base_info.get("hidden_checklist") or []
