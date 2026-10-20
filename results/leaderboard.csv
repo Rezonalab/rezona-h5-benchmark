@@ -1,0 +1,14 @@
+rank,model,model_name,n_cases,public_rate,hidden_rate,all10_rate,runnable_rate,functional_public_rate
+1,codex_gpt_6_astra,GPT-6 astra,180,0.5713,0.4931,0.54,0.8667,0.6592
+2,cc_fable_5_1,Fable 5.1,180,0.4472,0.4069,0.4311,0.8222,0.5439
+3,cc_fable_5,Fable 5,180,0.3898,0.3931,0.3911,0.7889,0.4941
+4,cc_opus_5,Opus 5,180,0.3722,0.4042,0.385,0.8389,0.4437
+5,codex_gpt_5_6_sol,GPT-5.6-sol,180,0.3343,0.3264,0.3311,0.8333,0.4011
+6,cc_kimi_k3,Kimi-K3,105,0.3191,0.2857,0.3057,0.781,0.4085
+7,cc_glm_5_3,GLM-5.3,180,0.3111,0.3403,0.3228,0.7833,0.3972
+8,codex_gpt_5_5,GPT-5.5,180,0.2694,0.2833,0.275,0.8444,0.3191
+9,cc_deepseek_flash_41,DeepSeek 4.1 Flash,180,0.2593,0.2889,0.2711,0.7944,0.3263
+10,cc_glm_5_2,GLM-5.2,180,0.2426,0.2806,0.2578,0.7333,0.3308
+11,cc_deepseek_v4_flash,DeepSeek V4-Flash,180,0.2352,0.2847,0.255,0.7333,0.3207
+12,codex_deepseek_v4_pro,DeepSeek V4-Pro,180,0.2222,0.275,0.2433,0.7722,0.2878
+13,cc_seed_evolving,Seed evolving,180,0.2102,0.2486,0.2256,0.6667,0.3153

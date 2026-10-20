@@ -1,0 +1,3899 @@
+{
+ "leaderboard": [
+  {
+   "model": "codex_gpt_6_astra",
+   "model_name": "GPT-6 astra",
+   "n_cases": 180,
+   "public_rate": 0.5713,
+   "hidden_rate": 0.4931,
+   "all10_rate": 0.54,
+   "runnable_rate": 0.8667,
+   "functional_public_rate": 0.6592,
+   "rank": 1
+  },
+  {
+   "model": "cc_fable_5_1",
+   "model_name": "Fable 5.1",
+   "n_cases": 180,
+   "public_rate": 0.4472,
+   "hidden_rate": 0.4069,
+   "all10_rate": 0.4311,
+   "runnable_rate": 0.8222,
+   "functional_public_rate": 0.5439,
+   "rank": 2
+  },
+  {
+   "model": "cc_fable_5",
+   "model_name": "Fable 5",
+   "n_cases": 180,
+   "public_rate": 0.3898,
+   "hidden_rate": 0.3931,
+   "all10_rate": 0.3911,
+   "runnable_rate": 0.7889,
+   "functional_public_rate": 0.4941,
+   "rank": 3
+  },
+  {
+   "model": "cc_opus_5",
+   "model_name": "Opus 5",
+   "n_cases": 180,
+   "public_rate": 0.3722,
+   "hidden_rate": 0.4042,
+   "all10_rate": 0.385,
+   "runnable_rate": 0.8389,
+   "functional_public_rate": 0.4437,
+   "rank": 4
+  },
+  {
+   "model": "codex_gpt_5_6_sol",
+   "model_name": "GPT-5.6-sol",
+   "n_cases": 180,
+   "public_rate": 0.3343,
+   "hidden_rate": 0.3264,
+   "all10_rate": 0.3311,
+   "runnable_rate": 0.8333,
+   "functional_public_rate": 0.4011,
+   "rank": 5
+  },
+  {
+   "model": "cc_kimi_k3",
+   "model_name": "Kimi-K3",
+   "n_cases": 105,
+   "public_rate": 0.3191,
+   "hidden_rate": 0.2857,
+   "all10_rate": 0.3057,
+   "runnable_rate": 0.781,
+   "functional_public_rate": 0.4085,
+   "rank": 6
+  },
+  {
+   "model": "cc_glm_5_3",
+   "model_name": "GLM-5.3",
+   "n_cases": 180,
+   "public_rate": 0.3111,
+   "hidden_rate": 0.3403,
+   "all10_rate": 0.3228,
+   "runnable_rate": 0.7833,
+   "functional_public_rate": 0.3972,
+   "rank": 7
+  },
+  {
+   "model": "codex_gpt_5_5",
+   "model_name": "GPT-5.5",
+   "n_cases": 180,
+   "public_rate": 0.2694,
+   "hidden_rate": 0.2833,
+   "all10_rate": 0.275,
+   "runnable_rate": 0.8444,
+   "functional_public_rate": 0.3191,
+   "rank": 8
+  },
+  {
+   "model": "cc_deepseek_flash_41",
+   "model_name": "DeepSeek 4.1 Flash",
+   "n_cases": 180,
+   "public_rate": 0.2593,
+   "hidden_rate": 0.2889,
+   "all10_rate": 0.2711,
+   "runnable_rate": 0.7944,
+   "functional_public_rate": 0.3263,
+   "rank": 9
+  },
+  {
+   "model": "cc_glm_5_2",
+   "model_name": "GLM-5.2",
+   "n_cases": 180,
+   "public_rate": 0.2426,
+   "hidden_rate": 0.2806,
+   "all10_rate": 0.2578,
+   "runnable_rate": 0.7333,
+   "functional_public_rate": 0.3308,
+   "rank": 10
+  },
+  {
+   "model": "cc_deepseek_v4_flash",
+   "model_name": "DeepSeek V4-Flash",
+   "n_cases": 180,
+   "public_rate": 0.2352,
+   "hidden_rate": 0.2847,
+   "all10_rate": 0.255,
+   "runnable_rate": 0.7333,
+   "functional_public_rate": 0.3207,
+   "rank": 11
+  },
+  {
+   "model": "codex_deepseek_v4_pro",
+   "model_name": "DeepSeek V4-Pro",
+   "n_cases": 180,
+   "public_rate": 0.2222,
+   "hidden_rate": 0.275,
+   "all10_rate": 0.2433,
+   "runnable_rate": 0.7722,
+   "functional_public_rate": 0.2878,
+   "rank": 12
+  },
+  {
+   "model": "cc_seed_evolving",
+   "model_name": "Seed evolving",
+   "n_cases": 180,
+   "public_rate": 0.2102,
+   "hidden_rate": 0.2486,
+   "all10_rate": 0.2256,
+   "runnable_rate": 0.6667,
+   "functional_public_rate": 0.3153,
+   "rank": 13
+  }
+ ],
+ "by_track": {
+  "cc_deepseek_flash_41": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.6333,
+    "hidden_rate": 0.75,
+    "all10_rate": 0.68,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.7037
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.2078,
+    "hidden_rate": 0.2317,
+    "all10_rate": 0.2173,
+    "runnable_rate": 0.7733,
+    "functional_public_rate": 0.2687
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.4583,
+    "hidden_rate": 0.4875,
+    "all10_rate": 0.47,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.5093
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.5667,
+    "hidden_rate": 0.6,
+    "all10_rate": 0.58,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.6296
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.1733,
+    "hidden_rate": 0.2333,
+    "all10_rate": 0.1973,
+    "runnable_rate": 0.6933,
+    "functional_public_rate": 0.25
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.5333,
+    "hidden_rate": 0.5125,
+    "all10_rate": 0.525,
+    "runnable_rate": 0.95,
+    "functional_public_rate": 0.5614
+   }
+  },
+  "cc_fable_5": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.7333,
+    "hidden_rate": 0.825,
+    "all10_rate": 0.77,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.7333
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.3444,
+    "hidden_rate": 0.3467,
+    "all10_rate": 0.3453,
+    "runnable_rate": 0.7733,
+    "functional_public_rate": 0.4454
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.5583,
+    "hidden_rate": 0.525,
+    "all10_rate": 0.545,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.6979
+   }
+  },
+  "cc_fable_5_1": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.75,
+    "hidden_rate": 0.9,
+    "all10_rate": 0.81,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.75
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.4078,
+    "hidden_rate": 0.3567,
+    "all10_rate": 0.3873,
+    "runnable_rate": 0.8067,
+    "functional_public_rate": 0.5055
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.5917,
+    "hidden_rate": 0.5375,
+    "all10_rate": 0.57,
+    "runnable_rate": 0.85,
+    "functional_public_rate": 0.6961
+   }
+  },
+  "cc_glm_5_2": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.6667,
+    "hidden_rate": 0.7,
+    "all10_rate": 0.68,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.6667
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.1889,
+    "hidden_rate": 0.2267,
+    "all10_rate": 0.204,
+    "runnable_rate": 0.7133,
+    "functional_public_rate": 0.2648
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.4333,
+    "hidden_rate": 0.475,
+    "all10_rate": 0.45,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.5778
+   }
+  },
+  "cc_glm_5_3": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.5333,
+    "hidden_rate": 0.625,
+    "all10_rate": 0.57,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.5926
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.2678,
+    "hidden_rate": 0.3017,
+    "all10_rate": 0.2813,
+    "runnable_rate": 0.7667,
+    "functional_public_rate": 0.3493
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.525,
+    "hidden_rate": 0.4875,
+    "all10_rate": 0.51,
+    "runnable_rate": 0.85,
+    "functional_public_rate": 0.6177
+   }
+  },
+  "cc_kimi_k3": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.6,
+    "hidden_rate": 0.75,
+    "all10_rate": 0.66,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.6
+   },
+   "main": {
+    "n_cases": 75,
+    "public_rate": 0.2289,
+    "hidden_rate": 0.17,
+    "all10_rate": 0.2053,
+    "runnable_rate": 0.72,
+    "functional_public_rate": 0.3179
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.5167,
+    "hidden_rate": 0.4875,
+    "all10_rate": 0.505,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.5741
+   }
+  },
+  "cc_opus_5": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.7333,
+    "hidden_rate": 0.825,
+    "all10_rate": 0.77,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.7333
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.32,
+    "hidden_rate": 0.3517,
+    "all10_rate": 0.3327,
+    "runnable_rate": 0.8133,
+    "functional_public_rate": 0.3934
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.5833,
+    "hidden_rate": 0.5875,
+    "all10_rate": 0.585,
+    "runnable_rate": 0.95,
+    "functional_public_rate": 0.614
+   }
+  },
+  "cc_seed_evolving": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.5333,
+    "hidden_rate": 0.625,
+    "all10_rate": 0.57,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.6666
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.1633,
+    "hidden_rate": 0.2133,
+    "all10_rate": 0.1833,
+    "runnable_rate": 0.6467,
+    "functional_public_rate": 0.2526
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.4,
+    "hidden_rate": 0.325,
+    "all10_rate": 0.37,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.5333
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.5,
+    "hidden_rate": 0.65,
+    "all10_rate": 0.56,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.5
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.1756,
+    "hidden_rate": 0.22,
+    "all10_rate": 0.1933,
+    "runnable_rate": 0.7467,
+    "functional_public_rate": 0.2351
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.4333,
+    "hidden_rate": 0.5,
+    "all10_rate": 0.46,
+    "runnable_rate": 0.85,
+    "functional_public_rate": 0.5098
+   }
+  },
+  "codex_gpt_5_5": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.6333,
+    "hidden_rate": 0.625,
+    "all10_rate": 0.63,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.6333
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.2178,
+    "hidden_rate": 0.2483,
+    "all10_rate": 0.23,
+    "runnable_rate": 0.82,
+    "functional_public_rate": 0.2656
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.475,
+    "hidden_rate": 0.375,
+    "all10_rate": 0.435,
+    "runnable_rate": 0.95,
+    "functional_public_rate": 0.5
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.6667,
+    "hidden_rate": 0.725,
+    "all10_rate": 0.69,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.6667
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.2911,
+    "hidden_rate": 0.285,
+    "all10_rate": 0.2887,
+    "runnable_rate": 0.8067,
+    "functional_public_rate": 0.3609
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.4917,
+    "hidden_rate": 0.4375,
+    "all10_rate": 0.47,
+    "runnable_rate": 0.95,
+    "functional_public_rate": 0.5176
+   }
+  },
+  "codex_gpt_6_astra": {
+   "expert": {
+    "n_cases": 10,
+    "public_rate": 0.8667,
+    "hidden_rate": 0.875,
+    "all10_rate": 0.87,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.8667
+   },
+   "main": {
+    "n_cases": 150,
+    "public_rate": 0.5267,
+    "hidden_rate": 0.4467,
+    "all10_rate": 0.4947,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.627
+   },
+   "repro": {
+    "n_cases": 20,
+    "public_rate": 0.7583,
+    "hidden_rate": 0.65,
+    "all10_rate": 0.715,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.7583
+   }
+  }
+ },
+ "by_platform": {
+  "cc_deepseek_flash_41": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.3059,
+    "hidden_rate": 0.3824,
+    "all10_rate": 0.3365,
+    "runnable_rate": 0.8588,
+    "functional_public_rate": 0.3562
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.2175,
+    "hidden_rate": 0.2053,
+    "all10_rate": 0.2126,
+    "runnable_rate": 0.7368,
+    "functional_public_rate": 0.2952
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.2941,
+    "hidden_rate": 0.4265,
+    "all10_rate": 0.3471,
+    "runnable_rate": 0.8824,
+    "functional_public_rate": 0.3333
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.1825,
+    "hidden_rate": 0.1579,
+    "all10_rate": 0.1726,
+    "runnable_rate": 0.6,
+    "functional_public_rate": 0.3041
+   }
+  },
+  "cc_fable_5": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.4412,
+    "hidden_rate": 0.5,
+    "all10_rate": 0.4647,
+    "runnable_rate": 0.8471,
+    "functional_public_rate": 0.5208
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.3439,
+    "hidden_rate": 0.2974,
+    "all10_rate": 0.3253,
+    "runnable_rate": 0.7368,
+    "functional_public_rate": 0.4667
+   }
+  },
+  "cc_fable_5_1": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.5039,
+    "hidden_rate": 0.5059,
+    "all10_rate": 0.5047,
+    "runnable_rate": 0.8824,
+    "functional_public_rate": 0.5711
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.3965,
+    "hidden_rate": 0.3184,
+    "all10_rate": 0.3653,
+    "runnable_rate": 0.7684,
+    "functional_public_rate": 0.516
+   }
+  },
+  "cc_glm_5_2": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.3039,
+    "hidden_rate": 0.3853,
+    "all10_rate": 0.3365,
+    "runnable_rate": 0.8471,
+    "functional_public_rate": 0.3588
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.1877,
+    "hidden_rate": 0.1868,
+    "all10_rate": 0.1874,
+    "runnable_rate": 0.6316,
+    "functional_public_rate": 0.2972
+   }
+  },
+  "cc_glm_5_3": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.3941,
+    "hidden_rate": 0.4735,
+    "all10_rate": 0.4259,
+    "runnable_rate": 0.8824,
+    "functional_public_rate": 0.4467
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.2368,
+    "hidden_rate": 0.2211,
+    "all10_rate": 0.2305,
+    "runnable_rate": 0.6947,
+    "functional_public_rate": 0.3409
+   }
+  },
+  "cc_kimi_k3": {
+   "mobile": {
+    "n_cases": 10,
+    "public_rate": 0.65,
+    "hidden_rate": 0.575,
+    "all10_rate": 0.62,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.65
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.2842,
+    "hidden_rate": 0.2553,
+    "all10_rate": 0.2726,
+    "runnable_rate": 0.7579,
+    "functional_public_rate": 0.375
+   }
+  },
+  "cc_opus_5": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.402,
+    "hidden_rate": 0.5,
+    "all10_rate": 0.4412,
+    "runnable_rate": 0.8941,
+    "functional_public_rate": 0.4496
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.3456,
+    "hidden_rate": 0.3184,
+    "all10_rate": 0.3347,
+    "runnable_rate": 0.7895,
+    "functional_public_rate": 0.4378
+   }
+  },
+  "cc_seed_evolving": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.2608,
+    "hidden_rate": 0.3441,
+    "all10_rate": 0.2941,
+    "runnable_rate": 0.7882,
+    "functional_public_rate": 0.3308
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.1649,
+    "hidden_rate": 0.1632,
+    "all10_rate": 0.1642,
+    "runnable_rate": 0.5579,
+    "functional_public_rate": 0.2956
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.2745,
+    "hidden_rate": 0.3735,
+    "all10_rate": 0.3141,
+    "runnable_rate": 0.8588,
+    "functional_public_rate": 0.3196
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.1754,
+    "hidden_rate": 0.1868,
+    "all10_rate": 0.18,
+    "runnable_rate": 0.6947,
+    "functional_public_rate": 0.2525
+   }
+  },
+  "codex_gpt_5_5": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.2804,
+    "hidden_rate": 0.3735,
+    "all10_rate": 0.3176,
+    "runnable_rate": 0.8824,
+    "functional_public_rate": 0.3178
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.2597,
+    "hidden_rate": 0.2026,
+    "all10_rate": 0.2368,
+    "runnable_rate": 0.8105,
+    "functional_public_rate": 0.3204
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.4078,
+    "hidden_rate": 0.4382,
+    "all10_rate": 0.42,
+    "runnable_rate": 0.8941,
+    "functional_public_rate": 0.4561
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.2684,
+    "hidden_rate": 0.2263,
+    "all10_rate": 0.2516,
+    "runnable_rate": 0.7789,
+    "functional_public_rate": 0.3446
+   }
+  },
+  "codex_gpt_6_astra": {
+   "mobile": {
+    "n_cases": 85,
+    "public_rate": 0.6412,
+    "hidden_rate": 0.5735,
+    "all10_rate": 0.6141,
+    "runnable_rate": 0.9059,
+    "functional_public_rate": 0.7078
+   },
+   "web": {
+    "n_cases": 95,
+    "public_rate": 0.5088,
+    "hidden_rate": 0.4211,
+    "all10_rate": 0.4737,
+    "runnable_rate": 0.8316,
+    "functional_public_rate": 0.6118
+   }
+  }
+ },
+ "by_render": {
+  "cc_deepseek_flash_41": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.3571,
+    "hidden_rate": 0.3764,
+    "all10_rate": 0.3648,
+    "runnable_rate": 0.989,
+    "functional_public_rate": 0.3611
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.1592,
+    "hidden_rate": 0.1994,
+    "all10_rate": 0.1753,
+    "runnable_rate": 0.5955,
+    "functional_public_rate": 0.2673
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.3297,
+    "hidden_rate": 0.3874,
+    "all10_rate": 0.3527,
+    "runnable_rate": 0.967,
+    "functional_public_rate": 0.3409
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.1386,
+    "hidden_rate": 0.1798,
+    "all10_rate": 0.1551,
+    "runnable_rate": 0.4944,
+    "functional_public_rate": 0.2803
+   }
+  },
+  "cc_fable_5": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.5037,
+    "hidden_rate": 0.467,
+    "all10_rate": 0.489,
+    "runnable_rate": 0.978,
+    "functional_public_rate": 0.515
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.2734,
+    "hidden_rate": 0.3174,
+    "all10_rate": 0.291,
+    "runnable_rate": 0.5955,
+    "functional_public_rate": 0.4591
+   }
+  },
+  "cc_fable_5_1": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.5513,
+    "hidden_rate": 0.4753,
+    "all10_rate": 0.5209,
+    "runnable_rate": 0.978,
+    "functional_public_rate": 0.5637
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.3408,
+    "hidden_rate": 0.3371,
+    "all10_rate": 0.3393,
+    "runnable_rate": 0.6629,
+    "functional_public_rate": 0.5141
+   }
+  },
+  "cc_glm_5_2": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.359,
+    "hidden_rate": 0.3764,
+    "all10_rate": 0.3659,
+    "runnable_rate": 0.978,
+    "functional_public_rate": 0.367
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.1236,
+    "hidden_rate": 0.1826,
+    "all10_rate": 0.1472,
+    "runnable_rate": 0.4831,
+    "functional_public_rate": 0.2558
+   }
+  },
+  "cc_glm_5_3": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.4212,
+    "hidden_rate": 0.4451,
+    "all10_rate": 0.4308,
+    "runnable_rate": 0.978,
+    "functional_public_rate": 0.4307
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.1985,
+    "hidden_rate": 0.2331,
+    "all10_rate": 0.2124,
+    "runnable_rate": 0.5843,
+    "functional_public_rate": 0.3397
+   }
+  },
+  "cc_kimi_k3": {
+   "2d": {
+    "n_cases": 39,
+    "public_rate": 0.4487,
+    "hidden_rate": 0.3974,
+    "all10_rate": 0.4282,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.4487
+   },
+   "3d": {
+    "n_cases": 66,
+    "public_rate": 0.2424,
+    "hidden_rate": 0.2197,
+    "all10_rate": 0.2333,
+    "runnable_rate": 0.6515,
+    "functional_public_rate": 0.3721
+   }
+  },
+  "cc_opus_5": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.4451,
+    "hidden_rate": 0.4698,
+    "all10_rate": 0.4549,
+    "runnable_rate": 0.989,
+    "functional_public_rate": 0.45
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.2978,
+    "hidden_rate": 0.3371,
+    "all10_rate": 0.3135,
+    "runnable_rate": 0.6854,
+    "functional_public_rate": 0.4344
+   }
+  },
+  "cc_seed_evolving": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.3095,
+    "hidden_rate": 0.3434,
+    "all10_rate": 0.3231,
+    "runnable_rate": 0.9121,
+    "functional_public_rate": 0.3394
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.1086,
+    "hidden_rate": 0.1517,
+    "all10_rate": 0.1258,
+    "runnable_rate": 0.4157,
+    "functional_public_rate": 0.2613
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.315,
+    "hidden_rate": 0.3544,
+    "all10_rate": 0.3308,
+    "runnable_rate": 0.967,
+    "functional_public_rate": 0.3258
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.1273,
+    "hidden_rate": 0.1938,
+    "all10_rate": 0.1539,
+    "runnable_rate": 0.573,
+    "functional_public_rate": 0.2222
+   }
+  },
+  "codex_gpt_5_5": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.3278,
+    "hidden_rate": 0.3626,
+    "all10_rate": 0.3418,
+    "runnable_rate": 0.978,
+    "functional_public_rate": 0.3352
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.2097,
+    "hidden_rate": 0.2022,
+    "all10_rate": 0.2067,
+    "runnable_rate": 0.7079,
+    "functional_public_rate": 0.2963
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.4414,
+    "hidden_rate": 0.4148,
+    "all10_rate": 0.4308,
+    "runnable_rate": 0.978,
+    "functional_public_rate": 0.4513
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.2247,
+    "hidden_rate": 0.236,
+    "all10_rate": 0.2292,
+    "runnable_rate": 0.6854,
+    "functional_public_rate": 0.3279
+   }
+  },
+  "codex_gpt_6_astra": {
+   "2d": {
+    "n_cases": 91,
+    "public_rate": 0.6886,
+    "hidden_rate": 0.5742,
+    "all10_rate": 0.6429,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.6886
+   },
+   "3d": {
+    "n_cases": 89,
+    "public_rate": 0.4513,
+    "hidden_rate": 0.4101,
+    "all10_rate": 0.4348,
+    "runnable_rate": 0.7303,
+    "functional_public_rate": 0.6179
+   }
+  }
+ },
+ "by_level": {
+  "cc_deepseek_flash_41": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.2857,
+    "hidden_rate": 0.256,
+    "all10_rate": 0.2738,
+    "runnable_rate": 0.7619,
+    "functional_public_rate": 0.375
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.2558,
+    "hidden_rate": 0.343,
+    "all10_rate": 0.2907,
+    "runnable_rate": 0.8837,
+    "functional_public_rate": 0.2895
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.2633,
+    "hidden_rate": 0.34,
+    "all10_rate": 0.294,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.3135
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2333,
+    "hidden_rate": 0.2111,
+    "all10_rate": 0.2244,
+    "runnable_rate": 0.6889,
+    "functional_public_rate": 0.3387
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.246,
+    "hidden_rate": 0.2679,
+    "all10_rate": 0.2548,
+    "runnable_rate": 0.7143,
+    "functional_public_rate": 0.3444
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.2481,
+    "hidden_rate": 0.2558,
+    "all10_rate": 0.2512,
+    "runnable_rate": 0.7907,
+    "functional_public_rate": 0.3137
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.25,
+    "hidden_rate": 0.33,
+    "all10_rate": 0.282,
+    "runnable_rate": 0.78,
+    "functional_public_rate": 0.3205
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.1963,
+    "hidden_rate": 0.2778,
+    "all10_rate": 0.2289,
+    "runnable_rate": 0.6444,
+    "functional_public_rate": 0.3046
+   }
+  },
+  "cc_fable_5": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.4246,
+    "hidden_rate": 0.3929,
+    "all10_rate": 0.4119,
+    "runnable_rate": 0.8095,
+    "functional_public_rate": 0.5245
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.3721,
+    "hidden_rate": 0.3953,
+    "all10_rate": 0.3814,
+    "runnable_rate": 0.814,
+    "functional_public_rate": 0.4571
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.42,
+    "hidden_rate": 0.43,
+    "all10_rate": 0.424,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.5
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.3407,
+    "hidden_rate": 0.35,
+    "all10_rate": 0.3444,
+    "runnable_rate": 0.6889,
+    "functional_public_rate": 0.4946
+   }
+  },
+  "cc_fable_5_1": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.4722,
+    "hidden_rate": 0.3571,
+    "all10_rate": 0.4262,
+    "runnable_rate": 0.8571,
+    "functional_public_rate": 0.5509
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.4612,
+    "hidden_rate": 0.436,
+    "all10_rate": 0.4512,
+    "runnable_rate": 0.8837,
+    "functional_public_rate": 0.5219
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.4767,
+    "hidden_rate": 0.45,
+    "all10_rate": 0.466,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.5675
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.3778,
+    "hidden_rate": 0.3778,
+    "all10_rate": 0.3778,
+    "runnable_rate": 0.7111,
+    "functional_public_rate": 0.5312
+   }
+  },
+  "cc_glm_5_2": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.2619,
+    "hidden_rate": 0.244,
+    "all10_rate": 0.2548,
+    "runnable_rate": 0.7381,
+    "functional_public_rate": 0.3548
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.2558,
+    "hidden_rate": 0.2965,
+    "all10_rate": 0.2721,
+    "runnable_rate": 0.7442,
+    "functional_public_rate": 0.3438
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.2433,
+    "hidden_rate": 0.35,
+    "all10_rate": 0.286,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.2897
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2111,
+    "hidden_rate": 0.2222,
+    "all10_rate": 0.2156,
+    "runnable_rate": 0.6,
+    "functional_public_rate": 0.3519
+   }
+  },
+  "cc_glm_5_3": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.3254,
+    "hidden_rate": 0.3512,
+    "all10_rate": 0.3357,
+    "runnable_rate": 0.8333,
+    "functional_public_rate": 0.3905
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.3256,
+    "hidden_rate": 0.3198,
+    "all10_rate": 0.3233,
+    "runnable_rate": 0.814,
+    "functional_public_rate": 0.4
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.3233,
+    "hidden_rate": 0.365,
+    "all10_rate": 0.34,
+    "runnable_rate": 0.82,
+    "functional_public_rate": 0.3943
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2704,
+    "hidden_rate": 0.3222,
+    "all10_rate": 0.2911,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.4056
+   }
+  },
+  "cc_kimi_k3": {
+   "easy": {
+    "n_cases": 27,
+    "public_rate": 0.3519,
+    "hidden_rate": 0.2222,
+    "all10_rate": 0.3,
+    "runnable_rate": 0.7778,
+    "functional_public_rate": 0.4524
+   },
+   "extreme": {
+    "n_cases": 24,
+    "public_rate": 0.2847,
+    "hidden_rate": 0.2917,
+    "all10_rate": 0.2875,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.3796
+   },
+   "hard": {
+    "n_cases": 30,
+    "public_rate": 0.3833,
+    "hidden_rate": 0.3917,
+    "all10_rate": 0.3867,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.4423
+   },
+   "medium": {
+    "n_cases": 24,
+    "public_rate": 0.2361,
+    "hidden_rate": 0.2188,
+    "all10_rate": 0.2292,
+    "runnable_rate": 0.7083,
+    "functional_public_rate": 0.3333
+   }
+  },
+  "cc_opus_5": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.4087,
+    "hidden_rate": 0.369,
+    "all10_rate": 0.3929,
+    "runnable_rate": 0.8571,
+    "functional_public_rate": 0.4769
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.3954,
+    "hidden_rate": 0.436,
+    "all10_rate": 0.4116,
+    "runnable_rate": 0.8837,
+    "functional_public_rate": 0.4474
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.41,
+    "hidden_rate": 0.465,
+    "all10_rate": 0.432,
+    "runnable_rate": 0.88,
+    "functional_public_rate": 0.4659
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2741,
+    "hidden_rate": 0.3389,
+    "all10_rate": 0.3,
+    "runnable_rate": 0.7333,
+    "functional_public_rate": 0.3737
+   }
+  },
+  "cc_seed_evolving": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.2143,
+    "hidden_rate": 0.2381,
+    "all10_rate": 0.2238,
+    "runnable_rate": 0.7143,
+    "functional_public_rate": 0.3
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.1822,
+    "hidden_rate": 0.25,
+    "all10_rate": 0.2093,
+    "runnable_rate": 0.5581,
+    "functional_public_rate": 0.3264
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.2267,
+    "hidden_rate": 0.26,
+    "all10_rate": 0.24,
+    "runnable_rate": 0.74,
+    "functional_public_rate": 0.3063
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2148,
+    "hidden_rate": 0.2444,
+    "all10_rate": 0.2267,
+    "runnable_rate": 0.6444,
+    "functional_public_rate": 0.3333
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.2857,
+    "hidden_rate": 0.244,
+    "all10_rate": 0.269,
+    "runnable_rate": 0.8095,
+    "functional_public_rate": 0.3529
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.1783,
+    "hidden_rate": 0.2442,
+    "all10_rate": 0.2047,
+    "runnable_rate": 0.7442,
+    "functional_public_rate": 0.2396
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.1967,
+    "hidden_rate": 0.31,
+    "all10_rate": 0.242,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.2341
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2333,
+    "hidden_rate": 0.2944,
+    "all10_rate": 0.2578,
+    "runnable_rate": 0.6889,
+    "functional_public_rate": 0.3387
+   }
+  },
+  "codex_gpt_5_5": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.2738,
+    "hidden_rate": 0.244,
+    "all10_rate": 0.2619,
+    "runnable_rate": 0.8333,
+    "functional_public_rate": 0.3286
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.3062,
+    "hidden_rate": 0.3023,
+    "all10_rate": 0.3047,
+    "runnable_rate": 0.9302,
+    "functional_public_rate": 0.3292
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.2767,
+    "hidden_rate": 0.32,
+    "all10_rate": 0.294,
+    "runnable_rate": 0.88,
+    "functional_public_rate": 0.3144
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.2222,
+    "hidden_rate": 0.2611,
+    "all10_rate": 0.2378,
+    "runnable_rate": 0.7333,
+    "functional_public_rate": 0.303
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.3492,
+    "hidden_rate": 0.2857,
+    "all10_rate": 0.3238,
+    "runnable_rate": 0.8571,
+    "functional_public_rate": 0.4074
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.3876,
+    "hidden_rate": 0.4012,
+    "all10_rate": 0.393,
+    "runnable_rate": 0.9302,
+    "functional_public_rate": 0.4167
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.34,
+    "hidden_rate": 0.365,
+    "all10_rate": 0.35,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.4048
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.263,
+    "hidden_rate": 0.25,
+    "all10_rate": 0.2578,
+    "runnable_rate": 0.7111,
+    "functional_public_rate": 0.3698
+   }
+  },
+  "codex_gpt_6_astra": {
+   "easy": {
+    "n_cases": 42,
+    "public_rate": 0.5595,
+    "hidden_rate": 0.4583,
+    "all10_rate": 0.519,
+    "runnable_rate": 0.8571,
+    "functional_public_rate": 0.6528
+   },
+   "extreme": {
+    "n_cases": 43,
+    "public_rate": 0.6434,
+    "hidden_rate": 0.5465,
+    "all10_rate": 0.6047,
+    "runnable_rate": 0.9535,
+    "functional_public_rate": 0.6748
+   },
+   "hard": {
+    "n_cases": 50,
+    "public_rate": 0.6,
+    "hidden_rate": 0.51,
+    "all10_rate": 0.564,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.6667
+   },
+   "medium": {
+    "n_cases": 45,
+    "public_rate": 0.4815,
+    "hidden_rate": 0.4556,
+    "all10_rate": 0.4711,
+    "runnable_rate": 0.7556,
+    "functional_public_rate": 0.6372
+   }
+  }
+ },
+ "by_category": {
+  "cc_deepseek_flash_41": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.25,
+    "hidden_rate": 0.2917,
+    "all10_rate": 0.2667,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.3125
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.3656,
+    "hidden_rate": 0.3548,
+    "all10_rate": 0.3613,
+    "runnable_rate": 0.7419,
+    "functional_public_rate": 0.4928
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.1458,
+    "hidden_rate": 0.1146,
+    "all10_rate": 0.1333,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.2188
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.1815,
+    "hidden_rate": 0.2056,
+    "all10_rate": 0.1911,
+    "runnable_rate": 0.8444,
+    "functional_public_rate": 0.2149
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.3854,
+    "hidden_rate": 0.4062,
+    "all10_rate": 0.3937,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.5139
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.2941,
+    "hidden_rate": 0.4044,
+    "all10_rate": 0.3382,
+    "runnable_rate": 0.8824,
+    "functional_public_rate": 0.3333
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.25,
+    "hidden_rate": 0.2417,
+    "all10_rate": 0.2467,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.3125
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.328,
+    "hidden_rate": 0.379,
+    "all10_rate": 0.3484,
+    "runnable_rate": 0.6774,
+    "functional_public_rate": 0.4841
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.125,
+    "hidden_rate": 0.1042,
+    "all10_rate": 0.1167,
+    "runnable_rate": 0.5833,
+    "functional_public_rate": 0.2143
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.163,
+    "hidden_rate": 0.1944,
+    "all10_rate": 0.1756,
+    "runnable_rate": 0.7333,
+    "functional_public_rate": 0.2222
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.2708,
+    "hidden_rate": 0.4844,
+    "all10_rate": 0.3563,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.3611
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.2941,
+    "hidden_rate": 0.3897,
+    "all10_rate": 0.3324,
+    "runnable_rate": 0.8235,
+    "functional_public_rate": 0.3571
+   }
+  },
+  "cc_fable_5": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.4444,
+    "hidden_rate": 0.375,
+    "all10_rate": 0.4167,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.5128
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.4355,
+    "hidden_rate": 0.5081,
+    "all10_rate": 0.4645,
+    "runnable_rate": 0.7742,
+    "functional_public_rate": 0.5625
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.3125,
+    "hidden_rate": 0.2396,
+    "all10_rate": 0.2833,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.4688
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.3333,
+    "hidden_rate": 0.3889,
+    "all10_rate": 0.3556,
+    "runnable_rate": 0.8222,
+    "functional_public_rate": 0.4054
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.375,
+    "hidden_rate": 0.4219,
+    "all10_rate": 0.3937,
+    "runnable_rate": 0.6875,
+    "functional_public_rate": 0.5455
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.4363,
+    "hidden_rate": 0.4044,
+    "all10_rate": 0.4235,
+    "runnable_rate": 0.8235,
+    "functional_public_rate": 0.5298
+   }
+  },
+  "cc_fable_5_1": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.4944,
+    "hidden_rate": 0.4167,
+    "all10_rate": 0.4633,
+    "runnable_rate": 0.8333,
+    "functional_public_rate": 0.5933
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.5538,
+    "hidden_rate": 0.4919,
+    "all10_rate": 0.529,
+    "runnable_rate": 0.8387,
+    "functional_public_rate": 0.6603
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.3056,
+    "hidden_rate": 0.25,
+    "all10_rate": 0.2833,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.4583
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.3741,
+    "hidden_rate": 0.3667,
+    "all10_rate": 0.3711,
+    "runnable_rate": 0.8889,
+    "functional_public_rate": 0.4208
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.4583,
+    "hidden_rate": 0.4844,
+    "all10_rate": 0.4688,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.6111
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.5,
+    "hidden_rate": 0.4485,
+    "all10_rate": 0.4794,
+    "runnable_rate": 0.8529,
+    "functional_public_rate": 0.5862
+   }
+  },
+  "cc_glm_5_2": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.2722,
+    "hidden_rate": 0.2417,
+    "all10_rate": 0.26,
+    "runnable_rate": 0.7667,
+    "functional_public_rate": 0.3551
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.3441,
+    "hidden_rate": 0.371,
+    "all10_rate": 0.3548,
+    "runnable_rate": 0.7097,
+    "functional_public_rate": 0.4848
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.1042,
+    "hidden_rate": 0.125,
+    "all10_rate": 0.1125,
+    "runnable_rate": 0.625,
+    "functional_public_rate": 0.1667
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.1815,
+    "hidden_rate": 0.2278,
+    "all10_rate": 0.2,
+    "runnable_rate": 0.7111,
+    "functional_public_rate": 0.2552
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.3333,
+    "hidden_rate": 0.3906,
+    "all10_rate": 0.3563,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.4445
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.2598,
+    "hidden_rate": 0.3603,
+    "all10_rate": 0.3,
+    "runnable_rate": 0.8235,
+    "functional_public_rate": 0.3155
+   }
+  },
+  "cc_glm_5_3": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.3778,
+    "hidden_rate": 0.2833,
+    "all10_rate": 0.34,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.4722
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.3441,
+    "hidden_rate": 0.4435,
+    "all10_rate": 0.3839,
+    "runnable_rate": 0.7097,
+    "functional_public_rate": 0.4849
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.2014,
+    "hidden_rate": 0.2188,
+    "all10_rate": 0.2083,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.3021
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.2704,
+    "hidden_rate": 0.3333,
+    "all10_rate": 0.2956,
+    "runnable_rate": 0.8444,
+    "functional_public_rate": 0.3202
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.3542,
+    "hidden_rate": 0.3594,
+    "all10_rate": 0.3563,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.4722
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.3333,
+    "hidden_rate": 0.3824,
+    "all10_rate": 0.3529,
+    "runnable_rate": 0.8529,
+    "functional_public_rate": 0.3908
+   }
+  },
+  "cc_kimi_k3": {
+   "Action": {
+    "n_cases": 25,
+    "public_rate": 0.32,
+    "hidden_rate": 0.29,
+    "all10_rate": 0.308,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.4
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 15,
+    "public_rate": 0.3778,
+    "hidden_rate": 0.4333,
+    "all10_rate": 0.4,
+    "runnable_rate": 0.7333,
+    "functional_public_rate": 0.5152
+   },
+   "RPG": {
+    "n_cases": 14,
+    "public_rate": 0.2619,
+    "hidden_rate": 0.0536,
+    "all10_rate": 0.1786,
+    "runnable_rate": 0.6429,
+    "functional_public_rate": 0.4074
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 29,
+    "public_rate": 0.3046,
+    "hidden_rate": 0.2328,
+    "all10_rate": 0.2759,
+    "runnable_rate": 0.8276,
+    "functional_public_rate": 0.3681
+   },
+   "Social & Tabletop": {
+    "n_cases": 2,
+    "public_rate": 0.8334,
+    "hidden_rate": 0.5,
+    "all10_rate": 0.7,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.8334
+   },
+   "Strategy": {
+    "n_cases": 20,
+    "public_rate": 0.2833,
+    "hidden_rate": 0.3875,
+    "all10_rate": 0.325,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.3542
+   }
+  },
+  "cc_opus_5": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.3778,
+    "hidden_rate": 0.3833,
+    "all10_rate": 0.38,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.4359
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.4194,
+    "hidden_rate": 0.4677,
+    "all10_rate": 0.4387,
+    "runnable_rate": 0.8387,
+    "functional_public_rate": 0.5
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.2986,
+    "hidden_rate": 0.2292,
+    "all10_rate": 0.2708,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.4479
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.337,
+    "hidden_rate": 0.4,
+    "all10_rate": 0.3622,
+    "runnable_rate": 0.9111,
+    "functional_public_rate": 0.3699
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.4167,
+    "hidden_rate": 0.5312,
+    "all10_rate": 0.4625,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.5555
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.402,
+    "hidden_rate": 0.4338,
+    "all10_rate": 0.4147,
+    "runnable_rate": 0.8824,
+    "functional_public_rate": 0.4556
+   }
+  },
+  "cc_seed_evolving": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.2444,
+    "hidden_rate": 0.2333,
+    "all10_rate": 0.24,
+    "runnable_rate": 0.7,
+    "functional_public_rate": 0.3492
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.2849,
+    "hidden_rate": 0.3468,
+    "all10_rate": 0.3097,
+    "runnable_rate": 0.6452,
+    "functional_public_rate": 0.4417
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.1667,
+    "hidden_rate": 0.1771,
+    "all10_rate": 0.1708,
+    "runnable_rate": 0.625,
+    "functional_public_rate": 0.2667
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.1519,
+    "hidden_rate": 0.1944,
+    "all10_rate": 0.1689,
+    "runnable_rate": 0.6444,
+    "functional_public_rate": 0.2356
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.2396,
+    "hidden_rate": 0.2969,
+    "all10_rate": 0.2625,
+    "runnable_rate": 0.6875,
+    "functional_public_rate": 0.3485
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.2059,
+    "hidden_rate": 0.2721,
+    "all10_rate": 0.2324,
+    "runnable_rate": 0.7059,
+    "functional_public_rate": 0.2917
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.1889,
+    "hidden_rate": 0.175,
+    "all10_rate": 0.1833,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.2361
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.3065,
+    "hidden_rate": 0.3548,
+    "all10_rate": 0.3258,
+    "runnable_rate": 0.8065,
+    "functional_public_rate": 0.38
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.1111,
+    "hidden_rate": 0.1875,
+    "all10_rate": 0.1417,
+    "runnable_rate": 0.625,
+    "functional_public_rate": 0.1778
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.1852,
+    "hidden_rate": 0.2167,
+    "all10_rate": 0.1978,
+    "runnable_rate": 0.8,
+    "functional_public_rate": 0.2315
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.2917,
+    "hidden_rate": 0.3906,
+    "all10_rate": 0.3312,
+    "runnable_rate": 0.6875,
+    "functional_public_rate": 0.4243
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.2696,
+    "hidden_rate": 0.375,
+    "all10_rate": 0.3118,
+    "runnable_rate": 0.8235,
+    "functional_public_rate": 0.3274
+   }
+  },
+  "codex_gpt_5_5": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.2889,
+    "hidden_rate": 0.325,
+    "all10_rate": 0.3033,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.3333
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.3602,
+    "hidden_rate": 0.3548,
+    "all10_rate": 0.3581,
+    "runnable_rate": 0.8065,
+    "functional_public_rate": 0.4467
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.1389,
+    "hidden_rate": 0.1042,
+    "all10_rate": 0.125,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.2083
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.2222,
+    "hidden_rate": 0.2556,
+    "all10_rate": 0.2356,
+    "runnable_rate": 0.9111,
+    "functional_public_rate": 0.2439
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.3333,
+    "hidden_rate": 0.2969,
+    "all10_rate": 0.3188,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.4445
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.2941,
+    "hidden_rate": 0.3382,
+    "all10_rate": 0.3118,
+    "runnable_rate": 0.9412,
+    "functional_public_rate": 0.3125
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.3278,
+    "hidden_rate": 0.3167,
+    "all10_rate": 0.3233,
+    "runnable_rate": 0.8333,
+    "functional_public_rate": 0.3933
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.3871,
+    "hidden_rate": 0.4597,
+    "all10_rate": 0.4161,
+    "runnable_rate": 0.8387,
+    "functional_public_rate": 0.4615
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.2569,
+    "hidden_rate": 0.1771,
+    "all10_rate": 0.225,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.3854
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.2556,
+    "hidden_rate": 0.2444,
+    "all10_rate": 0.2511,
+    "runnable_rate": 0.8889,
+    "functional_public_rate": 0.2875
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.4375,
+    "hidden_rate": 0.3594,
+    "all10_rate": 0.4062,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.5833
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.402,
+    "hidden_rate": 0.4118,
+    "all10_rate": 0.4059,
+    "runnable_rate": 0.9118,
+    "functional_public_rate": 0.4409
+   }
+  },
+  "codex_gpt_6_astra": {
+   "Action": {
+    "n_cases": 30,
+    "public_rate": 0.5722,
+    "hidden_rate": 0.5167,
+    "all10_rate": 0.55,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.6603
+   },
+   "Adventure & Puzzle": {
+    "n_cases": 31,
+    "public_rate": 0.6505,
+    "hidden_rate": 0.6048,
+    "all10_rate": 0.6323,
+    "runnable_rate": 0.8387,
+    "functional_public_rate": 0.7756
+   },
+   "RPG": {
+    "n_cases": 24,
+    "public_rate": 0.4444,
+    "hidden_rate": 0.2812,
+    "all10_rate": 0.3792,
+    "runnable_rate": 0.7083,
+    "functional_public_rate": 0.6274
+   },
+   "Simulation & Sandbox": {
+    "n_cases": 45,
+    "public_rate": 0.537,
+    "hidden_rate": 0.4611,
+    "all10_rate": 0.5067,
+    "runnable_rate": 0.9333,
+    "functional_public_rate": 0.5754
+   },
+   "Social & Tabletop": {
+    "n_cases": 16,
+    "public_rate": 0.5729,
+    "hidden_rate": 0.5156,
+    "all10_rate": 0.55,
+    "runnable_rate": 0.75,
+    "functional_public_rate": 0.7639
+   },
+   "Strategy": {
+    "n_cases": 34,
+    "public_rate": 0.6324,
+    "hidden_rate": 0.5515,
+    "all10_rate": 0.6,
+    "runnable_rate": 0.9706,
+    "functional_public_rate": 0.6515
+   }
+  }
+ },
+ "by_incentive": {
+  "cc_deepseek_flash_41": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.1897,
+    "hidden_rate": 0.2672,
+    "all10_rate": 0.2207,
+    "runnable_rate": 0.8276,
+    "functional_public_rate": 0.2292
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.1111,
+    "hidden_rate": 0.1111,
+    "all10_rate": 0.1111,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.1667
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.2246,
+    "hidden_rate": 0.2391,
+    "all10_rate": 0.2304,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.3039
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.2941,
+    "hidden_rate": 0.3172,
+    "all10_rate": 0.3034,
+    "runnable_rate": 0.8067,
+    "functional_public_rate": 0.3646
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.2012,
+    "hidden_rate": 0.2414,
+    "all10_rate": 0.2172,
+    "runnable_rate": 0.8276,
+    "functional_public_rate": 0.2431
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.0741,
+    "hidden_rate": 0.0278,
+    "all10_rate": 0.0556,
+    "runnable_rate": 0.4444,
+    "functional_public_rate": 0.1667
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.1884,
+    "hidden_rate": 0.2609,
+    "all10_rate": 0.2174,
+    "runnable_rate": 0.6957,
+    "functional_public_rate": 0.2708
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.2647,
+    "hidden_rate": 0.3193,
+    "all10_rate": 0.2866,
+    "runnable_rate": 0.7395,
+    "functional_public_rate": 0.358
+   }
+  },
+  "cc_fable_5": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.4023,
+    "hidden_rate": 0.3017,
+    "all10_rate": 0.3621,
+    "runnable_rate": 0.7931,
+    "functional_public_rate": 0.5072
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.2778,
+    "hidden_rate": 0.3056,
+    "all10_rate": 0.2889,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.4166
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.3043,
+    "hidden_rate": 0.337,
+    "all10_rate": 0.3174,
+    "runnable_rate": 0.6957,
+    "functional_public_rate": 0.4375
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.4118,
+    "hidden_rate": 0.4328,
+    "all10_rate": 0.4202,
+    "runnable_rate": 0.8151,
+    "functional_public_rate": 0.5052
+   }
+  },
+  "cc_fable_5_1": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.4425,
+    "hidden_rate": 0.3362,
+    "all10_rate": 0.4,
+    "runnable_rate": 0.8276,
+    "functional_public_rate": 0.5347
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.3889,
+    "hidden_rate": 0.3056,
+    "all10_rate": 0.3556,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.5833
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.3478,
+    "hidden_rate": 0.3587,
+    "all10_rate": 0.3522,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.4706
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.472,
+    "hidden_rate": 0.4412,
+    "all10_rate": 0.4597,
+    "runnable_rate": 0.8487,
+    "functional_public_rate": 0.5561
+   }
+  },
+  "cc_glm_5_2": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.1897,
+    "hidden_rate": 0.2069,
+    "all10_rate": 0.1966,
+    "runnable_rate": 0.7931,
+    "functional_public_rate": 0.2391
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.037,
+    "hidden_rate": 0.1111,
+    "all10_rate": 0.0667,
+    "runnable_rate": 0.4444,
+    "functional_public_rate": 0.0833
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.2029,
+    "hidden_rate": 0.2283,
+    "all10_rate": 0.213,
+    "runnable_rate": 0.6957,
+    "functional_public_rate": 0.2917
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.2787,
+    "hidden_rate": 0.3214,
+    "all10_rate": 0.2958,
+    "runnable_rate": 0.7479,
+    "functional_public_rate": 0.3727
+   }
+  },
+  "cc_glm_5_3": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.3218,
+    "hidden_rate": 0.2672,
+    "all10_rate": 0.3,
+    "runnable_rate": 0.8621,
+    "functional_public_rate": 0.3733
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.1852,
+    "hidden_rate": 0.1111,
+    "all10_rate": 0.1556,
+    "runnable_rate": 0.4444,
+    "functional_public_rate": 0.4167
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.2174,
+    "hidden_rate": 0.2174,
+    "all10_rate": 0.2174,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.2941
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.3361,
+    "hidden_rate": 0.3992,
+    "all10_rate": 0.3613,
+    "runnable_rate": 0.7983,
+    "functional_public_rate": 0.4211
+   }
+  },
+  "cc_kimi_k3": {
+   "competitive": {
+    "n_cases": 21,
+    "public_rate": 0.2222,
+    "hidden_rate": 0.2024,
+    "all10_rate": 0.2143,
+    "runnable_rate": 0.7619,
+    "functional_public_rate": 0.2917
+   },
+   "cooperative": {
+    "n_cases": 7,
+    "public_rate": 0.2619,
+    "hidden_rate": 0.1429,
+    "all10_rate": 0.2143,
+    "runnable_rate": 0.7143,
+    "functional_public_rate": 0.3667
+   },
+   "mixed-motive": {
+    "n_cases": 6,
+    "public_rate": 0.1667,
+    "hidden_rate": 0.1667,
+    "all10_rate": 0.1667,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.25
+   },
+   "single-agent": {
+    "n_cases": 71,
+    "public_rate": 0.3662,
+    "hidden_rate": 0.3345,
+    "all10_rate": 0.3535,
+    "runnable_rate": 0.8028,
+    "functional_public_rate": 0.4561
+   }
+  },
+  "cc_opus_5": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.3563,
+    "hidden_rate": 0.3621,
+    "all10_rate": 0.3586,
+    "runnable_rate": 0.8621,
+    "functional_public_rate": 0.4133
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.2407,
+    "hidden_rate": 0.25,
+    "all10_rate": 0.2444,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.3611
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.2826,
+    "hidden_rate": 0.3587,
+    "all10_rate": 0.313,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.3823
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.4034,
+    "hidden_rate": 0.4349,
+    "all10_rate": 0.416,
+    "runnable_rate": 0.8655,
+    "functional_public_rate": 0.466
+   }
+  },
+  "cc_seed_evolving": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.2069,
+    "hidden_rate": 0.2241,
+    "all10_rate": 0.2138,
+    "runnable_rate": 0.7586,
+    "functional_public_rate": 0.2727
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.037,
+    "hidden_rate": 0.0278,
+    "all10_rate": 0.0333,
+    "runnable_rate": 0.2222,
+    "functional_public_rate": 0.1666
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.1377,
+    "hidden_rate": 0.1413,
+    "all10_rate": 0.1391,
+    "runnable_rate": 0.6087,
+    "functional_public_rate": 0.2262
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.2381,
+    "hidden_rate": 0.292,
+    "all10_rate": 0.2597,
+    "runnable_rate": 0.6891,
+    "functional_public_rate": 0.3455
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.1552,
+    "hidden_rate": 0.2328,
+    "all10_rate": 0.1862,
+    "runnable_rate": 0.8276,
+    "functional_public_rate": 0.1875
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.0741,
+    "hidden_rate": 0.0556,
+    "all10_rate": 0.0667,
+    "runnable_rate": 0.4444,
+    "functional_public_rate": 0.1667
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.1522,
+    "hidden_rate": 0.1957,
+    "all10_rate": 0.1696,
+    "runnable_rate": 0.6957,
+    "functional_public_rate": 0.2188
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.2633,
+    "hidden_rate": 0.3172,
+    "all10_rate": 0.2849,
+    "runnable_rate": 0.7983,
+    "functional_public_rate": 0.3298
+   }
+  },
+  "codex_gpt_5_5": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.2529,
+    "hidden_rate": 0.25,
+    "all10_rate": 0.2517,
+    "runnable_rate": 0.8966,
+    "functional_public_rate": 0.282
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.0926,
+    "hidden_rate": 0.1389,
+    "all10_rate": 0.1111,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.1389
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.1812,
+    "hidden_rate": 0.2065,
+    "all10_rate": 0.1913,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.2451
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.3039,
+    "hidden_rate": 0.3172,
+    "all10_rate": 0.3092,
+    "runnable_rate": 0.8655,
+    "functional_public_rate": 0.3511
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.2988,
+    "hidden_rate": 0.2931,
+    "all10_rate": 0.2966,
+    "runnable_rate": 0.8621,
+    "functional_public_rate": 0.3467
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.1852,
+    "hidden_rate": 0.2222,
+    "all10_rate": 0.2,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.2778
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.3043,
+    "hidden_rate": 0.2391,
+    "all10_rate": 0.2783,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.4118
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.3599,
+    "hidden_rate": 0.3592,
+    "all10_rate": 0.3597,
+    "runnable_rate": 0.8571,
+    "functional_public_rate": 0.4199
+   }
+  },
+  "codex_gpt_6_astra": {
+   "competitive": {
+    "n_cases": 29,
+    "public_rate": 0.523,
+    "hidden_rate": 0.4655,
+    "all10_rate": 0.5,
+    "runnable_rate": 0.8966,
+    "functional_public_rate": 0.5833
+   },
+   "cooperative": {
+    "n_cases": 9,
+    "public_rate": 0.4815,
+    "hidden_rate": 0.3056,
+    "all10_rate": 0.4111,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.7222
+   },
+   "mixed-motive": {
+    "n_cases": 23,
+    "public_rate": 0.471,
+    "hidden_rate": 0.4022,
+    "all10_rate": 0.4435,
+    "runnable_rate": 0.7391,
+    "functional_public_rate": 0.6372
+   },
+   "single-agent": {
+    "n_cases": 119,
+    "public_rate": 0.6092,
+    "hidden_rate": 0.5315,
+    "all10_rate": 0.5782,
+    "runnable_rate": 0.8992,
+    "functional_public_rate": 0.6776
+   }
+  }
+ },
+ "by_judge_batch": {
+  "cc_deepseek_flash_41": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.5167,
+    "hidden_rate": 0.575,
+    "all10_rate": 0.54,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.5741
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.2645,
+    "hidden_rate": 0.35,
+    "all10_rate": 0.2987,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.3148
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.1511,
+    "hidden_rate": 0.1133,
+    "all10_rate": 0.136,
+    "runnable_rate": 0.7067,
+    "functional_public_rate": 0.2138
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.5444,
+    "hidden_rate": 0.5417,
+    "all10_rate": 0.5433,
+    "runnable_rate": 0.9333,
+    "functional_public_rate": 0.5833
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.2533,
+    "hidden_rate": 0.3967,
+    "all10_rate": 0.3107,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.2923
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.0933,
+    "hidden_rate": 0.07,
+    "all10_rate": 0.084,
+    "runnable_rate": 0.52,
+    "functional_public_rate": 0.1795
+   }
+  },
+  "cc_fable_5": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.6167,
+    "hidden_rate": 0.625,
+    "all10_rate": 0.62,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.7115
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.3978,
+    "hidden_rate": 0.4833,
+    "all10_rate": 0.432,
+    "runnable_rate": 0.8267,
+    "functional_public_rate": 0.4812
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.2911,
+    "hidden_rate": 0.21,
+    "all10_rate": 0.2587,
+    "runnable_rate": 0.72,
+    "functional_public_rate": 0.4043
+   }
+  },
+  "cc_fable_5_1": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.6444,
+    "hidden_rate": 0.6583,
+    "all10_rate": 0.65,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.716
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.4667,
+    "hidden_rate": 0.4833,
+    "all10_rate": 0.4733,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.5385
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.3489,
+    "hidden_rate": 0.23,
+    "all10_rate": 0.3013,
+    "runnable_rate": 0.7467,
+    "functional_public_rate": 0.4673
+   }
+  },
+  "cc_glm_5_2": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.5111,
+    "hidden_rate": 0.55,
+    "all10_rate": 0.5267,
+    "runnable_rate": 0.8333,
+    "functional_public_rate": 0.6133
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.2667,
+    "hidden_rate": 0.3567,
+    "all10_rate": 0.3027,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.3175
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.1111,
+    "hidden_rate": 0.0967,
+    "all10_rate": 0.1053,
+    "runnable_rate": 0.5867,
+    "functional_public_rate": 0.1894
+   }
+  },
+  "cc_glm_5_3": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.5278,
+    "hidden_rate": 0.5333,
+    "all10_rate": 0.53,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.609
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.3489,
+    "hidden_rate": 0.46,
+    "all10_rate": 0.3933,
+    "runnable_rate": 0.8667,
+    "functional_public_rate": 0.4026
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.1867,
+    "hidden_rate": 0.1433,
+    "all10_rate": 0.1693,
+    "runnable_rate": 0.6667,
+    "functional_public_rate": 0.28
+   }
+  },
+  "cc_kimi_k3": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.5444,
+    "hidden_rate": 0.575,
+    "all10_rate": 0.5567,
+    "runnable_rate": 0.9333,
+    "functional_public_rate": 0.5833
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.2289,
+    "hidden_rate": 0.17,
+    "all10_rate": 0.2053,
+    "runnable_rate": 0.72,
+    "functional_public_rate": 0.3179
+   }
+  },
+  "cc_opus_5": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.6333,
+    "hidden_rate": 0.6667,
+    "all10_rate": 0.6467,
+    "runnable_rate": 0.9667,
+    "functional_public_rate": 0.6552
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.3622,
+    "hidden_rate": 0.48,
+    "all10_rate": 0.4093,
+    "runnable_rate": 0.88,
+    "functional_public_rate": 0.4116
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.2778,
+    "hidden_rate": 0.2233,
+    "all10_rate": 0.256,
+    "runnable_rate": 0.7467,
+    "functional_public_rate": 0.372
+   }
+  },
+  "cc_seed_evolving": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.4444,
+    "hidden_rate": 0.425,
+    "all10_rate": 0.4367,
+    "runnable_rate": 0.7667,
+    "functional_public_rate": 0.5797
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.2178,
+    "hidden_rate": 0.3333,
+    "all10_rate": 0.264,
+    "runnable_rate": 0.7733,
+    "functional_public_rate": 0.2816
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.1089,
+    "hidden_rate": 0.0933,
+    "all10_rate": 0.1027,
+    "runnable_rate": 0.52,
+    "functional_public_rate": 0.2094
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.4556,
+    "hidden_rate": 0.55,
+    "all10_rate": 0.4933,
+    "runnable_rate": 0.9,
+    "functional_public_rate": 0.5062
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.2267,
+    "hidden_rate": 0.3367,
+    "all10_rate": 0.2707,
+    "runnable_rate": 0.84,
+    "functional_public_rate": 0.2698
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.1244,
+    "hidden_rate": 0.1033,
+    "all10_rate": 0.116,
+    "runnable_rate": 0.6533,
+    "functional_public_rate": 0.1905
+   }
+  },
+  "codex_gpt_5_5": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.5278,
+    "hidden_rate": 0.4583,
+    "all10_rate": 0.5,
+    "runnable_rate": 0.9667,
+    "functional_public_rate": 0.546
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.2467,
+    "hidden_rate": 0.35,
+    "all10_rate": 0.288,
+    "runnable_rate": 0.88,
+    "functional_public_rate": 0.2803
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.1889,
+    "hidden_rate": 0.1467,
+    "all10_rate": 0.172,
+    "runnable_rate": 0.76,
+    "functional_public_rate": 0.2485
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.55,
+    "hidden_rate": 0.5333,
+    "all10_rate": 0.5433,
+    "runnable_rate": 0.9667,
+    "functional_public_rate": 0.569
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.3822,
+    "hidden_rate": 0.4133,
+    "all10_rate": 0.3947,
+    "runnable_rate": 0.88,
+    "functional_public_rate": 0.4343
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.2,
+    "hidden_rate": 0.1567,
+    "all10_rate": 0.1827,
+    "runnable_rate": 0.7333,
+    "functional_public_rate": 0.2727
+   }
+  },
+  "codex_gpt_6_astra": {
+   "Final-30": {
+    "n_cases": 30,
+    "public_rate": 0.7944,
+    "hidden_rate": 0.725,
+    "all10_rate": 0.7667,
+    "runnable_rate": 1.0,
+    "functional_public_rate": 0.7944
+   },
+   "Mobile-75": {
+    "n_cases": 75,
+    "public_rate": 0.6067,
+    "hidden_rate": 0.54,
+    "all10_rate": 0.58,
+    "runnable_rate": 0.8933,
+    "functional_public_rate": 0.6791
+   },
+   "PC-75": {
+    "n_cases": 75,
+    "public_rate": 0.4467,
+    "hidden_rate": 0.3533,
+    "all10_rate": 0.4093,
+    "runnable_rate": 0.7867,
+    "functional_public_rate": 0.5678
+   }
+  }
+ },
+ "capability_by_model": {
+  "cc_deepseek_flash_41": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.3004
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.2876
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.218
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.1953
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.3153
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.2879
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2248
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.2353
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.2913
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.192
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.2949
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.2609
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.2903
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.1667
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.3196
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.3059
+   }
+  },
+  "cc_deepseek_v4_flash": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.2784
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.2778
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.2654
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.165
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.2611
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.2273
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2636
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.2185
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.3107
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.2455
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.3077
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.2319
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.1935
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.1296
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.2887
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.2353
+   }
+  },
+  "cc_fable_5": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.3993
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.3824
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.3223
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.3805
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.4089
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.4091
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.3798
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.4034
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.4369
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.317
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.3974
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.3406
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.3226
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.3889
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.3918
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.4118
+   }
+  },
+  "cc_fable_5_1": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.3956
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.4314
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.3697
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.4242
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.4138
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.4455
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.3953
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.4202
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.4272
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.4688
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.4103
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.4348
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.4194
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.4074
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.3814
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.4588
+   }
+  },
+  "cc_glm_5_2": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.2967
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.2908
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.237
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.165
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.3005
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.2424
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2403
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.2395
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.2816
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.2232
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.2564
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.2464
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.1613
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.1111
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.268
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.2118
+   }
+  },
+  "cc_glm_5_3": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.3223
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.3366
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.3033
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.2189
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.3448
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.3273
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.3333
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.2899
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.3786
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.3214
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.3333
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.3333
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.3226
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.2037
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.4021
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.2824
+   }
+  },
+  "cc_kimi_k3": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 175,
+    "rate": 0.3143
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 196,
+    "rate": 0.3367
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 122,
+    "rate": 0.2049
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 180,
+    "rate": 0.2556
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 130,
+    "rate": 0.3
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 215,
+    "rate": 0.2884
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 79,
+    "rate": 0.2152
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 115,
+    "rate": 0.3478
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 50,
+    "rate": 0.34
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 125,
+    "rate": 0.36
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 46,
+    "rate": 0.2174
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 82,
+    "rate": 0.2561
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 25,
+    "rate": 0.16
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 34,
+    "rate": 0.2353
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 50,
+    "rate": 0.24
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 26,
+    "rate": 0.3077
+   }
+  },
+  "cc_opus_5": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.4249
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.3889
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.346
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.2761
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.399
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.3636
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.3333
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.3319
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.4854
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.3839
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.3846
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.4058
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.3548
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.2593
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.4227
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.3765
+   }
+  },
+  "cc_seed_evolving": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.2527
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.2484
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.1943
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.1751
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.2463
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.2364
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2791
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.1723
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.2816
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.1786
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.1923
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.1232
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.0
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.1296
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.299
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.1765
+   }
+  },
+  "codex_deepseek_v4_pro": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.2857
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.2549
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.2227
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.1616
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.3054
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.2364
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2403
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.2311
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.301
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.2366
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.2179
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.1594
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.3226
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.1296
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.299
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.2235
+   }
+  },
+  "codex_gpt_5_5": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.2821
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.3007
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.1943
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.202
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.3202
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.2939
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2558
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.2269
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.3301
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.25
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.2949
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.2536
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.3226
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.2222
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.2887
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.1765
+   }
+  },
+  "codex_gpt_5_6_sol": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.3443
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.3791
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.2512
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.2458
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.3448
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.3424
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.2868
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.3277
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.3689
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.3214
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.2564
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.3116
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.3226
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.2407
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.3196
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.3412
+   }
+  },
+  "codex_gpt_6_astra": {
+   "C1|hidden": {
+    "name": "Core rules",
+    "n": 273,
+    "rate": 0.5018
+   },
+   "C1|public": {
+    "name": "Core rules",
+    "n": 306,
+    "rate": 0.6144
+   },
+   "C2|hidden": {
+    "name": "AI & NPC behavior",
+    "n": 211,
+    "rate": 0.4502
+   },
+   "C2|public": {
+    "name": "AI & NPC behavior",
+    "n": 297,
+    "rate": 0.4781
+   },
+   "C3|hidden": {
+    "name": "Numeric design & balance",
+    "n": 203,
+    "rate": 0.5419
+   },
+   "C3|public": {
+    "name": "Numeric design & balance",
+    "n": 330,
+    "rate": 0.5545
+   },
+   "C4|hidden": {
+    "name": "Interaction & input",
+    "n": 129,
+    "rate": 0.4651
+   },
+   "C4|public": {
+    "name": "Interaction & input",
+    "n": 238,
+    "rate": 0.5714
+   },
+   "C5|hidden": {
+    "name": "Levels & scenes",
+    "n": 103,
+    "rate": 0.5534
+   },
+   "C5|public": {
+    "name": "Levels & scenes",
+    "n": 224,
+    "rate": 0.5491
+   },
+   "C6|hidden": {
+    "name": "Animation & rendering",
+    "n": 78,
+    "rate": 0.4359
+   },
+   "C6|public": {
+    "name": "Animation & rendering",
+    "n": 138,
+    "rate": 0.558
+   },
+   "C7|hidden": {
+    "name": "Feedback & game feel",
+    "n": 31,
+    "rate": 0.4839
+   },
+   "C7|public": {
+    "name": "Feedback & game feel",
+    "n": 54,
+    "rate": 0.6296
+   },
+   "C8|hidden": {
+    "name": "Onboarding & meta UI",
+    "n": 97,
+    "rate": 0.4639
+   },
+   "C8|public": {
+    "name": "Onboarding & meta UI",
+    "n": 85,
+    "rate": 0.6235
+   }
+  }
+ }
+}
