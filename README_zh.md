@@ -1,6 +1,6 @@
 # OCTAVE
 
-**A Capability-Resolved Benchmark for Complete HTML5 Game Generation**
+**A Capability-Resolved Benchmark for End-to-End HTML5 Game Generation**
 
 [English](README.md) · [数据集说明](data/README.md) · [结果](results/README.md) · [复现](docs/reproduce.md)
 
